@@ -44,7 +44,7 @@ def test_write_csv_output_has_no_trailing_zero_floats(tmp_path):
     assert "5" in content
 
 
-def test_write_csv_computes_etapa_camaron_per_record(tmp_path):
+def test_write_csv_computes_clasificacion_camaron_per_record(tmp_path):
     records = [
         {
             "empresa": "Nicovita",
@@ -76,8 +76,8 @@ def test_write_csv_computes_etapa_camaron_per_record(tmp_path):
     import pandas as pd
 
     df = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
-    assert df.loc[0, "etapa_camaron"] == "Hatchery"
-    assert df.loc[1, "etapa_camaron"] == "Grower"
+    assert df.loc[0, "clasificacion_camaron"] == "Hatchery"
+    assert df.loc[1, "clasificacion_camaron"] == "Grower"
 
 
 def test_write_csv_computes_particula_min_max_per_record(tmp_path):

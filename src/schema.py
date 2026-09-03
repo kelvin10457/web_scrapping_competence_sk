@@ -18,7 +18,7 @@ SCHEMA_COLUMNS = [
     "nombre_producto",
     "etapa",
     "producto_salud",
-    "etapa_camaron",
+    "clasificacion_camaron",
     "tamano_pellet_mm",
     "particula_min_mm",
     "particula_max_mm",
@@ -174,15 +174,20 @@ def etapa_from_tamano(tamano_pellet_mm: str | None, tipo_presentacion: str | Non
 # Los 4 valores del negocio para el reporte de competencia (mensaje de la
 # jefa del usuario, 2026-09-02) -- distintos de ETAPA_VALUES, que se disenaron
 # antes de tener ese mensaje y por eso no calzan 1 a 1 con estos 4 terminos.
-ETAPA_CAMARON_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
+CLASIFICACION_CAMARON_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
 
 
-def etapa_camaron_from_row(
+def clasificacion_camaron_from_row(
     etapa: str | None, tamano_pellet_mm: str | None, tipo_presentacion: str | None
 ) -> str | None:
     """Clasifica el producto en las 4 etapas que definio la jefa del usuario
     para el reporte de competencia -- Hatchery/Nursery/Pre Grower/Grower --
     columna aparte de `etapa` porque no comparten vocabulario (ver arriba).
+    Nombrada `clasificacion_camaron` (antes `etapa_camaron`, renombrada
+    2026-09-03 a pedido del usuario) para no confundirla con `etapa`: esta
+    no es "una etapa mas" del mismo vocabulario, sino la clasificacion fija
+    de 4 casillas que pide el reporte, derivada sobre todo de tamano de
+    pellet en vez del texto/categoria de la fuente.
 
     Hatchery se decide por el propio valor de `etapa` (`"larva"`), no por
     tamano: la jefa la define por tipo de producto ("de laboratorios

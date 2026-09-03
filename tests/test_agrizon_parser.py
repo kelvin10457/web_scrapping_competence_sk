@@ -97,7 +97,7 @@ def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
     products = _load_products()
     record = parser.parse_product(_find(products, "larviva-55-250-375-micras-1-kg"))
     assert record["etapa"] == "larva"
-    assert record["etapa_camaron"] is None  # se calcula despues, en pipeline.write_csv
+    assert record["clasificacion_camaron"] is None  # se calcula despues, en pipeline.write_csv
 
 
 def test_etapa_1_6mm_boundary_stays_none():

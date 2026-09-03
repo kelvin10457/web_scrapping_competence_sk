@@ -103,49 +103,49 @@ def test_etapa_from_tamano_empty_input_stays_none():
     assert schema.etapa_from_tamano("", "Pelletizado") is None
 
 
-def test_etapa_camaron_larva_overrides_to_hatchery_regardless_of_tamano():
+def test_clasificacion_camaron_larva_overrides_to_hatchery_regardless_of_tamano():
     # Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que por
     # tamano solo hubieran caido en Nursery -- la jefa define Hatchery por
     # tipo de producto (laboratorio larvario), no por banda de mm.
-    assert schema.etapa_camaron_from_row("larva", "0.3", "Extruido") == "Hatchery"
-    assert schema.etapa_camaron_from_row("larva", None, None) == "Hatchery"
+    assert schema.clasificacion_camaron_from_row("larva", "0.3", "Extruido") == "Hatchery"
+    assert schema.clasificacion_camaron_from_row("larva", None, None) == "Hatchery"
 
 
-def test_etapa_camaron_below_1_6mm_is_nursery():
-    assert schema.etapa_camaron_from_row("precria", "0.8", "Extruido") == "Nursery"
-    assert schema.etapa_camaron_from_row(None, "1.2", "Pelletizado") == "Nursery"
+def test_clasificacion_camaron_below_1_6mm_is_nursery():
+    assert schema.clasificacion_camaron_from_row("precria", "0.8", "Extruido") == "Nursery"
+    assert schema.clasificacion_camaron_from_row(None, "1.2", "Pelletizado") == "Nursery"
 
 
-def test_etapa_camaron_handles_range_string():
-    assert schema.etapa_camaron_from_row("precria", "0.5-1.0", "Pelletizado") == "Nursery"
+def test_clasificacion_camaron_handles_range_string():
+    assert schema.clasificacion_camaron_from_row("precria", "0.5-1.0", "Pelletizado") == "Nursery"
 
 
-def test_etapa_camaron_exactly_1_6mm_is_pre_grower():
+def test_clasificacion_camaron_exactly_1_6mm_is_pre_grower():
     # A diferencia de etapa_from_tamano (que deja este caso en None porque
     # reusa las 6 categorias viejas), aca la columna es dedicada a los 4
     # terminos de la jefa y ella asocio 1.6mm especificamente a Pre Grower.
-    assert schema.etapa_camaron_from_row("engorde", "1.6", "Pelletizado") == "Pre Grower"
-    assert schema.etapa_camaron_from_row(None, "1.6", "Extruido") == "Pre Grower"
+    assert schema.clasificacion_camaron_from_row("engorde", "1.6", "Pelletizado") == "Pre Grower"
+    assert schema.clasificacion_camaron_from_row(None, "1.6", "Extruido") == "Pre Grower"
 
 
-def test_etapa_camaron_grower_threshold_depends_on_tipo_presentacion():
-    assert schema.etapa_camaron_from_row("engorde", "1.8", "Pelletizado") == "Grower"
-    assert schema.etapa_camaron_from_row("engorde", "1.8", "Extruido") is None
-    assert schema.etapa_camaron_from_row("engorde", "1.9", "Extruido") == "Grower"
-    assert schema.etapa_camaron_from_row("engorde", "2.5", "Pelletizado") == "Grower"
+def test_clasificacion_camaron_grower_threshold_depends_on_tipo_presentacion():
+    assert schema.clasificacion_camaron_from_row("engorde", "1.8", "Pelletizado") == "Grower"
+    assert schema.clasificacion_camaron_from_row("engorde", "1.8", "Extruido") is None
+    assert schema.clasificacion_camaron_from_row("engorde", "1.9", "Extruido") == "Grower"
+    assert schema.clasificacion_camaron_from_row("engorde", "2.5", "Pelletizado") == "Grower"
 
 
-def test_etapa_camaron_gap_between_1_6_and_grower_threshold_stays_none():
-    assert schema.etapa_camaron_from_row("engorde", "1.7", "Pelletizado") is None
+def test_clasificacion_camaron_gap_between_1_6_and_grower_threshold_stays_none():
+    assert schema.clasificacion_camaron_from_row("engorde", "1.7", "Pelletizado") is None
 
 
-def test_etapa_camaron_unknown_tipo_presentacion_at_grower_size_stays_none():
-    assert schema.etapa_camaron_from_row("engorde", "2.5", None) is None
+def test_clasificacion_camaron_unknown_tipo_presentacion_at_grower_size_stays_none():
+    assert schema.clasificacion_camaron_from_row("engorde", "2.5", None) is None
 
 
-def test_etapa_camaron_empty_tamano_stays_none():
-    assert schema.etapa_camaron_from_row("engorde", None, "Pelletizado") is None
-    assert schema.etapa_camaron_from_row("salud", "", "Pelletizado") is None
+def test_clasificacion_camaron_empty_tamano_stays_none():
+    assert schema.clasificacion_camaron_from_row("engorde", None, "Pelletizado") is None
+    assert schema.clasificacion_camaron_from_row("salud", "", "Pelletizado") is None
 
 
 def test_detect_producto_salud_true_for_disease_marker():

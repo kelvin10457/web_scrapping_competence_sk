@@ -55,7 +55,7 @@ def run_empresa(empresa: str) -> list[dict]:
 
         # biomar.com deshabilitado a proposito (decision del usuario,
         # 2026-09-03): sus filas son solo identificacion por familia de
-        # producto, sin tamano/etapa_camaron/proteina -- se prefiere que
+        # producto, sin tamano/clasificacion_camaron/proteina -- se prefiere que
         # BioMar aparezca unicamente via Agrizon, con datos tecnicos reales
         # por SKU, aunque eso deje fuera productos sin match en Agrizon
         # (Blue Impact, INICIO *, SmartCare Balance *, EXIA Focus). Ver
@@ -102,7 +102,7 @@ def write_xlsx(df: pd.DataFrame, path: Path) -> None:
 
 def write_csv(records: list[dict], path: Path) -> None:
     for record in records:
-        record["etapa_camaron"] = schema.etapa_camaron_from_row(
+        record["clasificacion_camaron"] = schema.clasificacion_camaron_from_row(
             record.get("etapa"), record.get("tamano_pellet_mm"), record.get("tipo_presentacion")
         )
         record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
