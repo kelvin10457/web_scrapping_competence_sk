@@ -1,0 +1,17 @@
+# Nota: el parser de HAID tambien necesita el binario de Tesseract OCR
+# instalado aparte (no es un paquete pip) para las 3 fichas que son PDF de
+# imagen. En Windows: winget install UB-Mannheim.TesseractOCR
+# Ademas hace falta el paquete de idioma espanol (spa.traineddata) en la
+# carpeta tessdata del instalador -- no viene incluido por defecto.
+requests==2.34.2
+beautifulsoup4==4.15.0
+lxml==6.1.2
+pandas==3.0.5
+pdfplumber==0.11.10
+pymupdf==1.28.2
+pytesseract==0.3.13
+pillow==12.3.0
+openpyxl==3.1.5
+
+# Dev / tests (no hace falta para correr el pipeline, solo para tests/)
+pytest==9.1.1
