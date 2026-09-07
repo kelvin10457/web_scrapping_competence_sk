@@ -87,7 +87,7 @@ def parse_listing(html: str) -> list[dict]:
             values = [c.get_text(strip=True) for c in cols[:7]]
             producto, proteina, grasa, tecnologia, calibre, etapa_txt, kg = values
 
-            record = schema.empty_record("Aquaxcel")
+            record = schema.empty_record("Cargill")
             record["nombre_producto"] = producto
             record["etapa"] = schema.normalize_etapa(etapa_txt)
             record["producto_salud"] = producto_salud

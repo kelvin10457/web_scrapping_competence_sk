@@ -24,7 +24,7 @@ def test_parse_listing_finds_all_portfolio_lines():
 def test_active_sku_has_full_identification_and_nutricional_data():
     records = parser.parse_listing(_load_html())
     active = next(r for r in records if r["nombre_producto"] == "AQUAXCEL ACTIVE 35% 2.0")
-    assert active["empresa"] == "Aquaxcel"
+    assert active["empresa"] == "Cargill"
     assert active["etapa"] == "engorde"
     assert active["tamano_pellet_mm"] == "2"
     assert active["tipo_presentacion"] == "Extruido"
