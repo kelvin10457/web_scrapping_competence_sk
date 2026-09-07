@@ -16,7 +16,13 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import schema  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
+if getattr(sys, "frozen", False):
+    # Empaquetado con PyInstaller: __file__ apunta a la carpeta temporal
+    # (_MEIxxxxx) que se borra al cerrar el .exe. data/ debe vivir junto
+    # al .exe, no ahi, o "desaparece" al cerrar la app.
+    ROOT = Path(sys.executable).resolve().parent
+else:
+    ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = ROOT / "data" / "processed"
 MASTER_PATH = ROOT / "data" / "master.csv"
 
