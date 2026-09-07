@@ -41,17 +41,40 @@ def test_tamano_pellet_mm_falls_back_to_title_when_subtipo_tab_is_missing():
     assert record["tamano_pellet_mm"] == "1.5"
 
 
-def test_tipo_presentacion_none_for_polvo_despite_description_saying_pelletizado():
+def test_tipo_presentacion_polvo_despite_description_saying_pelletizado():
     # Ficha internamente inconsistente (confirmado 2026-09-03): la pestana
     # dedicada "Tipo" dice "Polvo" pero la "Descripcion" de marketing dice
-    # "pelletizado". Se confia en el campo dedicado, no en la descripcion --
-    # y "Polvo" es una 3ra categoria fuera de Extruido/Pelletizado, asi que
-    # tipo_presentacion queda en None (no se fuerza a Pelletizado).
+    # "pelletizado". Se confia en el campo dedicado, no en la descripcion.
+    # Hasta 2026-09-06 "Polvo" quedaba en None (3ra categoria fuera de
+    # Extruido/Pelletizado); desde 2026-09-07 es un valor propio de
+    # tipo_presentacion (ver schema.detect_tecnologia), a pedido del
+    # usuario tras encontrar Artemia Cysts/Mpex/Royal Pepper Protein en la
+    # division Larvicultura.
     html = _html("agripac_35_premium_micropellet_agua_dulce_1_5mm.html")
     record = parser.parse_product(
         "https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-5mm/", html
     )
-    assert record["tipo_presentacion"] is None
+    assert record["tipo_presentacion"] == "Polvo"
+
+
+def test_es_larvicultura_flag_forces_clasificacion_camaron_hatchery_in_pipeline():
+    # El parser solo marca el registro (record["_es_larvicultura"]); quien
+    # decide Hatchery es schema.clasificacion_camaron_from_row, llamado
+    # centralizado desde pipeline.write_csv() -- ver test_pipeline.py para
+    # el caso end-to-end. Aca solo se verifica que parse_product/parse_listing
+    # propagan el flag que les llega del scraper.
+    html = _html("agripac_35_premium_micropellet_agua_dulce_1_5mm.html")
+    record = parser.parse_product(
+        "https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-5mm/",
+        html,
+        es_larvicultura=True,
+    )
+    assert record["_es_larvicultura"] is True
+
+    records = parser.parse_listing(
+        [{"url": "https://agripac.com.ec/productos/x/", "html": html, "es_larvicultura": True}]
+    )
+    assert records[0]["_es_larvicultura"] is True
 
 
 def test_proteina_pct_falls_back_to_ingredientes_nucleo_when_title_has_no_percent():

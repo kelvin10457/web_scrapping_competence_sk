@@ -107,7 +107,17 @@ def etapa_matches(raw_text: str | None) -> set[str]:
 # 2026-09-01 tras notar que Aquaxcel (Extruido/Pelletizado) y Nicovita/HAID
 # (antes: "Saco de polipropileno...") llenaban la misma columna con dos
 # conceptos distintos e incomparables.
-_TECNOLOGIA_RE = re.compile(r"extrui|extrus|extrud|pel{1,2}etiz", re.I)
+#
+# Ampliada 2026-09-07 (division Larvicultura de Agripac, ver
+# src/parsers/agripac.py) con 3 valores mas alla de la dicotomia original:
+# "Polvo" (Artemia Cysts), "Microparticulado" (Mpex) y "Liquido" (Royal
+# Pepper Protein) -- a pedido explicito del usuario, que prefirio agregarlos
+# como categorias propias en vez de dejarlos en None (criterio usado antes
+# para "Polvo" de Feedpac Premium y "Microgranulado" de Agrizon). Efecto
+# retroactivo esperado: los productos Agripac que YA traian "Polvo" en su
+# pestana "Tipo" (ej. "35% Premium Micropellet Agua Dulce") dejan de quedar
+# en None y ahora muestran "Polvo".
+_TECNOLOGIA_RE = re.compile(r"extrui|extrus|extrud|pel{1,2}etiz|\bpolvo\b|particulad|l[ií]quid", re.I)
 
 
 def detect_tecnologia(text: str | None) -> str | None:
@@ -125,13 +135,27 @@ def detect_tecnologia(text: str | None) -> str | None:
     "extrui"/"pelletiza", espanol) no reconocia: "Extrusado" (tag de
     Larviva) y "Pelletized"/"Extruded" (titulos de producto en ingles).
     Se recorta cada raiz a su prefijo comun (p.ej. "extrus" en vez de
-    "extrusa") para que matchee ambos idiomas con una sola alternativa."""
+    "extrusa") para que matchee ambos idiomas con una sola alternativa.
+
+    Ampliado 2026-09-07 con "Polvo"/"Microparticulado"/"Liquido" (ver nota
+    junto a `_TECNOLOGIA_RE`) -- "Microextruido" (MeM, Larvicultura) ya
+    resolvia solo a "Extruido" desde antes, porque contiene "extrui" como
+    substring, asi que no necesito una regla aparte para el."""
     if not text:
         return None
     m = _TECNOLOGIA_RE.search(text)
     if not m:
         return None
-    return "Extruido" if m.group(0).lower().startswith(("extrui", "extrus", "extrud")) else "Pelletizado"
+    token = m.group(0).lower()
+    if token.startswith(("extrui", "extrus", "extrud")):
+        return "Extruido"
+    if token.startswith("pel"):
+        return "Pelletizado"
+    if token == "polvo":
+        return "Polvo"
+    if token.startswith("particulad"):
+        return "Microparticulado"
+    return "Líquido"
 
 
 _TAMANO_NUM_RE = re.compile(r"\d+(?:\.\d+)?")
@@ -178,7 +202,10 @@ CLASIFICACION_CAMARON_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
 
 
 def clasificacion_camaron_from_row(
-    etapa: str | None, tamano_pellet_mm: str | None, tipo_presentacion: str | None
+    etapa: str | None,
+    tamano_pellet_mm: str | None,
+    tipo_presentacion: str | None,
+    es_larvicultura: bool = False,
 ) -> str | None:
     """Clasifica el producto en las 4 etapas que definio la jefa del usuario
     para el reporte de competencia -- Hatchery/Nursery/Pre Grower/Grower --
@@ -195,6 +222,18 @@ def clasificacion_camaron_from_row(
     datos actuales (Nicovita Origin, 0.3-0.8mm) es justamente un caso donde
     clasificar solo por tamano lo hubiera puesto en Nursery por error.
 
+    `es_larvicultura` (agregado 2026-09-07, division Larvicultura de
+    Agripac) es la MISMA idea aplicada por division en vez de por `etapa`:
+    a pedido del usuario, CUALQUIER producto de esa division (Larfeed,
+    MeM, Mpex, Artemia Cysts...) es Hatchery sin mirar tamano, aunque su
+    `etapa` no resuelva a "larva" (ej. Mpex, en estadio "PL1 a PL6", no
+    matchea la regla `larva` de `_ETAPA_RULES` con la misma fuerza que un
+    "larva"/"hatchery" explicito) y aunque su tamano en micras (100-800um)
+    hubiera caido en Nursery por banda. Se revisa ANTES que `etapa=="larva"`
+    porque es la senal mas fuerte (division completa, no texto ambiguo por
+    producto), pero en la practica nunca compiten: ningun producto fuera de
+    Larvicultura tiene este flag en True.
+
     El resto se deriva de tamano_pellet_mm (y tipo_presentacion para el
     umbral de Grower, que la jefa dio distinto por Pellet/Extruido: 1.8mm
     vs 1.9mm). A diferencia de `etapa_from_tamano` (que deja 1.6mm sin
@@ -206,6 +245,8 @@ def clasificacion_camaron_from_row(
     Devuelve None para tamano_pellet_mm vacio/sin numero reconocible, el
     hueco entre 1.6 y el arranque de Grower, y Grower si no se conoce
     tipo_presentacion -- no se fuerza un valor sin evidencia."""
+    if es_larvicultura:
+        return "Hatchery"
     if etapa == "larva":
         return "Hatchery"
     if not tamano_pellet_mm:

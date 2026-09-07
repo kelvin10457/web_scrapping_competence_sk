@@ -103,7 +103,10 @@ def write_xlsx(df: pd.DataFrame, path: Path) -> None:
 def write_csv(records: list[dict], path: Path) -> None:
     for record in records:
         record["clasificacion_camaron"] = schema.clasificacion_camaron_from_row(
-            record.get("etapa"), record.get("tamano_pellet_mm"), record.get("tipo_presentacion")
+            record.get("etapa"),
+            record.get("tamano_pellet_mm"),
+            record.get("tipo_presentacion"),
+            record.get("_es_larvicultura", False),
         )
         record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
             record.get("tamano_pellet_mm")

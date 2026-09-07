@@ -13,6 +13,7 @@ Nicovita.
 from __future__ import annotations
 
 import datetime
+import html as html_lib
 import re
 import sys
 from pathlib import Path
@@ -37,8 +38,13 @@ _KG_RE = re.compile(r"(\d+(?:\.\d+)?)\s*kg", re.I)
 
 
 def _extract_title(html: str) -> str | None:
+    # html_lib.unescape() agregado 2026-09-07: caso real "MeM 300 - 500"
+    # (division Larvicultura) -- su <h1> trae el guion como entidad HTML
+    # literal ("MeM 300 &#8211; 500") en vez del caracter "-" ya resuelto,
+    # a diferencia del resto del catalogo balanceado (sin entidades en el
+    # titulo). Sin decodificar, "&#8211;" quedaba tal cual en nombre_producto.
     m = _TITLE_RE.search(html)
-    return m.group(1).strip() if m else None
+    return html_lib.unescape(m.group(1)).strip() if m else None
 
 
 def _extract_tabs(html: str) -> dict[str, str]:
@@ -82,10 +88,17 @@ def _empaque_kg(presentaciones: str) -> str | None:
     return m.group(1) if m else None
 
 
-def parse_product(url: str, html: str) -> dict:
+def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
     record = schema.empty_record("Agripac")
     record["fuente_url"] = url
     record["fecha_extraccion"] = datetime.date.today().isoformat()
+    # Marcador interno (no es columna del esquema -- pipeline.write_csv()
+    # arma el DataFrame con schema.SCHEMA_COLUMNS, asi que esta clave nunca
+    # llega al CSV): agregado 2026-09-07 para que write_csv() pueda pasarle
+    # a schema.clasificacion_camaron_from_row() que este producto viene de
+    # la division Larvicultura -- a pedido del usuario, TODO producto de esa
+    # division es "Hatchery" sin mirar tamano (ver docstring de esa funcion).
+    record["_es_larvicultura"] = es_larvicultura
 
     title = _extract_title(html) or ""
     record["nombre_producto"] = title
@@ -101,9 +114,11 @@ def parse_product(url: str, html: str) -> dict:
     # "Descripcion" es texto de marketing que en al menos 2 productos
     # (Premium Micropellet Agua Dulce) dice "pelletizado" mientras que su
     # propia pestana "Tipo" dice "Polvo" (ficha internamente inconsistente,
-    # confirmado 2026-09-03). "Polvo" queda en None -- es una 3ra categoria
-    # fuera de la dicotomia Extruido/Pelletizado del schema, igual que
-    # "Microgranulado" en Agrizon (ver src/parsers/agrizon.py).
+    # confirmado 2026-09-03). Desde 2026-09-07 "Polvo"/"Microparticulado"/
+    # "Liquido" son valores propios de tipo_presentacion (ver
+    # schema.detect_tecnologia), asi que ya no quedan en None -- a pedido
+    # del usuario, tras encontrar estos 3 casos reales en la division
+    # Larvicultura (Artemia Cysts, Mpex, Royal Pepper Protein).
     record["tipo_presentacion"] = schema.detect_tecnologia(tabs.get("tipo"))
     record["empaque_kg"] = _empaque_kg(presentaciones)
 
@@ -122,4 +137,4 @@ def parse_product(url: str, html: str) -> dict:
 
 
 def parse_listing(products: list[dict]) -> list[dict]:
-    return [parse_product(p["url"], p["html"]) for p in products]
+    return [parse_product(p["url"], p["html"], p.get("es_larvicultura", False)) for p in products]

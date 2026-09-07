@@ -54,6 +54,32 @@ def test_detect_tecnologia_no_mention_returns_none():
     assert schema.detect_tecnologia("") is None
 
 
+def test_detect_tecnologia_microextruido_resolves_to_extruido():
+    # Caso real: MeM (Agripac, division Larvicultura) usa "Microextruido" en
+    # su pestana "Tipo" -- ya contiene "extrui" como substring, asi que
+    # resuelve a "Extruido" sin necesitar una regla aparte.
+    assert schema.detect_tecnologia("Tipo Microextruido") == "Extruido"
+
+
+def test_detect_tecnologia_polvo():
+    # Caso real: Artemia Cysts (Agripac, division Larvicultura). Agregado
+    # 2026-09-07 a pedido del usuario -- antes quedaba en None junto con
+    # "Microparticulado"/"Liquido" (3ra categoria fuera de la dicotomia).
+    assert schema.detect_tecnologia("Tipo Polvo") == "Polvo"
+
+
+def test_detect_tecnologia_microparticulado():
+    # Caso real: Mpex (Agripac, division Larvicultura).
+    assert schema.detect_tecnologia("Tipo Microparticulado") == "Microparticulado"
+
+
+def test_detect_tecnologia_liquido():
+    # Caso real: Royal Pepper Protein (Agripac, division Larvicultura) --
+    # su pestana "Tipo" dice literalmente "Liquidos" (con tilde, plural).
+    assert schema.detect_tecnologia("Tipo Líquidos") == "Líquido"
+    assert schema.detect_tecnologia("Tipo Liquido") == "Líquido"
+
+
 def test_empty_record_has_all_columns_none_except_empresa():
     record = schema.empty_record("Nicovita")
     assert record["empresa"] == "Nicovita"
@@ -109,6 +135,16 @@ def test_clasificacion_camaron_larva_overrides_to_hatchery_regardless_of_tamano(
     # tipo de producto (laboratorio larvario), no por banda de mm.
     assert schema.clasificacion_camaron_from_row("larva", "0.3", "Extruido") == "Hatchery"
     assert schema.clasificacion_camaron_from_row("larva", None, None) == "Hatchery"
+
+
+def test_clasificacion_camaron_es_larvicultura_overrides_to_hatchery_regardless_of_tamano():
+    # Agregado 2026-09-07: a pedido del usuario, TODO producto de la
+    # division Larvicultura de Agripac es Hatchery, incluso si su etapa no
+    # resuelve a "larva" (ej. Mpex, "PL1 a PL6") y aunque su tamano en
+    # micras (100-800um = 0.1-0.8mm) hubiera caido en Nursery por banda.
+    assert schema.clasificacion_camaron_from_row("precria", "0.3", "Extruido", es_larvicultura=True) == "Hatchery"
+    assert schema.clasificacion_camaron_from_row(None, None, None, es_larvicultura=True) == "Hatchery"
+    assert schema.clasificacion_camaron_from_row("engorde", "2.5", "Pelletizado", es_larvicultura=True) == "Hatchery"
 
 
 def test_clasificacion_camaron_below_1_6mm_is_nursery():
