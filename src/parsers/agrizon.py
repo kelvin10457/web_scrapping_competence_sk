@@ -14,9 +14,6 @@ cada SKU (INICIO Focus/Maxio/Prime/Pro; LARVIVA Mysis/PL/Zoea) -- forzar
 una equivalencia ahi seria inventar dato, asi que en esos 2 casos
 nombre_producto queda con el nombre generico que usa Agrizon.
 
-grasa_pct sigue sin publicarse en ningun lado (ni biomar.com ni Agrizon) --
-queda None igual que antes.
-
 proteina_pct se lee del TITULO del producto (confirmado con el usuario
 2026-09-03): un producto (Exia Prime 35% Precria 0.6-0.9mm) tiene su
 `body_html` en desacuerdo con su titulo (25% vs 35%) -- decision del
@@ -104,7 +101,7 @@ def parse_product(product: dict) -> dict:
     # presente (ej. EXIA Perform/Pro) -- combinar ambos cierra ese hueco.
     record["tipo_presentacion"] = schema.detect_tecnologia(f"{title} {tags_text}")
     record["producto_salud"] = schema.detect_producto_salud(tags_text)
-    record["etapa"] = _etapa(tags_text, record["tamano_pellet_mm"], record["tipo_presentacion"])
+    record["etapa_competidor"] = _etapa(tags_text, record["tamano_pellet_mm"], record["tipo_presentacion"])
 
     variant = (product.get("variants") or [{}])[0]
     grams = variant.get("grams")

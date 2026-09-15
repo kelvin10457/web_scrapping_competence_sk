@@ -24,7 +24,6 @@ def test_parse_pdf_text_no_tecnologia_mention_stays_none():
     text = "Composicion garantizada\nProteinas (%) 35\nGrasa (%) 5"
     fields = parser.parse_pdf_text(text)
     assert fields["tipo_presentacion"] is None
-    assert fields["grasa_pct"] == 5.0
 
 
 def test_parse_pdf_text_detects_single_l_peletizada_spelling():
@@ -208,7 +207,7 @@ def test_parse_product_classic_fills_etapa_per_sku_leaving_1_6mm_ambiguous():
         html="",
         pdf_bytes=pdf_path.read_bytes(),
     )
-    by_tamano = {r["tamano_pellet_mm"]: r["etapa"] for r in records}
+    by_tamano = {r["tamano_pellet_mm"]: r["etapa_competidor"] for r in records}
     assert by_tamano["0.5-1.0"] == "precria"
     assert by_tamano["1.2"] == "precria"
     assert by_tamano["1.6"] is None
@@ -233,7 +232,7 @@ def test_parse_product_terap_keeps_stage_info_and_flags_salud():
         pdf_bytes=pdf_path.read_bytes(),
     )
     assert all(r["producto_salud"] is True for r in records)
-    by_tamano = {r["tamano_pellet_mm"]: r["etapa"] for r in records}
+    by_tamano = {r["tamano_pellet_mm"]: r["etapa_competidor"] for r in records}
     assert by_tamano["0.8"] == "precria"
     assert by_tamano["1.2"] == "precria"
     assert by_tamano["2.0"] == "engorde"

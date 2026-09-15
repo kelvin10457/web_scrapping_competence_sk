@@ -95,7 +95,7 @@ def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
     # Marcador interno (no es columna del esquema -- pipeline.write_csv()
     # arma el DataFrame con schema.SCHEMA_COLUMNS, asi que esta clave nunca
     # llega al CSV): agregado 2026-09-07 para que write_csv() pueda pasarle
-    # a schema.clasificacion_camaron_from_row() que este producto viene de
+    # a schema.etapa_skt_from_row() que este producto viene de
     # la division Larvicultura -- a pedido del usuario, TODO producto de esa
     # division es "Hatchery" sin mirar tamano (ver docstring de esa funcion).
     record["_es_larvicultura"] = es_larvicultura
@@ -131,7 +131,7 @@ def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
         etapa = schema.normalize_etapa(etapa_text)
     if etapa is None:
         etapa = schema.etapa_from_tamano(record["tamano_pellet_mm"], record["tipo_presentacion"])
-    record["etapa"] = etapa
+    record["etapa_competidor"] = etapa
 
     return record
 

@@ -2,10 +2,10 @@ import pipeline
 
 
 def test_format_value_strips_trailing_zero_from_whole_float():
-    # Hallazgo del usuario 2026-09-02: proteina_pct/grasa_pct de HAID y
-    # Aquaxcel salian como float crudo (35.0) mientras tamano_pellet_mm/
-    # empaque_kg ya se limpiaban con :g -- un visor de CSV con locale en
-    # español puede leer el "." como separador de miles y mostrar 350.
+    # Hallazgo del usuario 2026-09-02: proteina_pct de HAID y Aquaxcel
+    # salia como float crudo (35.0) mientras tamano_pellet_mm/empaque_kg ya
+    # se limpiaban con :g -- un visor de CSV con locale en español puede
+    # leer el "." como separador de miles y mostrar 350.
     assert pipeline._format_value(35.0) == "35"
     assert pipeline._format_value(4.0) == "4"
 
@@ -25,12 +25,11 @@ def test_write_csv_output_has_no_trailing_zero_floats(tmp_path):
         {
             "empresa": "HAID",
             "nombre_producto": "HAID Speed",
-            "etapa": "engorde",
+            "etapa_competidor": "engorde",
             "tamano_pellet_mm": "1.2",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
             "proteina_pct": 37.0,
-            "grasa_pct": 5.0,
             "fuente_url": "https://www.haid.com.ec/speed/",
             "fecha_extraccion": "2026-09-02",
         }
@@ -39,34 +38,30 @@ def test_write_csv_output_has_no_trailing_zero_floats(tmp_path):
     pipeline.write_csv(records, path)
     content = path.read_text(encoding="utf-8-sig")
     assert "37.0" not in content
-    assert "5.0" not in content
     assert "37" in content
-    assert "5" in content
 
 
-def test_write_csv_computes_clasificacion_camaron_per_record(tmp_path):
+def test_write_csv_computes_etapa_skt_per_record(tmp_path):
     records = [
         {
             "empresa": "Nicovita",
             "nombre_producto": "Nicovita Origin",
-            "etapa": "larva",
+            "etapa_competidor": "larva",
             "tamano_pellet_mm": "0.3",
             "tipo_presentacion": "Extruido",
             "empaque_kg": "10,20",
             "proteina_pct": "45",
-            "grasa_pct": 10.0,
             "fuente_url": "https://nicovita.com/productos/nicovita-origin-ecuador/",
             "fecha_extraccion": "2026-09-02",
         },
         {
             "empresa": "Nicovita",
             "nombre_producto": "Nicovita Classic AD",
-            "etapa": "engorde",
+            "etapa_competidor": "engorde",
             "tamano_pellet_mm": "2.0",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
             "proteina_pct": "35",
-            "grasa_pct": 5.0,
             "fuente_url": "https://nicovita.com/productos/nicovita-classic-ad-ecuador/",
             "fecha_extraccion": "2026-09-02",
         },
@@ -76,8 +71,8 @@ def test_write_csv_computes_clasificacion_camaron_per_record(tmp_path):
     import pandas as pd
 
     df = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
-    assert df.loc[0, "clasificacion_camaron"] == "Hatchery"
-    assert df.loc[1, "clasificacion_camaron"] == "Grower"
+    assert df.loc[0, "etapa_skt"] == "Hatchery"
+    assert df.loc[1, "etapa_skt"] == "Grower"
 
 
 def test_write_csv_computes_particula_min_max_per_record(tmp_path):
@@ -85,24 +80,22 @@ def test_write_csv_computes_particula_min_max_per_record(tmp_path):
         {
             "empresa": "Nicovita",
             "nombre_producto": "Nicovita Classic",
-            "etapa": "precria",
+            "etapa_competidor": "precria",
             "tamano_pellet_mm": "0.5-1.0",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
             "proteina_pct": "35",
-            "grasa_pct": 5.0,
             "fuente_url": "https://nicovita.com/productos/nicovita-classic-ecuador/",
             "fecha_extraccion": "2026-09-03",
         },
         {
             "empresa": "HAID",
             "nombre_producto": "HAID Speed",
-            "etapa": "engorde",
+            "etapa_competidor": "engorde",
             "tamano_pellet_mm": "2.0",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
             "proteina_pct": "37",
-            "grasa_pct": 5.0,
             "fuente_url": "https://www.haid.com.ec/speed/",
             "fecha_extraccion": "2026-09-03",
         },
@@ -129,12 +122,11 @@ def test_write_csv_also_writes_xlsx_with_real_numeric_dtype(tmp_path):
         {
             "empresa": "BioMar",
             "nombre_producto": "Exia Start",
-            "etapa": "precria",
+            "etapa_competidor": "precria",
             "tamano_pellet_mm": "0.9-1.2",
             "tipo_presentacion": None,
             "empaque_kg": "10",
             "proteina_pct": "38",
-            "grasa_pct": None,
             "fuente_url": "https://agrizon.com/en/products/exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas",
             "fecha_extraccion": "2026-09-03",
         }

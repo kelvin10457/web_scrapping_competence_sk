@@ -128,10 +128,10 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     """Devuelve una fila por tamano de pellet listado (mismo grano que
     Nicovita/Aquaxcel) en vez de una sola fila con los tamanos en una lista.
     A diferencia de Nicovita, aqui no hay ambiguedad que resolver: cada
-    ficha HAID publica un unico % de proteina/grasa para TODOS sus
-    calibres (son la misma formula en distintas moliendas, confirmado
-    contra las 6 fichas reales -- ver MEMORY.md) asi que proteina_pct y
-    grasa_pct se repiten igual en cada fila explotada."""
+    ficha HAID publica un unico % de proteina para TODOS sus calibres (son
+    la misma formula en distintas moliendas, confirmado contra las 6 fichas
+    reales -- ver MEMORY.md) asi que proteina_pct se repite igual en cada
+    fila explotada."""
     record = schema.empty_record("HAID")
     record["fuente_url"] = url
     record["fecha_extraccion"] = datetime.date.today().isoformat()
@@ -146,7 +146,6 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
         pdf_text, _used_ocr = sc.extract_pdf_text(pdf_bytes)
 
     record["proteina_pct"] = _line_number(pdf_text, r"prote[ií]na")
-    record["grasa_pct"] = _line_number(pdf_text, r"grasa")
 
     pellet_from_pdf = _extract_pellet_mm(pdf_text)
     pellet_from_html = _extract_pellet_mm(html)
@@ -160,7 +159,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     recomendaciones = _extract_recomendaciones(pdf_text)
 
     etapa_text = f"{descripcion} {recomendaciones}"
-    record["etapa"] = _infer_etapa(slug, etapa_text)
+    record["etapa_competidor"] = _infer_etapa(slug, etapa_text)
     record["producto_salud"] = schema.detect_producto_salud(etapa_text)
 
     tamanos = [t for t in (record["tamano_pellet_mm"] or "").split(",") if t]

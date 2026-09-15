@@ -61,7 +61,7 @@ def run_empresa(empresa: str) -> list[dict]:
 
         # biomar.com deshabilitado a proposito (decision del usuario,
         # 2026-09-03): sus filas son solo identificacion por familia de
-        # producto, sin tamano/clasificacion_camaron/proteina -- se prefiere que
+        # producto, sin tamano/etapa_skt/proteina -- se prefiere que
         # BioMar aparezca unicamente via Agrizon, con datos tecnicos reales
         # por SKU, aunque eso deje fuera productos sin match en Agrizon
         # (Blue Impact, INICIO *, SmartCare Balance *, EXIA Focus). Ver
@@ -82,10 +82,9 @@ def run_empresa(empresa: str) -> list[dict]:
 def _format_value(value):
     """Evita que un float entero (ej. 35.0) se escriba con ".0" en el CSV.
     Aquaxcel ya usaba f"{v:g}" para tamano_pellet_mm/empaque_kg pero no para
-    proteina_pct/grasa_pct, y HAID/Nicovita (grasa_pct) devuelven float crudo
-    -- mismo criterio aplicado aca de forma pareja a las 4 empresas en vez de
-    repetirlo por parser. Motivo: un ".0" de mas en un visor de CSV con
-    locale en español (donde "." es separador de miles) se lee como el
+    proteina_pct -- mismo criterio aplicado aca de forma pareja a las 4
+    empresas en vez de repetirlo por parser. Motivo: un ".0" de mas en un
+    visor de CSV con locale en español (donde "." es separador de miles) se lee como el
     valor x10 (ej. "45.0" -> 450) -- hallazgo del usuario 2026-09-02."""
     if isinstance(value, float):
         return f"{value:g}"
@@ -108,8 +107,8 @@ def write_xlsx(df: pd.DataFrame, path: Path) -> None:
 
 def write_csv(records: list[dict], path: Path) -> None:
     for record in records:
-        record["clasificacion_camaron"] = schema.clasificacion_camaron_from_row(
-            record.get("etapa"),
+        record["etapa_skt"] = schema.etapa_skt_from_row(
+            record.get("etapa_competidor"),
             record.get("tamano_pellet_mm"),
             record.get("tipo_presentacion"),
             record.get("_es_larvicultura", False),

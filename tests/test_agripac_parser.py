@@ -57,9 +57,9 @@ def test_tipo_presentacion_polvo_despite_description_saying_pelletizado():
     assert record["tipo_presentacion"] == "Polvo"
 
 
-def test_es_larvicultura_flag_forces_clasificacion_camaron_hatchery_in_pipeline():
+def test_es_larvicultura_flag_forces_etapa_skt_hatchery_in_pipeline():
     # El parser solo marca el registro (record["_es_larvicultura"]); quien
-    # decide Hatchery es schema.clasificacion_camaron_from_row, llamado
+    # decide Hatchery es schema.etapa_skt_from_row, llamado
     # centralizado desde pipeline.write_csv() -- ver test_pipeline.py para
     # el caso end-to-end. Aca solo se verifica que parse_product/parse_listing
     # propagan el flag que les llega del scraper.
@@ -105,7 +105,7 @@ def test_etapa_falls_back_to_tamano_when_text_is_generic_for_all_products():
     record = parser.parse_product(
         "https://agripac.com.ec/productos/feedpac-35-ultra-gregarinas-18-mm/", html
     )
-    assert record["etapa"] == "engorde"
+    assert record["etapa_competidor"] == "engorde"
 
 
 def test_parse_listing_tags_all_records_as_agripac():

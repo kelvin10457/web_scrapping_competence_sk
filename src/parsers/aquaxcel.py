@@ -85,11 +85,11 @@ def parse_listing(html: str) -> list[dict]:
             if len(cols) < 7:
                 continue
             values = [c.get_text(strip=True) for c in cols[:7]]
-            producto, proteina, grasa, tecnologia, calibre, etapa_txt, kg = values
+            producto, proteina, _grasa, tecnologia, calibre, etapa_txt, kg = values
 
             record = schema.empty_record("Cargill")
             record["nombre_producto"] = producto
-            record["etapa"] = schema.normalize_etapa(etapa_txt)
+            record["etapa_competidor"] = schema.normalize_etapa(etapa_txt)
             record["producto_salud"] = producto_salud
             mm = _first_number(calibre)
             record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
@@ -97,7 +97,6 @@ def parse_listing(html: str) -> list[dict]:
             kg_val = _first_number(kg)
             record["empaque_kg"] = f"{kg_val:g}" if kg_val is not None else None
             record["proteina_pct"] = _first_number(proteina)
-            record["grasa_pct"] = _first_number(grasa)
             record["fuente_url"] = LISTING_URL
             record["fecha_extraccion"] = fecha
             records.append(record)

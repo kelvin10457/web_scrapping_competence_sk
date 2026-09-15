@@ -16,9 +16,9 @@ SCHEMA_COLUMNS = [
     # Identificacion
     "empresa",
     "nombre_producto",
-    "etapa",
+    "etapa_competidor",
     "producto_salud",
-    "clasificacion_camaron",
+    "etapa_skt",
     "tamano_pellet_mm",
     "particula_min_mm",
     "particula_max_mm",
@@ -26,7 +26,6 @@ SCHEMA_COLUMNS = [
     "empaque_kg",
     # Composicion nutricional
     "proteina_pct",
-    "grasa_pct",
     # Metadata
     "fuente_url",
     "fecha_extraccion",
@@ -43,9 +42,9 @@ SCHEMA_COLUMNS = [
 # separador decimal al abrir el archivo, que es lo que hace que un valor
 # como "0.9" se lea como 9 bajo configuracion regional en espanol (punto
 # interpretado como separador de miles, hallazgo del usuario 2026-09-03).
-NUMERIC_COLUMNS = ["particula_min_mm", "particula_max_mm", "empaque_kg", "proteina_pct", "grasa_pct"]
+NUMERIC_COLUMNS = ["particula_min_mm", "particula_max_mm", "empaque_kg", "proteina_pct"]
 
-# Valores normalizados validos para la columna "etapa" (PLAN.md § 3).
+# Valores normalizados validos para la columna "etapa_competidor" (PLAN.md § 3).
 # "salud" YA NO es uno de ellos (ver nota abajo, 2026-09-02) -- se dejo aca
 # comentado por si algun caller viejo lo referencia, pero normalize_etapa()
 # no lo devuelve mas.
@@ -198,41 +197,44 @@ def etapa_from_tamano(tamano_pellet_mm: str | None, tipo_presentacion: str | Non
 # Los 4 valores del negocio para el reporte de competencia (mensaje de la
 # jefa del usuario, 2026-09-02) -- distintos de ETAPA_VALUES, que se disenaron
 # antes de tener ese mensaje y por eso no calzan 1 a 1 con estos 4 terminos.
-CLASIFICACION_CAMARON_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
+ETAPA_SKT_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
 
 
-def clasificacion_camaron_from_row(
-    etapa: str | None,
+def etapa_skt_from_row(
+    etapa_competidor: str | None,
     tamano_pellet_mm: str | None,
     tipo_presentacion: str | None,
     es_larvicultura: bool = False,
 ) -> str | None:
     """Clasifica el producto en las 4 etapas que definio la jefa del usuario
     para el reporte de competencia -- Hatchery/Nursery/Pre Grower/Grower --
-    columna aparte de `etapa` porque no comparten vocabulario (ver arriba).
-    Nombrada `clasificacion_camaron` (antes `etapa_camaron`, renombrada
-    2026-09-03 a pedido del usuario) para no confundirla con `etapa`: esta
-    no es "una etapa mas" del mismo vocabulario, sino la clasificacion fija
-    de 4 casillas que pide el reporte, derivada sobre todo de tamano de
-    pellet en vez del texto/categoria de la fuente.
+    columna aparte de `etapa_competidor` porque no comparten vocabulario (ver
+    arriba). Nombrada `etapa_skt` (antes `etapa_camaron`, luego
+    `clasificacion_camaron` -- renombrada de nuevo 2026-09-15 a pedido del
+    usuario) para no confundirla con `etapa_competidor`: esta no es "una
+    etapa mas" del mismo vocabulario, sino la clasificacion fija de 4
+    casillas que pide el reporte, derivada sobre todo de tamano de pellet en
+    vez del texto/categoria de la fuente.
 
-    Hatchery se decide por el propio valor de `etapa` (`"larva"`), no por
-    tamano: la jefa la define por tipo de producto ("de laboratorios
-    larvarios"), no por una banda de mm, y el unico producto `larva` de los
-    datos actuales (Nicovita Origin, 0.3-0.8mm) es justamente un caso donde
-    clasificar solo por tamano lo hubiera puesto en Nursery por error.
+    Hatchery se decide por el propio valor de `etapa_competidor`
+    (`"larva"`), no por tamano: la jefa la define por tipo de producto ("de
+    laboratorios larvarios"), no por una banda de mm, y el unico producto
+    `larva` de los datos actuales (Nicovita Origin, 0.3-0.8mm) es justamente
+    un caso donde clasificar solo por tamano lo hubiera puesto en Nursery
+    por error.
 
     `es_larvicultura` (agregado 2026-09-07, division Larvicultura de
-    Agripac) es la MISMA idea aplicada por division en vez de por `etapa`:
-    a pedido del usuario, CUALQUIER producto de esa division (Larfeed,
-    MeM, Mpex, Artemia Cysts...) es Hatchery sin mirar tamano, aunque su
-    `etapa` no resuelva a "larva" (ej. Mpex, en estadio "PL1 a PL6", no
-    matchea la regla `larva` de `_ETAPA_RULES` con la misma fuerza que un
-    "larva"/"hatchery" explicito) y aunque su tamano en micras (100-800um)
-    hubiera caido en Nursery por banda. Se revisa ANTES que `etapa=="larva"`
-    porque es la senal mas fuerte (division completa, no texto ambiguo por
-    producto), pero en la practica nunca compiten: ningun producto fuera de
-    Larvicultura tiene este flag en True.
+    Agripac) es la MISMA idea aplicada por division en vez de por
+    `etapa_competidor`: a pedido del usuario, CUALQUIER producto de esa
+    division (Larfeed, MeM, Mpex, Artemia Cysts...) es Hatchery sin mirar
+    tamano, aunque su `etapa_competidor` no resuelva a "larva" (ej. Mpex, en
+    estadio "PL1 a PL6", no matchea la regla `larva` de `_ETAPA_RULES` con
+    la misma fuerza que un "larva"/"hatchery" explicito) y aunque su tamano
+    en micras (100-800um) hubiera caido en Nursery por banda. Se revisa
+    ANTES que `etapa_competidor=="larva"` porque es la senal mas fuerte
+    (division completa, no texto ambiguo por producto), pero en la practica
+    nunca compiten: ningun producto fuera de Larvicultura tiene este flag en
+    True.
 
     El resto se deriva de tamano_pellet_mm (y tipo_presentacion para el
     umbral de Grower, que la jefa dio distinto por Pellet/Extruido: 1.8mm
@@ -247,7 +249,7 @@ def clasificacion_camaron_from_row(
     tipo_presentacion -- no se fuerza un valor sin evidencia."""
     if es_larvicultura:
         return "Hatchery"
-    if etapa == "larva":
+    if etapa_competidor == "larva":
         return "Hatchery"
     if not tamano_pellet_mm:
         return None

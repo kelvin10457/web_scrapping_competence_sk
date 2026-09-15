@@ -64,8 +64,8 @@ def parse_product(url: str, html: str) -> dict:
         # Engorde" y "De Alevinaje" a la vez), el producto genuinamente
         # cubre mas de una etapa -- se deja en None en vez de elegir una
         # arbitrariamente (mismo criterio que Nicovita Classic/Katal base).
-        record["etapa"] = schema.normalize_etapa(etapa_values[0])
+        record["etapa_competidor"] = schema.normalize_etapa(etapa_values[0])
     else:
-        record["etapa"] = None
+        record["etapa_competidor"] = None
 
     return record

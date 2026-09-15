@@ -96,18 +96,6 @@ def _extract_pdf_url(html: str) -> str | None:
     return m.group(1) if m else None
 
 
-def _pdf_field_line(text: str, label_pattern: str) -> str | None:
-    m = re.search(label_pattern + r"[^\n]*", text, re.I)
-    return m.group(0) if m else None
-
-
-def _first_number(line: str | None) -> float | None:
-    if not line:
-        return None
-    m = re.search(r"\d+(?:\.\d+)?", line)
-    return float(m.group(0)) if m else None
-
-
 _REPRODUCTOR_MARKER = re.compile(r"reproductor|broodstock|maduraci[oó]n", re.I)
 _EARLY_MARKER = re.compile(r"post\s*larva|postlarva|\bpl\s?\d|desde\s+pl\b", re.I)
 _LATE_MARKER = re.compile(r"tama[ñn]o de mercado|hasta cosecha|tama[ñn]o de cosecha|peso de cosecha", re.I)
@@ -152,7 +140,6 @@ def parse_pdf_text(pdf_text: str) -> dict:
     fields: dict = {}
 
     fields["tipo_presentacion"] = schema.detect_tecnologia(pdf_text)
-    fields["grasa_pct"] = _first_number(_pdf_field_line(pdf_text, r"Grasa\s*\(%\)"))
 
     desc_match = re.search(
         r"Descripci[oó]n del Producto\s*\n(.+?)\n\s*3\.", pdf_text, re.S
@@ -247,11 +234,11 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     etapa = schema.normalize_etapa(slug.replace("-", " "))
     if etapa is None:
         etapa = _infer_etapa_from_description(etapa_text)
-    record["etapa"] = etapa
+    record["etapa_competidor"] = etapa
 
     if not pairs:
-        if record["etapa"] is None:
-            record["etapa"] = schema.etapa_from_tamano(record["tamano_pellet_mm"], record["tipo_presentacion"])
+        if record["etapa_competidor"] is None:
+            record["etapa_competidor"] = schema.etapa_from_tamano(record["tamano_pellet_mm"], record["tipo_presentacion"])
         return [record]
 
     records = []
@@ -264,7 +251,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
         # Katal base, que cubren post-larva a mercado), se intenta con el
         # tamano puntual de ESTA fila -- solo es posible desde la
         # explosion a grano SKU (antes no habia un tamano puntual que usar).
-        if row["etapa"] is None:
-            row["etapa"] = schema.etapa_from_tamano(tamano, row["tipo_presentacion"])
+        if row["etapa_competidor"] is None:
+            row["etapa_competidor"] = schema.etapa_from_tamano(tamano, row["tipo_presentacion"])
         records.append(row)
     return records

@@ -129,59 +129,59 @@ def test_etapa_from_tamano_empty_input_stays_none():
     assert schema.etapa_from_tamano("", "Pelletizado") is None
 
 
-def test_clasificacion_camaron_larva_overrides_to_hatchery_regardless_of_tamano():
+def test_etapa_skt_larva_overrides_to_hatchery_regardless_of_tamano():
     # Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que por
     # tamano solo hubieran caido en Nursery -- la jefa define Hatchery por
     # tipo de producto (laboratorio larvario), no por banda de mm.
-    assert schema.clasificacion_camaron_from_row("larva", "0.3", "Extruido") == "Hatchery"
-    assert schema.clasificacion_camaron_from_row("larva", None, None) == "Hatchery"
+    assert schema.etapa_skt_from_row("larva", "0.3", "Extruido") == "Hatchery"
+    assert schema.etapa_skt_from_row("larva", None, None) == "Hatchery"
 
 
-def test_clasificacion_camaron_es_larvicultura_overrides_to_hatchery_regardless_of_tamano():
+def test_etapa_skt_es_larvicultura_overrides_to_hatchery_regardless_of_tamano():
     # Agregado 2026-09-07: a pedido del usuario, TODO producto de la
     # division Larvicultura de Agripac es Hatchery, incluso si su etapa no
     # resuelve a "larva" (ej. Mpex, "PL1 a PL6") y aunque su tamano en
     # micras (100-800um = 0.1-0.8mm) hubiera caido en Nursery por banda.
-    assert schema.clasificacion_camaron_from_row("precria", "0.3", "Extruido", es_larvicultura=True) == "Hatchery"
-    assert schema.clasificacion_camaron_from_row(None, None, None, es_larvicultura=True) == "Hatchery"
-    assert schema.clasificacion_camaron_from_row("engorde", "2.5", "Pelletizado", es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row("precria", "0.3", "Extruido", es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row(None, None, None, es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row("engorde", "2.5", "Pelletizado", es_larvicultura=True) == "Hatchery"
 
 
-def test_clasificacion_camaron_below_1_6mm_is_nursery():
-    assert schema.clasificacion_camaron_from_row("precria", "0.8", "Extruido") == "Nursery"
-    assert schema.clasificacion_camaron_from_row(None, "1.2", "Pelletizado") == "Nursery"
+def test_etapa_skt_below_1_6mm_is_nursery():
+    assert schema.etapa_skt_from_row("precria", "0.8", "Extruido") == "Nursery"
+    assert schema.etapa_skt_from_row(None, "1.2", "Pelletizado") == "Nursery"
 
 
-def test_clasificacion_camaron_handles_range_string():
-    assert schema.clasificacion_camaron_from_row("precria", "0.5-1.0", "Pelletizado") == "Nursery"
+def test_etapa_skt_handles_range_string():
+    assert schema.etapa_skt_from_row("precria", "0.5-1.0", "Pelletizado") == "Nursery"
 
 
-def test_clasificacion_camaron_exactly_1_6mm_is_pre_grower():
+def test_etapa_skt_exactly_1_6mm_is_pre_grower():
     # A diferencia de etapa_from_tamano (que deja este caso en None porque
     # reusa las 6 categorias viejas), aca la columna es dedicada a los 4
     # terminos de la jefa y ella asocio 1.6mm especificamente a Pre Grower.
-    assert schema.clasificacion_camaron_from_row("engorde", "1.6", "Pelletizado") == "Pre Grower"
-    assert schema.clasificacion_camaron_from_row(None, "1.6", "Extruido") == "Pre Grower"
+    assert schema.etapa_skt_from_row("engorde", "1.6", "Pelletizado") == "Pre Grower"
+    assert schema.etapa_skt_from_row(None, "1.6", "Extruido") == "Pre Grower"
 
 
-def test_clasificacion_camaron_grower_threshold_depends_on_tipo_presentacion():
-    assert schema.clasificacion_camaron_from_row("engorde", "1.8", "Pelletizado") == "Grower"
-    assert schema.clasificacion_camaron_from_row("engorde", "1.8", "Extruido") is None
-    assert schema.clasificacion_camaron_from_row("engorde", "1.9", "Extruido") == "Grower"
-    assert schema.clasificacion_camaron_from_row("engorde", "2.5", "Pelletizado") == "Grower"
+def test_etapa_skt_grower_threshold_depends_on_tipo_presentacion():
+    assert schema.etapa_skt_from_row("engorde", "1.8", "Pelletizado") == "Grower"
+    assert schema.etapa_skt_from_row("engorde", "1.8", "Extruido") is None
+    assert schema.etapa_skt_from_row("engorde", "1.9", "Extruido") == "Grower"
+    assert schema.etapa_skt_from_row("engorde", "2.5", "Pelletizado") == "Grower"
 
 
-def test_clasificacion_camaron_gap_between_1_6_and_grower_threshold_stays_none():
-    assert schema.clasificacion_camaron_from_row("engorde", "1.7", "Pelletizado") is None
+def test_etapa_skt_gap_between_1_6_and_grower_threshold_stays_none():
+    assert schema.etapa_skt_from_row("engorde", "1.7", "Pelletizado") is None
 
 
-def test_clasificacion_camaron_unknown_tipo_presentacion_at_grower_size_stays_none():
-    assert schema.clasificacion_camaron_from_row("engorde", "2.5", None) is None
+def test_etapa_skt_unknown_tipo_presentacion_at_grower_size_stays_none():
+    assert schema.etapa_skt_from_row("engorde", "2.5", None) is None
 
 
-def test_clasificacion_camaron_empty_tamano_stays_none():
-    assert schema.clasificacion_camaron_from_row("engorde", None, "Pelletizado") is None
-    assert schema.clasificacion_camaron_from_row("salud", "", "Pelletizado") is None
+def test_etapa_skt_empty_tamano_stays_none():
+    assert schema.etapa_skt_from_row("engorde", None, "Pelletizado") is None
+    assert schema.etapa_skt_from_row("salud", "", "Pelletizado") is None
 
 
 def test_detect_producto_salud_true_for_disease_marker():
@@ -244,9 +244,10 @@ def test_schema_no_longer_includes_unpublished_fields():
     # energia_kcal_kg y velocidad_hundimiento se sacaron del esquema
     # (2026-09-01); fibra_pct/ceniza_pct/humedad_pct/estabilidad_agua_min y
     # los claims cualitativos se sacaron despues (2026-09-02) a pedido del
-    # usuario -- el esquema se redujo a los atributos de negocio priorizados
-    # (competidor/marca vive en nombre_producto, etapa, tecnologia, tamano,
-    # empaque, proteina, grasa).
+    # usuario; grasa_pct se saco el 2026-09-15 (tambien a pedido del
+    # usuario) -- el esquema se redujo a los atributos de negocio
+    # priorizados (competidor/marca vive en nombre_producto, etapa,
+    # tecnologia, tamano, empaque, proteina).
     assert "energia_kcal_kg" not in schema.SCHEMA_COLUMNS
     assert "velocidad_hundimiento" not in schema.SCHEMA_COLUMNS
     assert "estabilidad_agua_min" not in schema.SCHEMA_COLUMNS
@@ -254,3 +255,17 @@ def test_schema_no_longer_includes_unpublished_fields():
     assert "ceniza_pct" not in schema.SCHEMA_COLUMNS
     assert "humedad_pct" not in schema.SCHEMA_COLUMNS
     assert "claims_texto_libre" not in schema.SCHEMA_COLUMNS
+    assert "grasa_pct" not in schema.SCHEMA_COLUMNS
+
+
+def test_schema_renames_etapa_and_clasificacion_camaron():
+    # 2026-09-15, a pedido del usuario: "etapa" (la etapa tal como la
+    # publica el propio competidor) paso a llamarse "etapa_competidor", y
+    # "clasificacion_camaron" (la clasificacion de 4 casillas que definio la
+    # jefa del usuario) paso a llamarse "etapa_skt" -- para que el par de
+    # columnas quede claramente distinguible por sufijo (_competidor vs.
+    # _skt) en vez de dos nombres sin relacion aparente entre si.
+    assert "etapa" not in schema.SCHEMA_COLUMNS
+    assert "clasificacion_camaron" not in schema.SCHEMA_COLUMNS
+    assert "etapa_competidor" in schema.SCHEMA_COLUMNS
+    assert "etapa_skt" in schema.SCHEMA_COLUMNS

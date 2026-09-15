@@ -198,4 +198,4 @@ def test_parse_product_fitness_keeps_stage_info_and_flags_salud():
         pdf_bytes=pdf_path.read_bytes(),
     )
     assert all(r["producto_salud"] is True for r in records)
-    assert all(r["etapa"] == "engorde" for r in records)
+    assert all(r["etapa_competidor"] == "engorde" for r in records)

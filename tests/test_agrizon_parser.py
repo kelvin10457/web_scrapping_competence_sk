@@ -88,7 +88,7 @@ def test_etapa_falls_back_to_tamano_when_tags_are_ambiguous():
     # set de tags -- ambiguo, se resuelve por tamano de pellet (< 1.6 -> precria).
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-1-2-mm-25-kg"))
-    assert record["etapa"] == "precria"
+    assert record["etapa_competidor"] == "precria"
 
 
 def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
@@ -96,8 +96,8 @@ def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
     # Larviva SOLO se puede resolver via tags ("larvas"/"Post-larva").
     products = _load_products()
     record = parser.parse_product(_find(products, "larviva-55-250-375-micras-1-kg"))
-    assert record["etapa"] == "larva"
-    assert record["clasificacion_camaron"] is None  # se calcula despues, en pipeline.write_csv
+    assert record["etapa_competidor"] == "larva"
+    assert record["etapa_skt"] is None  # se calcula despues, en pipeline.write_csv
 
 
 def test_etapa_1_6mm_boundary_stays_none():
@@ -105,16 +105,7 @@ def test_etapa_1_6mm_boundary_stays_none():
     # diseno (techo de Nursery y tamano tipico de Pre Grower a la vez).
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-1-6-mm-25-kg"))
-    assert record["etapa"] is None
-
-
-def test_grasa_pct_always_none():
-    # Agrizon tampoco publica grasa -- sigue siendo un hueco real, no un
-    # bug del parser.
-    products = _load_products()
-    for product in products:
-        record = parser.parse_product(product)
-        assert record["grasa_pct"] is None
+    assert record["etapa_competidor"] is None
 
 
 def test_parse_listing_tags_all_records_as_biomar():
