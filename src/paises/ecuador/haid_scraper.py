@@ -114,6 +114,12 @@ def save_pdf(pdf_url: str, content: bytes) -> Path:
     return dest
 
 
+def ocr_image(image_bytes: bytes) -> str:
+    """OCR local (Tesseract, espanol) de una imagen. Compartido con otras
+    empresas cuyas fichas son imagenes (ej. Nutrimar Mexico)."""
+    return pytesseract.image_to_string(Image.open(io.BytesIO(image_bytes)), lang="spa")
+
+
 def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, bool]:
     """Devuelve (texto, uso_ocr). Intenta texto nativo primero (pdfplumber);
     si esta vacio (ficha escaneada como imagen), cae a OCR local con
@@ -127,8 +133,7 @@ def extract_pdf_text(pdf_bytes: bytes) -> tuple[str, bool]:
     pages_text = []
     for page in doc:
         pix = page.get_pixmap(dpi=300)
-        img = Image.open(io.BytesIO(pix.tobytes("png")))
-        pages_text.append(pytesseract.image_to_string(img, lang="spa"))
+        pages_text.append(ocr_image(pix.tobytes("png")))
     doc.close()
     return "\n".join(pages_text), True
 

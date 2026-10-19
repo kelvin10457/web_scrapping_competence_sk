@@ -20,7 +20,7 @@
 - [x] R2.1 registro de conflictos: schema.resolver_campo(candidatos, reglas) + regla_coincidencia/regla_preferir; record['_conflictos'] -> pipeline.write_conflictos -> data/processed/{pais}/_conflictos.csv; build_master ignora '_*' y consolida data/conflictos.csv
 - [x] R2.2 vimifos: celda con varias proteinas -> una fila por SKU ("Bumper Crop 30%"...). Bumper Crop/Natural Force/Total Range: M=1 calibre (2-6) -> 3 filas c/u. Nulos proteina: antes 3/15, despues 0/21
 - [x] R2.3 apiaba: schema.reglas_titulo_vs_analisis (coincidencia > analisis_copiado_de > nombre_comercial) + resolver_y_registrar (reutilizable). Dorado 35%: titulo 35 + texto 35 x2 vs analisis 40 -> 35 (coincidencia). Nulos proteina: antes 1/3, despues 0/3
-- [ ] R2.4 nutrimar: fichas tecnicas (Wix, pdfplumber/OCR HAID), Zeigler vs Nutrimar
+- [x] R2.4 nutrimar (ok): 19 filas (Zeigler 13 / Nutrimar 6). Fichas PDF /_files/ugd/*.pdf (pdfplumber via haid_scraper.extract_pdf_text) + imagen 'Tabla de Analisis' de Extensivo (haid_scraper.ocr_image, preproceso umbral 160). Validados vs ficha real: PL Raceway 40-9 (40%, 0.4-1.2 mm, 20 kg), Semi-intensivo (35/30% -> 2 SKUs, 1.6-2.5 mm, 25 kg), Extensivo (OCR 35%). Intensivo sin ficha publicada. Super growth usa el mismo PDF que Semi-intensivo
 - [ ] R2.5 Nicaragua/Panama: reconfirmar candidatos (1 request c/u)
 
 - [x] R1 (pedido del usuario) reorganizar por pais: src/paises/<pais>/<empresa>.py con run(), _compartido/ para motores, master por pais, README por pais + ARQUITECTURA.md (169 tests ok)
@@ -37,7 +37,7 @@ mexico | vimifos | vimifos.com/categoria/camaron -> /producto/xtrudix (+otras li
 mexico | purina | nutrimentospurina.com/peces | HTML | solo tilapia/bagre/trucha, sin camaron | sin_fuente_publica (sin linea de camaron)
 mexico | apiaba | acuacultura.com.mx/productos-marcas/api-camaron/ (productos en /productos/<slug>/; sitemap product-sitemap.xml) | HTML estatico, robots permite | nombre, empaque kg, proteina, humedad, fibra, micropellet | construir -> pendiente
 mexico | azteca | aztecamexico.mx es sitio avicola/frizado, sin catalogo acuicola; busqueda web sin resultados | - | - | sin_fuente_publica
-mexico | nutrimar | grupoacuicolamexicano.com.mx/productos -> nutrimar.mx/<slug> (~30 productos) | HTML SSR (Wix) | nombre + descripcion; sin proteina | parcial (construir) -> pendiente
+mexico | nutrimar | grupoacuicolamexicano.com.mx/nutrimar -> nutrimar.mx/<slug> | HTML SSR (Wix) + fichas PDF/imagen | nombre, proteina, calibre, empaque; empresa Zeigler/Nutrimar | ok (R2.4)
 mexico | adm | sin catalogo publico encontrado | - | - | descartado (§6)
 honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni distribuidor publico encontrado (busqueda 2026-10-19) | - | - | sin_fuente_publica (carga manual via GUI; HAID/Agripac fuera por §6)
 

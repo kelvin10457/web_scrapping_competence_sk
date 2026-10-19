@@ -1,4 +1,4 @@
-"""Nutrimar Mexico: nutrimar.mx (parcial: solo nombres)."""
+"""Nutrimar Mexico: nutrimar.mx (+ fichas tecnicas PDF o imagen; productos Zeigler con empresa=Zeigler)."""
 from __future__ import annotations
 
 from paises.mexico import nutrimar_parser, nutrimar_scraper
