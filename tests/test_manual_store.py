@@ -49,3 +49,24 @@ def test_fetch_all_on_non_database_file_raises_value_error(tmp_path):
     bad_path.write_text("esto no es una base de datos sqlite")
     with pytest.raises(ValueError):
         manual_store.fetch_all(bad_path)
+
+
+def test_old_db_without_pais_is_migrated_with_default_ecuador(tmp_path):
+    import sqlite3
+
+    db = tmp_path / "old.db"
+    cols = [c for c in schema.SCHEMA_COLUMNS if c != "pais"]
+    with sqlite3.connect(db) as conn:
+        conn.execute(
+            "CREATE TABLE registros_manuales (id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + ", ".join(f'"{c}" TEXT' for c in cols) + ")"
+        )
+        conn.execute('INSERT INTO registros_manuales ("empresa", "nombre_producto") VALUES (?, ?)', ("HAID", "X"))
+    df = manual_store.fetch_all(db)
+    assert list(df["pais"]) == ["ecuador"]
+
+
+def test_insert_record_without_pais_defaults_to_ecuador(tmp_path):
+    db = tmp_path / "n.db"
+    manual_store.insert_record({"empresa": "HAID", "nombre_producto": "X"}, db)
+    assert manual_store.fetch_all(db)["pais"].tolist() == ["ecuador"]

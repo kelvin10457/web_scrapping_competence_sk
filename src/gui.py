@@ -21,6 +21,7 @@ from tkinter import ttk, messagebox, scrolledtext, filedialog
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import fuentes  # noqa: E402
 import manual_store  # noqa: E402
 import merge_human  # noqa: E402
 import pipeline  # noqa: E402
@@ -83,6 +84,7 @@ EMPRESAS_MANUAL = ["Nicovita", "HAID", "Cargill", "BioMar", "Agripac"]
 # particula_max_mm (siempre derivadas, igual que en merge_human.apply_merge
 # -- nunca se toma un valor que el humano haya escrito ahi).
 FORM_FIELDS = [
+    ("pais", "País", "combobox", list(schema.PAIS_VALUES)),
     ("empresa", "Empresa", "combobox", EMPRESAS_MANUAL),
     ("nombre_producto", "Nombre del producto", "entry", None),
     ("etapa_competidor", "Etapa (competidor)", "combobox", sorted(schema.ETAPA_VALUES)),
@@ -97,8 +99,10 @@ FORM_FIELDS = [
 class EmpresaCard:
     """Tarjeta visual por empresa: checkbox, nombre, badge de estado, boton detalle."""
 
-    def __init__(self, parent: "ttk.Frame", empresa: str, on_ver_detalle) -> None:
+    def __init__(self, parent: "ttk.Frame", empresa: str, on_ver_detalle, pais: str = "ecuador") -> None:
         self.empresa = empresa
+        self.pais = pais
+        self.key = f"{pais}/{empresa}"
         self.estado = ESTADO_PENDIENTE
         self.var = BooleanVar(value=True)
 
@@ -110,7 +114,7 @@ class EmpresaCard:
         )
         self.check.grid(row=0, column=0, sticky="w")
 
-        nombre = NOMBRES_EMPRESA.get(empresa, empresa)
+        nombre = f"{NOMBRES_EMPRESA.get(empresa, empresa)} ({pais.capitalize()})"
         self.nombre_lbl = ttk.Label(
             self.frame, text=nombre, style="CardTitle.TLabel"
         )
@@ -123,7 +127,7 @@ class EmpresaCard:
 
         self.detalle_btn = ttk.Button(
             self.frame, text="Ver detalle", style="Link.TButton",
-            command=lambda: on_ver_detalle(empresa), state="disabled",
+            command=lambda: on_ver_detalle(self.key), state="disabled",
         )
         self.detalle_btn.grid(row=0, column=3, sticky="e")
 
@@ -246,14 +250,15 @@ class ManualRecordDialog:
         path = merge_human.OUTPUT_PATH if merge_human.OUTPUT_PATH.exists() else merge_human.MASTER_PATH
         if not path.exists():
             return None
-        return pd.read_excel(path)
+        return merge_human._with_default_pais(pd.read_excel(path))
 
     def _buscar_coincidencias(self) -> None:
         empresa = self._get("empresa")
         nombre = self._get("nombre_producto")
-        if not empresa or not nombre:
+        pais = self._get("pais")
+        if not empresa or not nombre or not pais:
             messagebox.showwarning(
-                "Faltan datos", "Escribe empresa y nombre del producto antes de buscar.", parent=self.dlg,
+                "Faltan datos", "Elige país y empresa y escribe el nombre del producto antes de buscar.", parent=self.dlg,
             )
             return
 
@@ -268,7 +273,7 @@ class ManualRecordDialog:
             )
             return
 
-        candidates = merge_human.find_name_candidates(master_df, empresa, nombre)
+        candidates = merge_human.find_name_candidates(master_df, empresa, nombre, pais)
         if len(candidates) == 0:
             self.candidates_status.configure(text="Sin coincidencias por nombre -- parece un producto nuevo.")
             return
@@ -319,9 +324,9 @@ class ManualRecordDialog:
 
     def _guardar_como_nuevo(self) -> None:
         record = self._build_record()
-        if not record["empresa"] or not record["nombre_producto"]:
+        if not record["empresa"] or not record["nombre_producto"] or record["pais"] not in schema.PAIS_VALUES:
             messagebox.showwarning(
-                "Faltan datos", "Empresa y nombre del producto son obligatorios.", parent=self.dlg,
+                "Faltan datos", "País (válido), empresa y nombre del producto son obligatorios.", parent=self.dlg,
             )
             return
         self._guardar(
@@ -491,11 +496,11 @@ class App:
         def on_ver_detalle(empresa: str) -> None:
             self._mostrar_error(empresa)
 
-        for empresa in pipeline.ALL_EMPRESAS:
-            card = EmpresaCard(cards_container, empresa, on_ver_detalle)
+        for pais, empresa in fuentes.listar():
+            card = EmpresaCard(cards_container, empresa, on_ver_detalle, pais=pais)
             card.pack(fill="x", pady=(0, 6))
             self._add_card_border(card.frame)
-            self.cards[empresa] = card
+            self.cards[card.key] = card
 
     def _add_card_border(self, frame: ttk.Frame) -> None:
         # ttk no soporta borde+color facilmente en 'clam' via configure directo
@@ -574,10 +579,11 @@ class App:
         self.log.see(END)
         self.log.configure(state="disabled")
 
-    def _mostrar_error(self, empresa: str) -> None:
-        detalle = self.errores.get(empresa)
+    def _mostrar_error(self, key: str) -> None:
+        detalle = self.errores.get(key)
+        empresa = key.split("/")[-1]
         if not detalle:
-            messagebox.showinfo(empresa, "Sin errores registrados para este sitio.")
+            messagebox.showinfo(key, "Sin errores registrados para este sitio.")
             return
         dlg = Toplevel(self.root)
         nombre = NOMBRES_EMPRESA.get(empresa, empresa)
@@ -660,7 +666,7 @@ class App:
                 if header_errors:
                     errores.extend(f"{xlsx_path.name}: {e}" for e in header_errors)
                 else:
-                    df = df[merge_human.schema.SCHEMA_COLUMNS]
+                    df = merge_human._with_default_pais(df)[merge_human.schema.SCHEMA_COLUMNS]
                     df = merge_human._drop_fully_empty_rows(df)
                     if not df.empty:
                         row_errors = merge_human.validate_rows(df)
@@ -797,8 +803,8 @@ class App:
         self.running = True
         self.run_btn.configure(state="disabled")
         self.progress.configure(maximum=len(seleccionadas), value=0)
-        for empresa in seleccionadas:
-            self.cards[empresa].set_estado(ESTADO_PENDIENTE)
+        for key in seleccionadas:
+            self.cards[key].set_estado(ESTADO_PENDIENTE)
         self.errores.clear()
         self.fusion_resultado = None
         self.log.configure(state="normal")
@@ -808,22 +814,23 @@ class App:
         thread = threading.Thread(target=self._run_pipeline, args=(seleccionadas,), daemon=True)
         thread.start()
 
-    def _run_pipeline(self, empresas: list[str]) -> None:
-        for empresa in empresas:
-            self.root.after(0, self.cards[empresa].set_estado, ESTADO_CORRIENDO)
-            self.root.after(0, self._log, f"--- {empresa} ---")
+    def _run_pipeline(self, keys: list[str]) -> None:
+        for key in keys:
+            pais, empresa = key.split("/", 1)
+            self.root.after(0, self.cards[key].set_estado, ESTADO_CORRIENDO)
+            self.root.after(0, self._log, f"--- {key} ---")
             try:
-                records = pipeline.run_empresa(empresa)
-                pipeline.write_csv(records, pipeline.processed_path("ecuador", empresa))
+                records = pipeline.run_empresa(empresa, pais)
+                pipeline.write_csv(records, pipeline.processed_path(pais, empresa))
                 self.root.after(
-                    0, self.cards[empresa].set_estado, ESTADO_OK, f"({len(records)})"
+                    0, self.cards[key].set_estado, ESTADO_OK, f"({len(records)})"
                 )
                 self.root.after(0, self._log, f"  OK: {len(records)} productos")
             except Exception:
                 detalle = traceback.format_exc()
-                self.errores[empresa] = detalle
-                self.root.after(0, self.cards[empresa].set_estado, ESTADO_ERROR)
-                self.root.after(0, self._log, f"  ERROR en {empresa} (ver detalle):\n{detalle}")
+                self.errores[key] = detalle
+                self.root.after(0, self.cards[key].set_estado, ESTADO_ERROR)
+                self.root.after(0, self._log, f"  ERROR en {key} (ver detalle):\n{detalle}")
             self.root.after(0, self.progress.step, 1)
 
         try:

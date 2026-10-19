@@ -53,6 +53,15 @@ def ensure_db(db_path: Path = DEFAULT_DB_PATH) -> None:
     columnas_sql = ", ".join(f'"{c}" TEXT' for c in schema.SCHEMA_COLUMNS)
     with sqlite3.connect(db_path) as conn:
         conn.execute(f"CREATE TABLE IF NOT EXISTS {_TABLE} (id INTEGER PRIMARY KEY AUTOINCREMENT, {columnas_sql})")
+        _migrar_pais(conn)
+
+
+def _migrar_pais(conn: sqlite3.Connection) -> None:
+    """Bases creadas antes de la expansion regional no tienen la columna
+    `pais`: se agrega con default 'ecuador' (PLAN_REGIONAL.md 2.5)."""
+    columnas = [fila[1] for fila in conn.execute(f"PRAGMA table_info({_TABLE})")]
+    if "pais" not in columnas:
+        conn.execute(f"ALTER TABLE {_TABLE} ADD COLUMN pais TEXT DEFAULT 'ecuador'")
 
 
 def insert_record(record: dict, db_path: Path = DEFAULT_DB_PATH) -> int:
@@ -63,6 +72,7 @@ def insert_record(record: dict, db_path: Path = DEFAULT_DB_PATH) -> int:
     ensure_db(db_path)
     columnas = schema.SCHEMA_COLUMNS
     placeholders = ", ".join("?" for _ in columnas)
+    record = {**record, "pais": record.get("pais") or "ecuador"}
     valores = [None if record.get(c) is None else str(record[c]) for c in columnas]
     with sqlite3.connect(db_path) as conn:
         cur = conn.execute(
@@ -81,6 +91,7 @@ def fetch_all(db_path: Path = DEFAULT_DB_PATH) -> pd.DataFrame:
     if not db_path.exists():
         return pd.DataFrame(columns=schema.SCHEMA_COLUMNS)
     try:
+        ensure_db(db_path)  # aplica la migracion de `pais` a bases viejas
         with sqlite3.connect(db_path) as conn:
             df = pd.read_sql_query(f"SELECT * FROM {_TABLE} ORDER BY id", conn)
     except (sqlite3.DatabaseError, pd.errors.DatabaseError) as exc:

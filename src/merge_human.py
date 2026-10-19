@@ -40,6 +40,7 @@ OUTPUT_PATH = ROOT / "data" / "master_prototipo.xlsx"
 
 # Columnas categoricas: solo valores ya definidos en schema.py, o vacio.
 CATEGORICAL_COLUMNS = {
+    "pais": set(schema.PAIS_VALUES),
     "etapa_competidor": schema.ETAPA_VALUES,
     "tipo_presentacion": schema.TIPO_PRESENTACION_VALUES,
     "etapa_skt": schema.ETAPA_SKT_VALUES,
@@ -142,7 +143,7 @@ def validate_rows(df: pd.DataFrame) -> list[str]:
                     "(obligatorio para poder buscar coincidencias en master)"
                 )
         for col, valid_values in CATEGORICAL_COLUMNS.items():
-            value = row[col]
+            value = row.get(col)
             if _is_empty(value):
                 continue
             text = str(value).strip()
@@ -223,7 +224,7 @@ def _master_tamano_as_float(text) -> float | None:
         return None
 
 
-def find_name_candidates(master_df: pd.DataFrame, empresa, nombre_producto) -> pd.Index:
+def find_name_candidates(master_df: pd.DataFrame, empresa, nombre_producto, pais=None) -> pd.Index:
     """Filas de master_df cuya empresa+nombre_producto normalizados
     coinciden, SIN filtrar aun por tamano/proteina -- a diferencia de
     find_matches(), que ya angosta automaticamente con esos atributos si la
@@ -238,6 +239,9 @@ def find_name_candidates(master_df: pd.DataFrame, empresa, nombre_producto) -> p
     mask = (master_df["empresa"].map(_normalize_key) == empresa_key) & (
         master_df["nombre_producto"].map(_normalize_key) == nombre_key
     )
+    if not _is_empty(pais):
+        # pais forma parte de la identidad (PLAN_REGIONAL.md 2.5).
+        mask &= master_df["pais"].map(_normalize_key) == _normalize_key(pais)
     return master_df.index[mask]
 
 
@@ -246,7 +250,9 @@ def find_matches(master_df: pd.DataFrame, human_row: pd.Series) -> pd.Index:
     nombre_producto normalizados, mas tamano_pellet_mm/proteina_pct SOLO si
     la fila humana los trae rellenos (son los atributos que distinguen
     variantes con el mismo nombre, ej. Nicovita Classic)."""
-    candidates = find_name_candidates(master_df, human_row["empresa"], human_row["nombre_producto"])
+    candidates = find_name_candidates(
+        master_df, human_row["empresa"], human_row["nombre_producto"], human_row.get("pais")
+    )
     mask = pd.Series(master_df.index.isin(candidates), index=master_df.index)
     tamano = _to_float(human_row["tamano_pellet_mm"])
     if tamano is not None:
@@ -302,6 +308,7 @@ def apply_merge(master_df: pd.DataFrame, human_df: pd.DataFrame) -> tuple[pd.Dat
     filas_ambiguas, cantidad_nuevas, cantidad_corregidas). Asume que
     human_df ya paso validate_headers()/validate_rows()."""
     master_df = _normalize_master_dtypes(master_df)
+    human_df = _with_default_pais(human_df)
     review_rows: list[dict] = []
     new_records: list[dict] = []
     n_updated = 0
@@ -341,6 +348,7 @@ def apply_merge(master_df: pd.DataFrame, human_df: pd.DataFrame) -> tuple[pd.Dat
         review_rows.append(
             {
                 "fila_humana": _excel_row(h_idx),
+                "pais": human_row["pais"],
                 "empresa": human_row["empresa"],
                 "nombre_producto": human_row["nombre_producto"],
                 "tamano_pellet_mm_humano": human_row["tamano_pellet_mm"],
@@ -382,6 +390,7 @@ def apply_merge_many(
 
 REVIEW_COLUMNS = [
     "fila_humana",
+    "pais",
     "empresa",
     "nombre_producto",
     "tamano_pellet_mm_humano",

@@ -472,3 +472,32 @@ def test_main_writes_master_and_revisar_sheets_when_valid(tmp_path, monkeypatch)
     revisar_sheet = pd.read_excel(output_path, sheet_name="revisar")
     assert list(master_sheet.columns) == schema.SCHEMA_COLUMNS
     assert len(revisar_sheet) == 1
+
+
+# --- pais (PLAN_REGIONAL.md 2.5) -----------------------------------------
+
+
+def test_find_matches_respects_pais():
+    master = _master_df(
+        _master_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Katal"),
+        _master_row(pais="honduras", empresa="Nicovita", nombre_producto="Nicovita Katal"),
+    )
+    human = pd.Series(_human_row(pais="honduras", empresa="Nicovita", nombre_producto="Nicovita Katal"))
+    assert list(merge_human.find_matches(master, human)) == [1]
+
+
+def test_human_row_without_pais_defaults_to_ecuador_in_apply_merge():
+    master = _master_df(
+        _master_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Katal"),
+        _master_row(pais="honduras", empresa="Nicovita", nombre_producto="Nicovita Katal"),
+    )
+    human = _human_df(_human_row(empresa="Nicovita", nombre_producto="Nicovita Katal", empaque_kg=25))
+    out, review, n_new, n_updated = merge_human.apply_merge(master, human)
+    assert (n_new, n_updated, review) == (0, 1, [])
+    assert out.loc[out["pais"] == "ecuador", "empaque_kg"].iloc[0] == 25
+    assert pd.isna(out.loc[out["pais"] == "honduras", "empaque_kg"].iloc[0])
+
+
+def test_validate_rows_rejects_unknown_pais():
+    errors = merge_human.validate_rows(_human_df(_human_row(pais="peru", empresa="X", nombre_producto="Y")))
+    assert any("pais" in e for e in errors)
