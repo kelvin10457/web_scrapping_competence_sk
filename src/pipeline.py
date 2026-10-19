@@ -27,6 +27,7 @@ else:
     ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = ROOT / "data" / "processed"
 MASTER_PATH = ROOT / "data" / "master.csv"
+CONFLICTOS_PATH = ROOT / "data" / "conflictos.csv"
 
 import fuentes  # noqa: E402
 import netutil  # noqa: E402
@@ -87,11 +88,48 @@ def write_csv(records: list[dict], path: Path) -> None:
     write_xlsx(df, path.with_suffix(".xlsx"))
 
 
+def conflictos_path(pais: str) -> Path:
+    return PROCESSED_DIR / pais / "_conflictos.csv"
+
+
+def write_conflictos(records: list[dict], pais: str, empresa: str) -> int:
+    """Reemplaza las filas de `empresa` en processed/{pais}/_conflictos.csv por
+    los conflictos de esta corrida (las de otras empresas del pais se conservan)."""
+    path = conflictos_path(pais)
+    nuevas = pd.DataFrame(schema.conflictos_de(records), columns=schema.CONFLICTO_COLUMNS)
+    # La columna empresa trae el nombre del record ("Api-Aba", "Zeigler"), no el slug.
+    propias = {empresa.lower()} | {str(r.get("empresa")).lower() for r in records}
+    if path.exists():
+        previas = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
+        previas = previas[~previas["empresa"].str.lower().isin(propias)]
+        nuevas = pd.concat([previas, nuevas], ignore_index=True)
+    if nuevas.empty:
+        if path.exists():
+            path.unlink()
+        return 0
+    path.parent.mkdir(parents=True, exist_ok=True)
+    nuevas.to_csv(path, index=False, encoding="utf-8-sig")
+    return len(schema.conflictos_de(records))
+
+
+def build_conflictos() -> None:
+    """Junta todos los processed/*/_conflictos.csv en data/conflictos.csv."""
+    frames = [pd.read_csv(p, dtype=str, keep_default_na=False, na_values=[""])
+              for p in sorted(PROCESSED_DIR.glob("*/_conflictos.csv"))]
+    if not frames:
+        pd.DataFrame(columns=schema.CONFLICTO_COLUMNS).to_csv(CONFLICTOS_PATH, index=False, encoding="utf-8-sig")
+        return
+    pd.concat(frames, ignore_index=True)[schema.CONFLICTO_COLUMNS].to_csv(
+        CONFLICTOS_PATH, index=False, encoding="utf-8-sig")
+
+
 def build_master() -> None:
+    build_conflictos()
     frames = []
     for pais, empresa in fuentes.listar():
         csv_path = processed_path(pais, empresa)
-        if csv_path.exists():
+        # Los archivos que empiezan con "_" (ej. _conflictos.csv) no son productos.
+        if csv_path.exists() and not csv_path.name.startswith("_"):
             frames.append(pd.read_csv(csv_path, dtype=str, keep_default_na=False, na_values=[""]))
     # Cualquier otro processed/{pais}/*.csv que ya no este en el registro igual entra.
     if not frames:
@@ -154,6 +192,9 @@ def main(pares: list[tuple[str, str]]) -> int:
                 raise RuntimeError("0 productos: se conserva el CSV anterior")
             write_csv(records, processed_path(pais, empresa))
             print(f"  OK: {len(records)} productos -> data/processed/{pais}/{empresa}.csv")
+            n_conf = write_conflictos(records, pais, empresa)
+            if n_conf:
+                print(f"  {n_conf} conflictos resueltos -> data/processed/{pais}/_conflictos.csv")
         except netutil.BlockedError as exc:
             errores += 1
             bloqueadas.append((pais, empresa, exc))

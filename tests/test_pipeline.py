@@ -214,3 +214,24 @@ def test_netutil_pause_only_applies_to_paced_hosts(monkeypatch):
     assert slept == []
     netutil.pause("https://nicovita.com/categoria/camarones/")
     assert len(slept) == 1
+
+
+def test_conflictos_por_pais_y_consolidado_sin_entrar_al_master(tmp_path, monkeypatch):
+    import pipeline
+    import pandas as pd
+    import schema
+    monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
+    monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
+    monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
+    monkeypatch.setattr(pipeline.fuentes, "listar", lambda *a, **k: [("mexico", "apiaba")])
+    record = schema.empty_record("Api-Aba")
+    record.update(pais="mexico", nombre_producto="Dorado 35%", proteina_pct="35")
+    schema.registrar_conflicto(record, "proteina_pct", "35", "nombre_comercial", [("40", "analisis"), ("35", "titulo")])
+    pipeline.write_csv([record], pipeline.processed_path("mexico", "apiaba"))
+    assert pipeline.write_conflictos([record], "mexico", "apiaba") == 1
+    assert pipeline.write_conflictos([record], "mexico", "apiaba") == 1  # re-correr no duplica
+    pipeline.build_master()
+    conf = pd.read_csv(tmp_path / "conflictos.csv", dtype=str)
+    assert len(conf) == 1 and conf.loc[0, "regla"] == "nombre_comercial"
+    master = pd.read_csv(tmp_path / "master.csv", dtype=str)
+    assert len(master) == 1 and "regla" not in master.columns

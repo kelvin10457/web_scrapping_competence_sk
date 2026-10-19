@@ -345,3 +345,77 @@ def empty_record(empresa: str) -> dict:
     record = {col: None for col in SCHEMA_COLUMNS}
     record["empresa"] = empresa
     return record
+
+
+# --- Conflictos (RONDA2 R2.1) -------------------------------------------------
+# Cuando una fuente da mas de un valor para un mismo campo no se deja la celda
+# vacia: se elige con una regla fija (resolver_campo) y se deja constancia en
+# data/processed/{pais}/_conflictos.csv (lo escribe pipeline.py). El esquema
+# principal no cambia: los conflictos viajan en record["_conflictos"].
+CONFLICTO_COLUMNS = ["pais", "empresa", "nombre_producto", "campo", "valor_elegido", "regla",
+                     "candidatos", "fuente_url", "fecha_extraccion"]
+
+
+def _mismo_valor(a, b) -> bool:
+    try:
+        return float(str(a).replace(",", ".")) == float(str(b).replace(",", "."))
+    except (TypeError, ValueError):
+        return str(a).strip().lower() == str(b).strip().lower()
+
+
+def regla_coincidencia(candidatos):
+    """Si dos o mas origenes dan el mismo valor, gana ese (el mas repetido)."""
+    for valor, _ in candidatos:
+        if sum(_mismo_valor(valor, otro) for otro, _ in candidatos) >= 2:
+            return valor, "coincidencia"
+    return None
+
+
+def regla_preferir(origen: str, nombre: str | None = None):
+    """Regla que toma el primer candidato cuyo origen es `origen`."""
+    def regla(candidatos):
+        for valor, org in candidatos:
+            if org == origen:
+                return valor, nombre or origen
+        return None
+    return regla
+
+
+def resolver_campo(candidatos, reglas):
+    """Elige un valor entre `candidatos` ([(valor, origen), ...]) aplicando
+    `reglas` en orden; gana la primera que decide. Cada regla es una funcion
+    pura `candidatos -> (valor, nombre_regla) | None`. Sin candidatos devuelve
+    (None, None); si hay uno solo (o todos iguales) devuelve ese con regla
+    "unico". Si ninguna regla decide: (None, "sin_regla")."""
+    candidatos = [(v, o) for v, o in candidatos if v is not None and v != ""]
+    if not candidatos:
+        return None, None
+    if all(_mismo_valor(v, candidatos[0][0]) for v, _ in candidatos):
+        return candidatos[0][0], "unico"
+    for regla in reglas:
+        decision = regla(candidatos)
+        if decision is not None:
+            return decision
+    return None, "sin_regla"
+
+
+def registrar_conflicto(record: dict, campo: str, valor, regla: str, candidatos) -> None:
+    """Anota en el record un conflicto resuelto; pipeline.py lo vuelca a
+    _conflictos.csv agregando pais/empresa/nombre/fuente/fecha del record."""
+    texto = " | ".join(f"{v} ({o})" for v, o in candidatos) if not isinstance(candidatos, str) else candidatos
+    record.setdefault("_conflictos", []).append(
+        {"campo": campo, "valor_elegido": valor, "regla": regla, "candidatos": texto})
+
+
+def conflictos_de(records: list[dict]) -> list[dict]:
+    """Filas de _conflictos.csv (CONFLICTO_COLUMNS) a partir de los records."""
+    filas = []
+    for record in records:
+        for c in record.get("_conflictos", []):
+            filas.append({
+                "pais": record.get("pais"), "empresa": record.get("empresa"),
+                "nombre_producto": record.get("nombre_producto"), **c,
+                "fuente_url": record.get("fuente_url"),
+                "fecha_extraccion": record.get("fecha_extraccion"),
+            })
+    return filas

@@ -274,3 +274,22 @@ def test_schema_renames_etapa_and_clasificacion_camaron():
 def test_pais_is_first_column_and_values_are_defined():
     assert schema.SCHEMA_COLUMNS[0] == "pais"
     assert set(schema.PAIS_VALUES) == {"ecuador", "honduras", "nicaragua", "panama", "mexico"}
+
+
+def test_resolver_campo_aplica_reglas_en_orden():
+    reglas = [schema.regla_coincidencia, schema.regla_preferir("titulo", "nombre_comercial")]
+    assert schema.resolver_campo([], reglas) == (None, None)
+    assert schema.resolver_campo([("35", "titulo")], reglas) == ("35", "unico")
+    assert schema.resolver_campo([("35", "titulo"), ("35,0", "tabla")], reglas) == ("35", "unico")
+    assert schema.resolver_campo([("40", "analisis"), ("35", "titulo"), ("40", "tabla")], reglas) == ("40", "coincidencia")
+    assert schema.resolver_campo([("40", "analisis"), ("35", "titulo")], reglas) == ("35", "nombre_comercial")
+    assert schema.resolver_campo([("40", "analisis"), ("35", "otro")], reglas) == (None, "sin_regla")
+
+
+def test_conflictos_de_arma_filas_con_columnas_fijas():
+    record = schema.empty_record("Api-Aba")
+    record.update(pais="mexico", nombre_producto="Dorado 35%", fuente_url="u", fecha_extraccion="2026-10-19")
+    schema.registrar_conflicto(record, "proteina_pct", "35", "nombre_comercial", [("40", "analisis"), ("35", "titulo")])
+    (fila,) = schema.conflictos_de([record])
+    assert list(fila) == schema.CONFLICTO_COLUMNS
+    assert fila["candidatos"] == "40 (analisis) | 35 (titulo)" and fila["empresa"] == "Api-Aba"
