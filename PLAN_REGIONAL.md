@@ -138,14 +138,19 @@ Solo si en la Fase 1 apareció alguna fuente (distribuidor, ficha pública). Si 
 ## 4. Reglas de trabajo (además de las de `PLAN.md`)
 - Usar `requests` + `BeautifulSoup`, igual que ahora. **No** agregar Playwright, porque rompe el empaquetado `.exe` (ver `PLAN.md` §4). Si un sitio necesita JS, se aplica §5.2.
 - Ser cortés con los servidores: un `User-Agent` identificable, pausa entre requests y respeto a `robots.txt`.
-- Si un sitio bloquea (403, captcha), **no intentar evadirlo**. Se documenta en `MEMORY.md` y se pasa a carga manual.
+- Si un sitio bloquea (403, captcha), el código **no resuelve ni falsifica** la verificación (sin proxies, sin suplantar el navegador). Procedimiento, en este orden:
+  1. El pipeline marca la fuente `BLOQUEADO`, conserva el CSV anterior y escribe `data/bloqueos.md` con la página del captcha (`data/bloqueos/*.html`) para verla.
+  2. **Páginas guardadas desde el navegador del usuario** (que sí puede entrar): Ctrl+S "solo HTML" en `data/manual/<empresa>/<pais>/`; el scraper las reconoce por su URL canónica (hoy implementado para Nicovita).
+  3. Reducir el ritmo: pausas aleatorias solo en los dominios que ya mostraron captcha (`netutil.PACED_HOSTS`), caché de HTML y PDF, y no repetir corridas tras un bloqueo.
+  4. Pedir a la empresa autorización o lista permitida para el acceso automatizado.
+  5. Si nada funciona, la fuente queda `bloqueado` en la tabla y se carga a mano por la GUI.
 - No borrar módulos viejos (mismo criterio que con `scrapers/biomar.py`).
 - Actualizar `ScraperCompetencia.spec` si cambian los imports dinámicos (por ejemplo, el registro en `fuentes.py` con `importlib`). Hay que agregar los `hiddenimports`, o el `.exe` no va a encontrar los módulos.
 
 ## 5. Bloqueos (modo autónomo: NO detenerse, registrar y seguir)
 El usuario no está mirando. Cuando aparece un bloqueo, **no se pregunta**: se anota en `PROGRESO_REGIONAL.md` → "Bloqueos" y se pasa al siguiente ítem.
 1. El layout de otro país no coincide con lo mapeado para Ecuador → si el ajuste del parser es chico, se hace; si no, ese (pais, empresa) se marca `bloqueado`.
-2. El sitio necesita JS/headless, devuelve 403 o captcha → se marca `sin_fuente_publica`. No se agrega Playwright.
+2. El sitio necesita JS/headless → se marca `sin_fuente_publica` (no se agrega Playwright: rompe el `.exe`). Si devuelve 403 o captcha → se aplica el procedimiento de §4 (páginas guardadas a mano / autorización) y, mientras no se resuelva, se marca `bloqueado`.
 3. Hace falta una decisión de negocio → se aplica el default de §6.
 
 **Única excepción que detiene todo:** si la Fase 0 no logra que Ecuador dé las mismas filas que antes, no se avanza a la Fase 2. Se deja el detalle en "Bloqueos" y se termina el loop.
