@@ -14,7 +14,7 @@
 - [x] F3 mexico/azteca (sin_fuente_publica)
 - [x] F3 mexico/nutrimar (parcial: 17 filas solo nombre; la fuente no publica proteina/calibre/empaque; validadas 3 vs paginas)
 - [x] F4 Centroamerica sin fuente documentada en MEMORY.md "Expansión regional"
-- [ ] F5 cierre (BLOQUEADO por captcha de nicovita.com, ver Bloqueos): pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
+- [~] F5 cierre (BLOQUEADO por captcha de nicovita.com, ver Bloqueos): pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
 
 - [x] R1 (pedido del usuario) reorganizar por pais: src/paises/<pais>/<empresa>.py con run(), _compartido/ para motores, master por pais, README por pais + ARQUITECTURA.md (169 tests ok)
 
@@ -39,3 +39,9 @@ honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni dis
 
 ## Última iteración: F4 hecho; reintentos (netutil) y guardas; nicovita.com bloquea con captcha, esperando para regenerar.
 Notas: sitio HAID rediseñado (Next.js, hrefs relativos): arreglado en scrapers/parsers haid. Agrizon da 429: reintento + pausa. Ecuador regenerado = baseline (test_ecuador_identity). aquaxcel parser usa LISTING_URL fijo (ecuador) en fuente_url: ajustar en F2.
+
+## Cierre (2026-10-19) — DETENIDO POR FRENO DE SEGURIDAD, §7.3 NO CUMPLIDO
+**Qué quedó:** Fase 0 completa (Ecuador idéntico al baseline), Fase 1 (tabla de fuentes), código reorganizado por país (`src/paises/<pais>/`, ver ARQUITECTURA.md), master por país, F2 (nicovita HN/MX, aquaxcel MX) y F3 (vimifos, apiaba, nutrimar parcial) construidos y validados; purina/azteca/adm descartados; Nicaragua/Panamá/Cargill-HN/BioMar-CA sin fuente pública. `pytest -q`: 169 pasan.
+**Qué falta (condición 7.3.4 y parte de 7.3.5):** (1) nicovita.com bloquea con captcha Radware (no se evade): honduras/mexico nicovita.csv están vacíos y master.csv no tiene `honduras`. (2) agripac.com.ec no responde (timeout) hoy. (3) Una corrida completa de `python src/pipeline.py` sin errores.
+**Cómo cerrarlo:** cuando nicovita.com y agripac.com.ec respondan (o con las páginas de Nicovita guardadas a mano, ver src/paises/_compartido/README.md): `python src/pipeline.py --empresa nicovita`, luego `python src/pipeline.py` completo y `pytest -q`; anotar aquí el resultado.
+**Decisiones de §6 a revisar:** no duplicar Honduras en Nicaragua/Panamá; Fase 5 (SENASICA/eaduana) no ejecutada; HAID/Agripac solo Ecuador; Nutrimar solo con nombres (¿vale mantenerlo?); Api-Aba Dorado 35% con proteína vacía por contradicción en la página.
