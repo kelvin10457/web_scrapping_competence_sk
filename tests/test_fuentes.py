@@ -29,3 +29,11 @@ def test_listar_filters_by_pais_and_empresa():
 def test_run_fuente_unknown_raises():
     with pytest.raises(ValueError):
         fuentes.run_fuente("panama", "nicovita")
+
+
+def test_nicovita_pausada_no_corre_sin_argumentos_pero_sigue_registrada():
+    for pais in ("ecuador", "honduras", "mexico"):
+        assert not fuentes.activa(pais, "nicovita")
+        assert (pais, "nicovita") in fuentes.listar()  # build_master sigue incluyendo su CSV
+    assert all(e != "nicovita" for _, e in fuentes.listar(solo_activas=True))
+    assert ("mexico", "vimifos") in fuentes.listar(solo_activas=True)

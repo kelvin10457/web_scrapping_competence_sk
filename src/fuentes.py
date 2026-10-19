@@ -15,15 +15,28 @@ import schema
 EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac", "vimifos", "apiaba", "nutrimar"]
 
 
+# Pares (pais, empresa) pausados: siguen en el registro (master.csv incluye su CSV
+# ya generado) pero la corrida sin argumentos los salta. Se corren a mano con
+# `--empresa <empresa>`. Nicovita: pausada por decision del usuario (RONDA2 R2.0).
+INACTIVAS = {("ecuador", "nicovita"), ("honduras", "nicovita"), ("mexico", "nicovita")}
+
+
+def activa(pais: str, empresa: str) -> bool:
+    return (pais, empresa) not in INACTIVAS
+
+
 def _fuentes_de(pais: str) -> list[str]:
     return list(importlib.import_module(f"paises.{pais}").FUENTES)
 
 
-def listar(pais: str | None = None, empresa: str | None = None) -> list[tuple[str, str]]:
+def listar(pais: str | None = None, empresa: str | None = None,
+           solo_activas: bool = False) -> list[tuple[str, str]]:
     """Pares (pais, empresa) registrados, filtrados, ecuador primero."""
     paises = sorted(schema.PAIS_VALUES, key=lambda p: (p != "ecuador", p))
     pares = [(p, e) for p in paises for e in _fuentes_de(p)]
     pares = [(p, e) for p, e in pares if (pais is None or p == pais) and (empresa is None or e == empresa)]
+    if solo_activas:
+        pares = [(p, e) for p, e in pares if activa(p, e)]
     return sorted(pares, key=lambda par: (par[0] != "ecuador", par[0], EMPRESA_ORDER.index(par[1])
                                           if par[1] in EMPRESA_ORDER else 99, par[1]))
 

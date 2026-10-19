@@ -178,7 +178,9 @@ def parse_args(argv: list[str]):
 
 if __name__ == "__main__":
     args = parse_args(sys.argv[1:])
-    pares = fuentes.listar(args.pais, args.empresa)
+    # Sin --empresa se saltan las fuentes pausadas (fuentes.INACTIVAS); con
+    # --empresa se corren igual (p. ej. `--empresa nicovita`).
+    pares = fuentes.listar(args.pais, args.empresa, solo_activas=args.empresa is None)
     if not pares:
         print(f"Sin fuentes registradas para pais={args.pais} empresa={args.empresa}")
         sys.exit(2)

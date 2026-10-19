@@ -16,12 +16,20 @@
 - [x] F4 Centroamerica sin fuente documentada en MEMORY.md "Expansión regional"
 - [~] F5 cierre (BLOQUEADO por captcha de nicovita.com, ver Bloqueos): pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
 
+- [x] R2.0 Nicovita pausada (usuario): fuentes.INACTIVAS; `pipeline.py` sin args la salta, `--empresa nicovita` la corre. ecuador/honduras/mexico nicovita = pausado (usuario)
+- [ ] R2.1 registro de conflictos: schema.resolver_campo + data/processed/{pais}/_conflictos.csv + data/conflictos.csv
+- [ ] R2.2 vimifos: celda con varias proteinas -> una fila por SKU
+- [ ] R2.3 apiaba: proteina contradictoria via resolver_campo (coincidencia / analisis_copiado_de / nombre_comercial)
+- [ ] R2.4 nutrimar: fichas tecnicas (Wix, pdfplumber/OCR HAID), Zeigler vs Nutrimar
+- [ ] R2.5 Nicaragua/Panama: reconfirmar candidatos (1 request c/u)
+
 - [x] R1 (pedido del usuario) reorganizar por pais: src/paises/<pais>/<empresa>.py con run(), _compartido/ para motores, master por pais, README por pais + ARQUITECTURA.md (169 tests ok)
 
 ## Fuentes por país
 (pais | empresa | url | formato | campos | decision/estado) — verificado 2026-10-19
-honduras | nicovita | nicovita.com/categoria/camarones/?pais=honduras (11 productos -honduras) | HTML + PDF texto (PDFs compartidos con Ecuador) | todos los del parser PDF | construir -> pendiente
-mexico | nicovita | ?pais=mexico (7 productos -mexico/-mexico-2) | HTML + PDF | idem | construir -> pendiente
+ecuador | nicovita | - | - | - | pausado (usuario) (R2.0; CSV actual se conserva)
+honduras | nicovita | nicovita.com/categoria/camarones/?pais=honduras (11 productos -honduras) | HTML + PDF texto (PDFs compartidos con Ecuador) | todos los del parser PDF | pausado (usuario) (R2.0)
+mexico | nicovita | ?pais=mexico (7 productos -mexico/-mexico-2) | HTML + PDF | idem | pausado (usuario) (R2.0)
 nicaragua, panama | nicovita | ?pais=nicaragua/panama: 0 productos | - | - | sin_fuente_publica (Nicovita los atiende desde Honduras; carga manual)
 mexico | aquaxcel | aquaxcel.com/productos/mexico/ | HTML estatico; parser Ecuador da 0 filas (layout distinto) | proteina, calibre, tecnologia, grasa, fibra | construir (ajuste de parser) -> pendiente
 honduras/nicaragua/panama | aquaxcel | /productos/{honduras,centroamerica,nicaragua}/ = 404 | - | - | sin_fuente_publica
