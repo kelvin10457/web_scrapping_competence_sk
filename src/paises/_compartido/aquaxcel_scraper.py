@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import requests
 
+import netutil
+
 LISTING_URL_TEMPLATE = "https://aquaxcel.com/productos/{pais_slug}/"
 LISTING_URL = LISTING_URL_TEMPLATE.format(pais_slug="ecuador")
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}

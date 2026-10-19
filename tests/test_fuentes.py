@@ -37,3 +37,13 @@ def test_nicovita_pausada_no_corre_sin_argumentos_pero_sigue_registrada():
         assert (pais, "nicovita") in fuentes.listar()  # build_master sigue incluyendo su CSV
     assert all(e != "nicovita" for _, e in fuentes.listar(solo_activas=True))
     assert ("mexico", "vimifos") in fuentes.listar(solo_activas=True)
+
+
+def test_todo_modulo_que_usa_netutil_lo_importa():
+    # Regresion 2026-10-19: aquaxcel_scraper usaba netutil.get sin importarlo.
+    from pathlib import Path
+    src = Path(__file__).resolve().parents[1] / "src"
+    sin_import = [str(p.relative_to(src)) for p in src.rglob("*.py")
+                  if "netutil." in p.read_text(encoding="utf-8") and p.name != "netutil.py"
+                  and "import netutil" not in p.read_text(encoding="utf-8")]
+    assert sin_import == []
