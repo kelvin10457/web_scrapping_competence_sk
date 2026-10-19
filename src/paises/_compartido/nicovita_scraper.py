@@ -5,6 +5,7 @@ necesidad de navegador headless.
 from __future__ import annotations
 
 import re
+import time
 from pathlib import Path
 
 import requests
@@ -42,10 +43,35 @@ _PDF_LINK_RE = re.compile(
 _TITLE_RE = re.compile(r"<title>(.*?)</title>", re.S)
 
 
+PAUSE_SECONDS = 2.0
+CACHE_TTL_SECONDS = 24 * 3600
+HTML_CACHE_DIR = RAW_DIR.parent / "nicovita_html"
+
+
+def cache_path(url: str) -> Path:
+    """Archivo de cache de una URL. Si el sitio bloquea (captcha), se puede
+    guardar la pagina a mano desde el navegador con este nombre exacto en
+    data/raw/nicovita_html/ y el scraper la usa (ver README de _compartido)."""
+    return HTML_CACHE_DIR / (re.sub(r"[^a-z0-9]+", "_", url.lower()).strip("_") + ".html")
+
+
 def fetch(url: str, session: requests.Session | None = None) -> str:
+    """HTML de una URL: cache de 24 h -> red (con pausa de cortesia) -> si el
+    sitio bloquea, cualquier copia guardada (aunque sea vieja o manual)."""
+    path = cache_path(url)
+    if path.exists() and time.time() - path.stat().st_mtime < CACHE_TTL_SECONDS:
+        return path.read_text(encoding="utf-8", errors="replace")
     s = session or requests
-    r = netutil.get(s, url, headers=HEADERS, timeout=30)
-    r.raise_for_status()
+    try:
+        time.sleep(PAUSE_SECONDS)
+        r = netutil.get(s, url, headers=HEADERS, timeout=30)
+        r.raise_for_status()
+    except netutil.BlockedError:
+        if path.exists():
+            return path.read_text(encoding="utf-8", errors="replace")
+        raise
+    HTML_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    path.write_text(r.text, encoding="utf-8")
     return r.text
 
 
@@ -85,6 +111,12 @@ def _canonical_key(html: str, pdf_url: str | None) -> tuple[str | None, str | No
 
 
 def download_pdf(pdf_url: str, session: requests.Session | None = None) -> bytes:
+    # Las fichas casi no cambian y se comparten entre paises: si ya estan en
+    # data/raw/nicovita/ no se vuelven a pedir.
+    existing = RAW_DIR / pdf_url.rsplit("/", 1)[-1]
+    if existing.exists():
+        return existing.read_bytes()
+    time.sleep(PAUSE_SECONDS)
     s = session or requests
     r = netutil.get(s, pdf_url, headers=HEADERS, timeout=30)
     r.raise_for_status()
