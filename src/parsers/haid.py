@@ -139,6 +139,8 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     slug = url.rstrip("/").rsplit("/", 1)[-1]
     title_match = re.search(r'property="og:title" content="([^"]+)"', html)
     nombre = title_match.group(1).strip() if title_match else slug.replace("-", " ").title()
+    # El sitio redisenado (2026-10) agrega el sufijo del sitio al og:title.
+    nombre = re.sub(r"\s+[-|–]\s+Haid Ecuador\s*$", "", nombre, flags=re.I)
     record["nombre_producto"] = f"HAID {nombre}"
 
     pdf_text = ""

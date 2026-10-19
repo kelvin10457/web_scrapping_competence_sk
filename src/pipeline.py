@@ -1,12 +1,13 @@
 """Orquestador: scrape -> parse -> CSV por empresa -> master.csv.
 
-Uso: python src/pipeline.py [empresa ...]
-Sin argumentos corre las 4 empresas. Cada empresa se corre de forma aislada
+Uso: python src/pipeline.py [--pais P] [--empresa E]
+Sin argumentos corre todos los (pais, empresa) de fuentes.py. Cada empresa se corre de forma aislada
 (un fallo en una no afecta a las demas) y master.csv se regenera siempre
 al final con lo que haya en processed/ (PLAN.md § 4-5: snapshot, no historico).
 """
 from __future__ import annotations
 
+import argparse
 import sys
 import traceback
 from pathlib import Path
@@ -26,57 +27,18 @@ else:
 PROCESSED_DIR = ROOT / "data" / "processed"
 MASTER_PATH = ROOT / "data" / "master.csv"
 
-ALL_EMPRESAS = ["nicovita", "haid", "aquaxcel", "biomar", "agripac"]
+import fuentes  # noqa: E402
+
+ALL_EMPRESAS = fuentes.empresas()
 
 
-def run_empresa(empresa: str) -> list[dict]:
-    if empresa == "nicovita":
-        from scrapers import nicovita as sc
-        from parsers import nicovita as pr
+def processed_path(pais: str, empresa: str) -> Path:
+    return PROCESSED_DIR / pais / f"{empresa}.csv"
 
-        records = []
-        for item in sc.scrape_all():
-            records.extend(pr.parse_product(item["url"], item["html"], item["pdf_bytes"]))
-        return records
 
-    if empresa == "haid":
-        from scrapers import haid as sc
-        from parsers import haid as pr
-
-        records = []
-        for item in sc.scrape_all():
-            records.extend(pr.parse_product(item["url"], item["html"], item["pdf_bytes"]))
-        return records
-
-    if empresa == "aquaxcel":
-        from scrapers import aquaxcel as sc
-        from parsers import aquaxcel as pr
-
-        html = sc.fetch_listing()
-        return pr.parse_listing(html)
-
-    if empresa == "biomar":
-        from scrapers import agrizon as agrizon_sc
-        from parsers import agrizon as agrizon_pr
-
-        # biomar.com deshabilitado a proposito (decision del usuario,
-        # 2026-09-03): sus filas son solo identificacion por familia de
-        # producto, sin tamano/etapa_skt/proteina -- se prefiere que
-        # BioMar aparezca unicamente via Agrizon, con datos tecnicos reales
-        # por SKU, aunque eso deje fuera productos sin match en Agrizon
-        # (Blue Impact, INICIO *, SmartCare Balance *, EXIA Focus). Ver
-        # MEMORY.md "BioMar -- fuente complementaria Agrizon". src/scrapers/
-        # biomar.py y src/parsers/biomar.py quedan sin usar aqui pero no se
-        # borraron.
-        return agrizon_pr.parse_listing(agrizon_sc.scrape_all())
-
-    if empresa == "agripac":
-        from scrapers import agripac as sc
-        from parsers import agripac as pr
-
-        return pr.parse_listing(sc.scrape_all())
-
-    raise ValueError(f"Empresa desconocida: {empresa}")
+def run_empresa(empresa: str, pais: str = "ecuador") -> list[dict]:
+    """Scrapea + parsea un (pais, empresa) segun el registro de fuentes.py."""
+    return fuentes.run_fuente(pais, empresa)
 
 
 def _format_value(value):
@@ -125,10 +87,11 @@ def write_csv(records: list[dict], path: Path) -> None:
 
 def build_master() -> None:
     frames = []
-    for empresa in ALL_EMPRESAS:
-        csv_path = PROCESSED_DIR / f"{empresa}.csv"
+    for pais, empresa in fuentes.listar():
+        csv_path = processed_path(pais, empresa)
         if csv_path.exists():
             frames.append(pd.read_csv(csv_path, dtype=str, keep_default_na=False, na_values=[""]))
+    # Cualquier otro processed/{pais}/*.csv que ya no este en el registro igual entra.
     if not frames:
         return
     master = pd.concat(frames, ignore_index=True)
@@ -137,20 +100,35 @@ def build_master() -> None:
     write_xlsx(master, MASTER_PATH.with_suffix(".xlsx"))
 
 
-def main(empresas: list[str]) -> None:
-    for empresa in empresas:
-        print(f"--- {empresa} ---")
+def main(pares: list[tuple[str, str]]) -> int:
+    """Corre cada (pais, empresa) de forma aislada. Devuelve la cantidad de errores."""
+    errores = 0
+    for pais, empresa in pares:
+        print(f"--- {pais}/{empresa} ---")
         try:
-            records = run_empresa(empresa)
-            write_csv(records, PROCESSED_DIR / f"{empresa}.csv")
-            print(f"  OK: {len(records)} productos -> data/processed/{empresa}.csv")
+            records = run_empresa(empresa, pais)
+            write_csv(records, processed_path(pais, empresa))
+            print(f"  OK: {len(records)} productos -> data/processed/{pais}/{empresa}.csv")
         except Exception:
-            print(f"  ERROR en {empresa}:")
+            errores += 1
+            print(f"  ERROR en {pais}/{empresa}:")
             traceback.print_exc()
     build_master()
     print(f"--- master.csv regenerado en {MASTER_PATH} ---")
+    return errores
+
+
+def parse_args(argv: list[str]):
+    parser = argparse.ArgumentParser(description="Scrapea competencia y regenera master.csv")
+    parser.add_argument("--pais", choices=schema.PAIS_VALUES, help="solo este pais")
+    parser.add_argument("--empresa", help="solo esta empresa")
+    return parser.parse_args(argv)
 
 
 if __name__ == "__main__":
-    args = sys.argv[1:] or ALL_EMPRESAS
-    main(args)
+    args = parse_args(sys.argv[1:])
+    pares = fuentes.listar(args.pais, args.empresa)
+    if not pares:
+        print(f"Sin fuentes registradas para pais={args.pais} empresa={args.empresa}")
+        sys.exit(2)
+    sys.exit(1 if main(pares) else 0)

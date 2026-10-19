@@ -15,6 +15,8 @@ array real (no string separado por comas, a diferencia del endpoint
 """
 from __future__ import annotations
 
+import time
+
 import requests
 
 BASE_URL = "https://agrizon.com"
@@ -34,12 +36,20 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
     while True:
         url = f"{COLLECTION_URL}/products.json?limit={PAGE_LIMIT}&page={page}"
         r = s.get(url, headers=HEADERS, timeout=30)
+        # Shopify devuelve 429 si se piden paginas seguidas muy rapido
+        # (verificado 2026-10-19): se respeta Retry-After (o 5 s) y se reintenta.
+        for _ in range(3):
+            if r.status_code != 429:
+                break
+            time.sleep(min(int(r.headers.get("Retry-After", 5) or 5), 30))
+            r = s.get(url, headers=HEADERS, timeout=30)
         r.raise_for_status()
         batch = r.json().get("products", [])
         if not batch:
             break
         products.extend(batch)
         page += 1
+        time.sleep(1)  # pausa cortes entre paginas
     return products
 
 

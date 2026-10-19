@@ -34,7 +34,7 @@ PRODUCT_SLUGS = ["starter-pro", "starter", "speed", "happiness", "happiness-plus
 # para desktop/mobile (mismo href repetido dos veces), lo que hace fragil
 # reconstruir DATOS de producto leyendo esos tabs -- pero para solo extraer
 # el slug de la URL el duplicado no molesta (set() lo colapsa solo).
-_PRODUCT_LINK_RE = re.compile(r'href="https://www\.haid\.com\.ec/([a-z0-9\-]+)/?"')
+_PRODUCT_LINK_RE = re.compile(r'href="(?:https://www\.haid\.com\.ec)?/([a-z0-9\-]+)/?"')
 
 _TESSERACT_CANDIDATES = [
     r"C:\Program Files\Tesseract-OCR\tesseract.exe",
@@ -59,7 +59,13 @@ def product_url(slug: str) -> str:
 
 def find_pdf_url(product_html: str) -> str | None:
     m = re.search(r'https://www\.haid\.com\.ec/wp-content/uploads/[^"\'\s)]+\.pdf', product_html, re.I)
-    return m.group(0) if m else None
+    if m:
+        return m.group(0)
+    # Sitio redisenado (verificado 2026-10-19): las fichas se enlazan como ruta
+    # relativa "/media/AAAA/MM/ficha-tecnica-*.pdf". Se pide "ficha" en el nombre
+    # para no tomar las politicas de privacidad/cookies que tambien viven en /media/.
+    m = re.search(r'href="(/media/[^"\'\s]*ficha[^"\'\s]*\.pdf)"', product_html, re.I)
+    return BASE_URL + m.group(1) if m else None
 
 
 def discover_product_slugs(session: requests.Session | None = None) -> list[str]:

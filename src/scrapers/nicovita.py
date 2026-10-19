@@ -10,9 +10,14 @@ from pathlib import Path
 import requests
 
 BASE_URL = "https://nicovita.com"
-LIST_URL = f"{BASE_URL}/categoria/camarones/?pais=ecuador"
+LIST_URL_TEMPLATE = f"{BASE_URL}/categoria/camarones/?pais={{pais_slug}}"
+LIST_URL = LIST_URL_TEMPLATE.format(pais_slug="ecuador")
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
 RAW_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "nicovita"
+
+# PDFs ya descargados en esta corrida (url -> bytes): las fichas se comparten
+# entre paises (PLAN_REGIONAL.md 2.6), asi no se bajan dos veces.
+_PDF_CACHE: dict[str, bytes] = {}
 
 # Solo exige el prefijo "nicovita-" tras "/productos/" -- Nicovita NO es
 # consistente con el sufijo de pais: la mayoria de los productos usan
@@ -42,14 +47,14 @@ def fetch(url: str, session: requests.Session | None = None) -> str:
     return r.text
 
 
-def discover_product_urls(session: requests.Session | None = None) -> list[str]:
-    html = fetch(LIST_URL, session=session)
+def discover_product_urls(session: requests.Session | None = None, pais_slug: str = "ecuador") -> list[str]:
+    html = fetch(LIST_URL_TEMPLATE.format(pais_slug=pais_slug), session=session)
     urls = {u.rstrip("/") + "/" for u in _PRODUCT_URL_RE.findall(html)}
-    # Las URLs "-ecuador" van primero: si dos terminan siendo la misma
+    # Las URLs "-{pais_slug}" van primero: si dos terminan siendo la misma
     # pagina (ver _canonical_key en scrape_all), la version localizada queda
     # como fuente_url en vez de un alias generico, igual que en los datos
     # historicos.
-    return sorted(urls, key=lambda u: (not u.rstrip("/").endswith("-ecuador"), u))
+    return sorted(urls, key=lambda u: (not u.rstrip("/").endswith(f"-{pais_slug}"), u))
 
 
 def find_pdf_url(product_html: str) -> str | None:
@@ -92,7 +97,7 @@ def save_pdf(pdf_url: str, content: bytes) -> Path:
     return dest
 
 
-def scrape_all() -> list[dict]:
+def scrape_all(pais_slug: str = "ecuador") -> list[dict]:
     """Devuelve una lista de dicts crudos: {url, html, pdf_url, pdf_bytes,
     pdf_path} listos para pasar al parser. pdf_bytes es None si la pagina no
     tiene ficha tecnica enlazada (no deberia pasar segun MEMORY.md, pero no
@@ -102,7 +107,7 @@ def scrape_all() -> list[dict]:
     session = requests.Session()
     results = []
     seen_keys: set[tuple[str, str]] = set()
-    for url in discover_product_urls(session):
+    for url in discover_product_urls(session, pais_slug=pais_slug):
         html = fetch(url, session=session)
         pdf_url = find_pdf_url(html)
         key = _canonical_key(html, pdf_url)
@@ -112,7 +117,9 @@ def scrape_all() -> list[dict]:
         pdf_bytes = None
         pdf_path = None
         if pdf_url:
-            pdf_bytes = download_pdf(pdf_url, session=session)
+            pdf_bytes = _PDF_CACHE.get(pdf_url)
+            if pdf_bytes is None:
+                pdf_bytes = _PDF_CACHE[pdf_url] = download_pdf(pdf_url, session=session)
             pdf_path = save_pdf(pdf_url, pdf_bytes)
         results.append(
             {
