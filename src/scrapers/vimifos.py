@@ -9,6 +9,8 @@ import time
 
 import requests
 
+import netutil
+
 BASE_URL = "https://vimifos.com"
 CATEGORY_URL = f"{BASE_URL}/categoria/camaron"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
@@ -18,7 +20,7 @@ PAUSE_SECONDS = 1.0
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
     s = session or requests
-    r = s.get(url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.text
 

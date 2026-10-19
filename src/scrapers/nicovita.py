@@ -9,6 +9,8 @@ from pathlib import Path
 
 import requests
 
+import netutil
+
 BASE_URL = "https://nicovita.com"
 LIST_URL_TEMPLATE = f"{BASE_URL}/categoria/camarones/?pais={{pais_slug}}"
 LIST_URL = LIST_URL_TEMPLATE.format(pais_slug="ecuador")
@@ -42,7 +44,7 @@ _TITLE_RE = re.compile(r"<title>(.*?)</title>", re.S)
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
     s = session or requests
-    r = s.get(url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.text
 
@@ -84,7 +86,7 @@ def _canonical_key(html: str, pdf_url: str | None) -> tuple[str | None, str | No
 
 def download_pdf(pdf_url: str, session: requests.Session | None = None) -> bytes:
     s = session or requests
-    r = s.get(pdf_url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, pdf_url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.content
 

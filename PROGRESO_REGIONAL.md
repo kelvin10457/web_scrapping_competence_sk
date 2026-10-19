@@ -14,7 +14,7 @@
 - [x] F3 mexico/azteca (sin_fuente_publica)
 - [x] F3 mexico/nutrimar (parcial: 17 filas solo nombre; la fuente no publica proteina/calibre/empaque; validadas 3 vs paginas)
 - [x] F4 Centroamerica sin fuente documentada en MEMORY.md "Expansión regional"
-- [ ] F5 cierre: pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
+- [ ] F5 cierre (BLOQUEADO por captcha de nicovita.com, ver Bloqueos): pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
 
 ## Fuentes por país
 (pais | empresa | url | formato | campos | decision/estado) — verificado 2026-10-19
@@ -32,7 +32,8 @@ mexico | adm | sin catalogo publico encontrado | - | - | descartado (§6)
 honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni distribuidor publico encontrado (busqueda 2026-10-19) | - | - | sin_fuente_publica (carga manual via GUI; HAID/Agripac fuera por §6)
 
 ## Bloqueos
-(ninguno)
+- 2026-10-19: nicovita.com redirige a validate.perfdrive.com (captcha Radware) tras muchas pruebas del dia. NO se evade (§4). Afecta ecuador/honduras/mexico nicovita: ecuador/nicovita.csv restaurado desde el baseline; honduras y mexico nicovita.csv quedaron vacios (los datos validados en F2 se regeneran con `python src/pipeline.py --empresa nicovita` cuando el bloqueo se levante). Guardas nuevas: netutil.BlockedError y no sobrescribir CSV con 0 filas.
+- Falta para cerrar §7.3: regenerar honduras/mexico nicovita, correr `python src/pipeline.py` sin errores y escribir el cierre.
 
-## Última iteración: F3 nutrimar hecho (parcial). Siguiente: F4 documentar en MEMORY.md y F5 cierre.
+## Última iteración: F4 hecho; reintentos (netutil) y guardas; nicovita.com bloquea con captcha, esperando para regenerar.
 Notas: sitio HAID rediseñado (Next.js, hrefs relativos): arreglado en scrapers/parsers haid. Agrizon da 429: reintento + pausa. Ecuador regenerado = baseline (test_ecuador_identity). aquaxcel parser usa LISTING_URL fijo (ecuador) en fuente_url: ajustar en F2.

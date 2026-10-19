@@ -38,10 +38,12 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
         r = s.get(url, headers=HEADERS, timeout=30)
         # Shopify devuelve 429 si se piden paginas seguidas muy rapido
         # (verificado 2026-10-19): se respeta Retry-After (o 5 s) y se reintenta.
-        for _ in range(3):
+        for intento in range(5):
             if r.status_code != 429:
                 break
-            time.sleep(min(int(r.headers.get("Retry-After", 5) or 5), 30))
+            retry_after = r.headers.get("Retry-After", "")
+            espera = int(retry_after) if retry_after.isdigit() else 5 * 2**intento
+            time.sleep(min(espera, 60))
             r = s.get(url, headers=HEADERS, timeout=30)
         r.raise_for_status()
         batch = r.json().get("products", [])

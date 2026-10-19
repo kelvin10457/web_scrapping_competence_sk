@@ -11,6 +11,8 @@ import re
 
 import requests
 
+import netutil
+
 BASE_URL = "https://agripac.com.ec"
 LISTING_URL = f"{BASE_URL}/division/alimento-balanceado-acuacultura/"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
@@ -34,7 +36,7 @@ _PRODUCT_URL_RE = re.compile(r'href="(https://agripac\.com\.ec/productos/[a-z0-9
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
     s = session or requests
-    r = s.get(url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.text
 

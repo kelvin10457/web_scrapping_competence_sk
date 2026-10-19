@@ -107,6 +107,9 @@ def main(pares: list[tuple[str, str]]) -> int:
         print(f"--- {pais}/{empresa} ---")
         try:
             records = run_empresa(empresa, pais)
+            if not records:
+                # No pisar un CSV bueno con uno vacio (sitio caido/bloqueado/rediseñado).
+                raise RuntimeError("0 productos: se conserva el CSV anterior")
             write_csv(records, processed_path(pais, empresa))
             print(f"  OK: {len(records)} productos -> data/processed/{pais}/{empresa}.csv")
         except Exception:

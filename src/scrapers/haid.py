@@ -14,6 +14,8 @@ import fitz  # pymupdf
 import pdfplumber
 import pytesseract
 import requests
+
+import netutil
 from PIL import Image
 
 BASE_URL = "https://www.haid.com.ec"
@@ -48,7 +50,7 @@ for _candidate in _TESSERACT_CANDIDATES:
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
     s = session or requests
-    r = s.get(url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.text
 
@@ -100,7 +102,7 @@ def discover_product_slugs(session: requests.Session | None = None) -> list[str]
 
 def download_pdf(pdf_url: str, session: requests.Session | None = None) -> bytes:
     s = session or requests
-    r = s.get(pdf_url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, pdf_url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.content
 

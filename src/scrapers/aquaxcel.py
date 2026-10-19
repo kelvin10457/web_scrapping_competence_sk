@@ -15,7 +15,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
 
 def fetch_listing(session: requests.Session | None = None, pais_slug: str = "ecuador") -> str:
     s = session or requests
-    r = s.get(LISTING_URL_TEMPLATE.format(pais_slug=pais_slug), headers=HEADERS, timeout=30)
+    r = netutil.get(s, LISTING_URL_TEMPLATE.format(pais_slug=pais_slug), headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.text
 

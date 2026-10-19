@@ -10,6 +10,8 @@ import time
 
 import requests
 
+import netutil
+
 LISTING_URL = "https://www.grupoacuicolamexicano.com.mx/nutrimar"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
 _LINK_RE = re.compile(r"https://www\.nutrimar\.mx/([A-Za-z0-9%\-]+)")
@@ -26,7 +28,7 @@ NON_FEED_SLUGS = {
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
     s = session or requests
-    r = s.get(url, headers=HEADERS, timeout=30)
+    r = netutil.get(s, url, headers=HEADERS, timeout=30)
     r.raise_for_status()
     return r.text
 
