@@ -13,9 +13,9 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import schema  # noqa: E402
-from scrapers import haid as sc  # noqa: E402
+from paises.ecuador import haid_scraper as sc  # noqa: E402
 
 # Fallback de etapa cuando ni el texto de la ficha (marcador de peso) ni las
 # reglas genericas de schema.normalize_etapa resuelven el caso. Solo aplica

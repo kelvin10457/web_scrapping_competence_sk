@@ -15,7 +15,7 @@ BASE_URL = "https://nicovita.com"
 LIST_URL_TEMPLATE = f"{BASE_URL}/categoria/camarones/?pais={{pais_slug}}"
 LIST_URL = LIST_URL_TEMPLATE.format(pais_slug="ecuador")
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
-RAW_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "nicovita"
+RAW_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "nicovita"
 
 # PDFs ya descargados en esta corrida (url -> bytes): las fichas se comparten
 # entre paises (PLAN_REGIONAL.md 2.6), asi no se bajan dos veces.

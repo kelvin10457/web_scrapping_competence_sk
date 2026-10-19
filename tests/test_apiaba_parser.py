@@ -1,6 +1,6 @@
 from conftest import FIXTURES
-from parsers import apiaba as parser
-from scrapers import apiaba as scraper
+from paises.mexico import apiaba_parser as parser
+from paises.mexico import apiaba_scraper as scraper
 
 
 def _read(name):

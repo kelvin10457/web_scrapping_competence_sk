@@ -1,6 +1,6 @@
 from conftest import FIXTURES
-from parsers import vimifos as parser
-from scrapers import vimifos as scraper
+from paises.mexico import vimifos_parser as parser
+from paises.mexico import vimifos_scraper as scraper
 
 
 def _read(name):

@@ -17,10 +17,10 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import schema  # noqa: E402
 
-from scrapers.aquaxcel import LISTING_URL  # noqa: E402
+from paises._compartido.aquaxcel_scraper import LISTING_URL  # noqa: E402
 
 _NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
 

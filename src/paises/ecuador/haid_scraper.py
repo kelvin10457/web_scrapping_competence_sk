@@ -21,7 +21,7 @@ from PIL import Image
 BASE_URL = "https://www.haid.com.ec"
 LIST_URL = f"{BASE_URL}/productos/"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
-RAW_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "raw" / "haid"
+RAW_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "haid"
 
 # Confirmado manualmente (MEMORY.md): a la fecha estos son los 6 productos
 # reales de HAID Ecuador. Se mantiene como fallback/referencia, pero

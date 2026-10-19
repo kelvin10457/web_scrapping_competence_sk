@@ -1,5 +1,5 @@
 from conftest import FIXTURES
-from parsers import biomar as parser
+from paises.ecuador import biomar_parser as parser
 
 
 def _load(name: str) -> str:

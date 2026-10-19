@@ -1,5 +1,5 @@
 from conftest import FIXTURES
-from parsers import agripac as parser
+from paises.ecuador import agripac_parser as parser
 
 
 def _html(filename: str) -> str:

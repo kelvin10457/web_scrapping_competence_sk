@@ -1,7 +1,7 @@
 import json
 
 from conftest import FIXTURES
-from parsers import agrizon as parser
+from paises.ecuador import agrizon_parser as parser
 
 
 def _load_products() -> list[dict]:

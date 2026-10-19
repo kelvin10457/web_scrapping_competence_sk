@@ -15,7 +15,7 @@ import pdfplumber
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import schema  # noqa: E402
 
 # Nombre comercial real por slug de URL (slug = URL sin "nicovita-" ni

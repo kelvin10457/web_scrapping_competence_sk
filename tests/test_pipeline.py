@@ -146,3 +146,20 @@ def test_write_csv_also_writes_xlsx_with_real_numeric_dtype(tmp_path):
     # siendo un numero real (lo que importa), no texto que Excel deba
     # reinterpretar.
     assert pd.api.types.is_numeric_dtype(df["proteina_pct"])
+
+
+def test_build_master_also_writes_one_master_per_pais(tmp_path, monkeypatch):
+    import pandas as pd
+    import schema
+
+    monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
+    monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
+    for pais in ("ecuador", "mexico"):
+        rec = {c: None for c in schema.SCHEMA_COLUMNS}
+        rec.update(pais=pais, empresa="Nicovita", nombre_producto=f"Nicovita {pais}")
+        pipeline.write_csv([rec], pipeline.processed_path(pais, "nicovita"))
+    pipeline.build_master()
+    assert len(pd.read_csv(tmp_path / "master.csv")) == 2
+    for pais in ("ecuador", "mexico"):
+        df = pd.read_csv(tmp_path / "processed" / pais / f"master_{pais}.csv")
+        assert list(df["pais"]) == [pais]

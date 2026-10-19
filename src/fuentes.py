@@ -1,74 +1,44 @@
-"""Registro declarativo de fuentes: (pais, empresa) -> scraper + parser.
+"""Registro de fuentes, derivado de las carpetas por pais (src/paises/<pais>/).
 
-PLAN_REGIONAL.md 2.2. Reemplaza los `if empresa == ...` de pipeline.run_empresa.
+Cada pais declara sus empresas en `paises.<pais>.FUENTES` y cada empresa es un
+modulo `paises.<pais>.<empresa>` con `run() -> list[dict]` (scrapea + parsea).
 Los modulos se importan con importlib, por eso ScraperCompetencia.spec los lista
-en `hiddenimports`: sin eso el .exe no los encuentra.
-
-`kind` dice como se conectan scraper y parser:
-- "items":   scrape_all(**params) -> [{url, html, pdf_bytes}]; parser.parse_product
-             se llama por item (Nicovita, HAID).
-- "listing": parser.parse_listing(scrape_all(**params)) (Aquaxcel, Agripac, Agrizon).
-Los parsers no agregan `pais`; lo agrega pipeline.
+en `hiddenimports`. El pipeline agrega la columna `pais`; los parsers no.
 """
 from __future__ import annotations
 
 import importlib
 
-FUENTES: dict[tuple[str, str], dict] = {
-    ("ecuador", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "ecuador"}},
-    ("honduras", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "honduras"}},
-    ("mexico", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "mexico"}},
-    ("mexico", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "mexico"}},
-    ("mexico", "vimifos"): {"scraper": "vimifos", "parser": "vimifos", "kind": "listing", "params": {}},
-    ("mexico", "apiaba"): {"scraper": "apiaba", "parser": "apiaba", "kind": "listing", "params": {}},
-    ("mexico", "nutrimar"): {"scraper": "nutrimar", "parser": "nutrimar", "kind": "listing", "params": {}},
-    ("ecuador", "haid"): {"scraper": "haid", "parser": "haid", "kind": "items", "params": {}},
-    ("ecuador", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "ecuador"}},
-    # biomar.com deshabilitado a proposito (ver MEMORY.md "BioMar -- fuente
-    # complementaria Agrizon"): BioMar aparece solo via Agrizon.
-    ("ecuador", "biomar"): {"scraper": "agrizon", "parser": "agrizon", "kind": "listing", "params": {}},
-    ("ecuador", "agripac"): {"scraper": "agripac", "parser": "agripac", "kind": "listing", "params": {}},
-}
+import schema
 
-# Orden estable de empresas (el de pipeline.ALL_EMPRESAS historico).
+# Orden estable de empresas dentro de cada pais en la GUI/CLI.
 EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac", "vimifos", "apiaba", "nutrimar"]
 
 
-def listar(pais: str | None = None, empresa: str | None = None) -> list[tuple[str, str]]:
-    """Pares (pais, empresa) registrados, filtrados, en orden estable."""
-    def key(par):
-        pais_, empresa_ = par
-        orden = EMPRESA_ORDER.index(empresa_) if empresa_ in EMPRESA_ORDER else len(EMPRESA_ORDER)
-        return (pais_ != "ecuador", pais_, orden, empresa_)
+def _fuentes_de(pais: str) -> list[str]:
+    return list(importlib.import_module(f"paises.{pais}").FUENTES)
 
-    pares = [
-        par for par in FUENTES
-        if (pais is None or par[0] == pais) and (empresa is None or par[1] == empresa)
-    ]
-    return sorted(pares, key=key)
+
+def listar(pais: str | None = None, empresa: str | None = None) -> list[tuple[str, str]]:
+    """Pares (pais, empresa) registrados, filtrados, ecuador primero."""
+    paises = sorted(schema.PAIS_VALUES, key=lambda p: (p != "ecuador", p))
+    pares = [(p, e) for p in paises for e in _fuentes_de(p)]
+    pares = [(p, e) for p, e in pares if (pais is None or p == pais) and (empresa is None or e == empresa)]
+    return sorted(pares, key=lambda par: (par[0] != "ecuador", par[0], EMPRESA_ORDER.index(par[1])
+                                          if par[1] in EMPRESA_ORDER else 99, par[1]))
 
 
 def empresas() -> list[str]:
-    """Empresas distintas registradas (orden estable)."""
-    vistas = {e for _, e in FUENTES}
+    vistas = {e for _, e in listar()}
     return sorted(vistas, key=lambda e: (EMPRESA_ORDER.index(e) if e in EMPRESA_ORDER else 99, e))
 
 
 def run_fuente(pais: str, empresa: str) -> list[dict]:
     """Scrapea y parsea un (pais, empresa). Agrega `pais` a cada registro."""
-    try:
-        fuente = FUENTES[(pais, empresa)]
-    except KeyError:
-        raise ValueError(f"Fuente desconocida: {pais}/{empresa}") from None
-    sc = importlib.import_module(f"scrapers.{fuente['scraper']}")
-    pr = importlib.import_module(f"parsers.{fuente['parser']}")
-    params = fuente["params"]
-    if fuente["kind"] == "items":
-        records = []
-        for item in sc.scrape_all(**params):
-            records.extend(pr.parse_product(item["url"], item["html"], item["pdf_bytes"]))
-    else:
-        records = pr.parse_listing(sc.scrape_all(**params))
+    if (pais, empresa) not in listar():
+        raise ValueError(f"Fuente desconocida: {pais}/{empresa}")
+    modulo = importlib.import_module(f"paises.{pais}.{empresa}")
+    records = modulo.run()
     for record in records:
         record["pais"] = pais
     return records

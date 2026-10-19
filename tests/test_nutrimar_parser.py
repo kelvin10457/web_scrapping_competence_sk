@@ -1,6 +1,6 @@
 from conftest import FIXTURES
-from parsers import nutrimar as parser
-from scrapers import nutrimar as scraper
+from paises.mexico import nutrimar_parser as parser
+from paises.mexico import nutrimar_scraper as scraper
 
 
 def _read(name):

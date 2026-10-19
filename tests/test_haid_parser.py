@@ -2,7 +2,7 @@ import pytest
 
 import schema
 from conftest import ROOT
-from parsers import haid as parser
+from paises.ecuador import haid_parser as parser
 
 # Texto real (recortado) de la ficha "Speed Pellet" -- ver MEMORY.md: el
 # encabezado dice PELLETIZADO (coincide con el nombre del producto) pero la

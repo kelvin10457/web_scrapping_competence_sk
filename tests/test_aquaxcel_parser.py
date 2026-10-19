@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 from conftest import FIXTURES
-from parsers import aquaxcel as parser
+from paises._compartido import aquaxcel_parser as parser
 
 
 def _load_html() -> str:

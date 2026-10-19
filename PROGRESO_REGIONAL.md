@@ -16,6 +16,8 @@
 - [x] F4 Centroamerica sin fuente documentada en MEMORY.md "Expansión regional"
 - [ ] F5 cierre (BLOQUEADO por captcha de nicovita.com, ver Bloqueos): pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
 
+- [x] R1 (pedido del usuario) reorganizar por pais: src/paises/<pais>/<empresa>.py con run(), _compartido/ para motores, master por pais, README por pais + ARQUITECTURA.md (169 tests ok)
+
 ## Fuentes por país
 (pais | empresa | url | formato | campos | decision/estado) — verificado 2026-10-19
 honduras | nicovita | nicovita.com/categoria/camarones/?pais=honduras (11 productos -honduras) | HTML + PDF texto (PDFs compartidos con Ecuador) | todos los del parser PDF | construir -> pendiente

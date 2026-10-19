@@ -98,6 +98,12 @@ def build_master() -> None:
     master = master[schema.SCHEMA_COLUMNS]
     master.to_csv(MASTER_PATH, index=False, encoding="utf-8-sig")
     write_xlsx(master, MASTER_PATH.with_suffix(".xlsx"))
+    # Un master por pais: data/processed/{pais}/master_{pais}.csv|xlsx (cada pais
+    # puede ofrecer productos distintos aunque la empresa sea la misma).
+    for pais, df_pais in master.groupby("pais", sort=False):
+        pais_path = PROCESSED_DIR / pais / f"master_{pais}.csv"
+        df_pais.to_csv(pais_path, index=False, encoding="utf-8-sig")
+        write_xlsx(df_pais, pais_path.with_suffix(".xlsx"))
 
 
 def main(pares: list[tuple[str, str]]) -> int:
