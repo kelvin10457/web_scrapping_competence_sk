@@ -12,7 +12,7 @@
 - [x] F3 mexico/purina (sin_fuente_publica)
 - [x] F3 mexico/apiaba (ok 3 filas validadas vs paginas; Dorado 35% proteina=None porque la pagina contradice titulo 35 vs analisis 40)
 - [x] F3 mexico/azteca (sin_fuente_publica)
-- [ ] F3 mexico/nutrimar
+- [x] F3 mexico/nutrimar (parcial: 17 filas solo nombre; la fuente no publica proteina/calibre/empaque; validadas 3 vs paginas)
 - [ ] F4 Centroamerica sin fuente: documentar en MEMORY.md
 - [ ] F5 cierre: pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
 
@@ -34,5 +34,5 @@ honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni dis
 ## Bloqueos
 (ninguno)
 
-## Última iteración: F3 apiaba hecho. Siguiente: nutrimar (parcial).
+## Última iteración: F3 nutrimar hecho (parcial). Siguiente: F4 documentar en MEMORY.md y F5 cierre.
 Notas: sitio HAID rediseñado (Next.js, hrefs relativos): arreglado en scrapers/parsers haid. Agrizon da 429: reintento + pausa. Ecuador regenerado = baseline (test_ecuador_identity). aquaxcel parser usa LISTING_URL fijo (ecuador) en fuente_url: ajustar en F2.
