@@ -73,6 +73,32 @@ def fetch(url: str, session: requests.Session | None = None) -> str:
     return r.text
 
 
+MANUAL_DIR = RAW_DIR.parent.parent / "manual" / "nicovita"
+_CANONICAL_RES = (
+    re.compile(r'<link[^>]+rel="canonical"[^>]+href="([^"]+)"', re.I),
+    re.compile(r'property="og:url"[^>]+content="([^"]+)"', re.I),
+)
+
+
+def manual_pages(pais_slug: str) -> dict[str, str]:
+    """Paginas de producto guardadas a mano desde el navegador en
+    data/manual/nicovita/<pais>/ (cualquier nombre de archivo, "Guardar como... Solo
+    HTML"). Se reconocen por su URL canonica real, asi que no hay que renombrar nada.
+    Se usan solo si el sitio bloquea (captcha). {url: html}"""
+    pages: dict[str, str] = {}
+    folder = MANUAL_DIR / pais_slug
+    if not folder.is_dir():
+        return pages
+    for path in sorted(list(folder.glob("*.htm")) + list(folder.glob("*.html"))):
+        html = path.read_text(encoding="utf-8", errors="replace")
+        for rx in _CANONICAL_RES:
+            m = rx.search(html)
+            if m and _PRODUCT_URL_RE.fullmatch(m.group(1).strip()):
+                pages[m.group(1).strip().rstrip("/") + "/"] = html
+                break
+    return pages
+
+
 def discover_product_urls(session: requests.Session | None = None, pais_slug: str = "ecuador") -> list[str]:
     html = fetch(LIST_URL_TEMPLATE.format(pais_slug=pais_slug), session=session)
     urls = {u.rstrip("/") + "/" for u in _PRODUCT_URL_RE.findall(html)}
@@ -138,8 +164,18 @@ def scrape_all(pais_slug: str = "ecuador") -> list[dict]:
     session = requests.Session()
     results = []
     seen_keys: set[tuple[str, str]] = set()
-    for url in discover_product_urls(session, pais_slug=pais_slug):
-        html = fetch(url, session=session)
+    try:
+        urls = discover_product_urls(session, pais_slug=pais_slug)
+        get_html = lambda u: fetch(u, session=session)  # noqa: E731
+    except netutil.BlockedError:
+        manual = manual_pages(pais_slug)
+        if not manual:
+            raise
+        print(f"  [bloqueado: usando {len(manual)} paginas guardadas a mano en {MANUAL_DIR / pais_slug}]")
+        urls = sorted(manual, key=lambda u: (not u.rstrip("/").endswith(f"-{pais_slug}"), u))
+        get_html = manual.__getitem__
+    for url in urls:
+        html = get_html(url)
         pdf_url = find_pdf_url(html)
         key = _canonical_key(html, pdf_url)
         if key[0] is not None and key in seen_keys:

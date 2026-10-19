@@ -246,3 +246,21 @@ def test_slug_from_url_handles_other_countries():
     assert pr.slug_from_url("https://nicovita.com/productos/nicovita-classic-mexico-2/") == "classic"
     assert pr.slug_from_url("https://nicovita.com/productos/nicovita-classic-engorde-honduras/") == "classic-engorde"
     assert pr.slug_from_url("https://nicovita.com/productos/nicovita-katal-ecuador/") == "katal"
+
+
+def test_manual_pages_recognized_by_canonical_url(tmp_path, monkeypatch):
+    from paises._compartido import nicovita_scraper as sc
+
+    folder = tmp_path / "honduras"
+    folder.mkdir()
+    (folder / "cualquier nombre (1).html").write_text(
+        '<html><link rel="canonical" href="https://nicovita.com/productos/nicovita-katal-honduras/" /></html>',
+        encoding="utf-8",
+    )
+    (folder / "listado.html").write_text(
+        '<link rel="canonical" href="https://nicovita.com/categoria/camarones/" />', encoding="utf-8"
+    )
+    monkeypatch.setattr(sc, "MANUAL_DIR", tmp_path)
+    pages = sc.manual_pages("honduras")
+    assert list(pages) == ["https://nicovita.com/productos/nicovita-katal-honduras/"]
+    assert sc.manual_pages("mexico") == {}
