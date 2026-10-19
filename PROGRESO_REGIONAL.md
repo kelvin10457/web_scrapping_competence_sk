@@ -5,8 +5,8 @@
 - [x] F0.4 pais en merge_human (matching), manual_store (ALTER TABLE), gui (tarjetas por pais/empresa, campo pais obligatorio)
 - [x] F0.5 regenerar Ecuador con pipeline y verificar mismas filas (si falla: STOP, ver §5)
 - [x] F1 descubrimiento de fuentes (tabla abajo)
-- [ ] F2 honduras/nicovita  (validados: 0/3)
-- [ ] F2 mexico/nicovita  (validados: 0/3)
+- [x] F2 honduras/nicovita  (ok, validados 3/3: Classic Engorde, Finalis, Terap vs PDF; 38 filas; nota: classic-honduras se deduplica como alias)
+- [x] F2 mexico/nicovita  (ok, validados 3/3: Classic, Katal, Terap vs PDF; 26 filas)
 - [ ] F2 mexico/aquaxcel  (validados: 0/3)
 - [ ] F3 mexico/vimifos
 - [x] F3 mexico/purina (sin_fuente_publica)
@@ -34,5 +34,5 @@ honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni dis
 ## Bloqueos
 (ninguno)
 
-## Última iteración: F1 completa (tabla de fuentes); Purina y Azteca descartados.
+## Última iteración: F2 honduras+mexico nicovita ok (parser slug generalizado).
 Notas: sitio HAID rediseñado (Next.js, hrefs relativos): arreglado en scrapers/parsers haid. Agrizon da 429: reintento + pausa. Ecuador regenerado = baseline (test_ecuador_identity). aquaxcel parser usa LISTING_URL fijo (ecuador) en fuente_url: ajustar en F2.

@@ -16,6 +16,8 @@ import importlib
 
 FUENTES: dict[tuple[str, str], dict] = {
     ("ecuador", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "ecuador"}},
+    ("honduras", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "honduras"}},
+    ("mexico", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "mexico"}},
     ("ecuador", "haid"): {"scraper": "haid", "parser": "haid", "kind": "items", "params": {}},
     ("ecuador", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "ecuador"}},
     # biomar.com deshabilitado a proposito (ver MEMORY.md "BioMar -- fuente

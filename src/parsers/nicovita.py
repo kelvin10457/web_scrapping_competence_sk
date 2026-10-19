@@ -45,7 +45,9 @@ _SLUG_TO_NAME = {
     "terap-e": "Nicovita Térap E+",
 }
 
-_SLUG_RE = re.compile(r"nicovita-(?P<slug>[a-z0-9\-]+)-ecuador")
+# Sufijo de pais (PLAN_REGIONAL.md): -ecuador/-honduras/-mexico, con "-2" opcional
+# (ej. nicovita-classic-mexico-2, alias duplicado).
+_SLUG_RE = re.compile(r"nicovita-(?P<slug>[a-z0-9\-]+?)-(?:ecuador|honduras|mexico|peru)(?:-\d+)?/?$")
 # Fallback para la linea Proterra (ver src/scrapers/nicovita.py): su URL no
 # trae el sufijo "-ecuador", asi que el regex de arriba no matchea nada.
 _SLUG_RE_SIN_PAIS = re.compile(r"nicovita\.com/productos/nicovita-(?P<slug>[a-z0-9\-]+)/?$")

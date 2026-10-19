@@ -269,7 +269,9 @@ def real_master_df():
     path = ROOT / "data" / "master.xlsx"
     if not path.exists():
         pytest.skip("data/master.xlsx no existe en este checkout")
-    return pd.read_excel(path)
+    # Estos casos se confirmaron con datos de Ecuador; el master regional trae mas paises.
+    df = pd.read_excel(path)
+    return df[df["pais"] == "ecuador"].reset_index(drop=True)
 
 
 def test_real_master_nicovita_classic_same_caliber_is_ambiguous_by_protein(real_master_df):

@@ -237,3 +237,12 @@ def test_parse_product_terap_keeps_stage_info_and_flags_salud():
     assert by_tamano["1.2"] == "precria"
     assert by_tamano["2.0"] == "engorde"
     assert by_tamano["2.5"] == "engorde"
+
+
+def test_slug_from_url_handles_other_countries():
+    from parsers import nicovita as pr
+
+    assert pr.slug_from_url("https://nicovita.com/productos/nicovita-katal-honduras/") == "katal"
+    assert pr.slug_from_url("https://nicovita.com/productos/nicovita-classic-mexico-2/") == "classic"
+    assert pr.slug_from_url("https://nicovita.com/productos/nicovita-classic-engorde-honduras/") == "classic-engorde"
+    assert pr.slug_from_url("https://nicovita.com/productos/nicovita-katal-ecuador/") == "katal"
