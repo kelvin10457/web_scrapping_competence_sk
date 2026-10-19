@@ -2,8 +2,8 @@
 primera fila es [NOMBRE DE LINEA, columna1, columna2, ...] y cuyas filas
 siguientes se rotulan PRESENTACION / % PROTEINA / TAMANO PARTICULA / peso
 del camaron. Cada columna es un producto. Solo se toma lo que el sitio
-publica: celdas con varios valores (ej. "30%, 35%, 40%") dejan proteina_pct
-en None en vez de elegir uno; "migaja"/"micropelet" no son un valor valido de
+publica. Una celda con varias proteinas (ej. "30%, 35%, 40%") se separa en una
+fila por SKU (RONDA2 R2.2, ver `_expandir_proteinas`); "migaja"/"micropelet" no son un valor valido de
 tipo_presentacion y quedan en None."""
 from __future__ import annotations
 
@@ -39,9 +39,57 @@ def _row_kind(label: str) -> str | None:
     return None
 
 
+_PROT_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*%")
+# Asociacion explicita proteina -> calibre/etapa publicada en el texto: "35% (2.0 mm)".
+_PROT_ASOC_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*%\s*\(([^)]+)\)")
+
+
+def _proteinas(text: str) -> list[float]:
+    return [float(n.replace(",", ".")) for n in _PROT_RE.findall(text or "")]
+
+
 def _parse_proteina(text: str) -> float | None:
-    nums = re.findall(rf"({_NUM})\s*%", text)
-    return float(nums[0]) if len(nums) == 1 else None
+    nums = _proteinas(text)
+    return nums[0] if len(nums) == 1 else None
+
+
+def _calibres(text: str) -> list[str]:
+    """Calibres publicados en la celda: un rango "2.0MM - 6MM" es UN calibre;
+    varios se separan con coma, punto y coma, barra o " y "."""
+    piezas = re.split(r"\s*(?:[,;/|]|y)\s*", text or "")
+    return [p for p in piezas if re.search(_NUM, p)]
+
+
+def _expandir_proteinas(record: dict, proteina_txt: str, tamano_txt: str) -> list[dict]:
+    """Regla deterministica de RONDA2 R2.2 para una celda con N>1 proteinas y
+    M calibres en la misma columna:
+    - asociacion explicita "35% (2.0 mm)" en el texto: manda sobre el orden;
+    - M == N: se emparejan 1 a 1 en el orden publicado;
+    - M en {0, 1}: N filas con el mismo calibre;
+    - M != N (ambos > 1): N filas con tamano_pellet_mm = texto original completo
+      y conflicto `calibre_no_emparejable`.
+    Cada fila es un SKU: nombre_producto lleva la proteina ("Bumper Crop 30%")."""
+    prots = _proteinas(proteina_txt)
+    calibres = _calibres(tamano_txt)
+    asociados = {float(p.replace(",", ".")): c for p, c in _PROT_ASOC_RE.findall(proteina_txt)}
+    filas = []
+    for i, prot in enumerate(prots):
+        fila = dict(record)
+        fila["_conflictos"] = []
+        fila["proteina_pct"] = prot
+        fila["nombre_producto"] = f"{record['nombre_producto']} {_fmt(prot)}%"
+        if prot in asociados:
+            fila["tamano_pellet_mm"] = _parse_tamano(asociados[prot]) or record["tamano_pellet_mm"]
+        elif len(calibres) == len(prots):
+            fila["tamano_pellet_mm"] = _parse_tamano(calibres[i])
+        elif len(calibres) <= 1:
+            fila["tamano_pellet_mm"] = record["tamano_pellet_mm"]
+        else:
+            fila["tamano_pellet_mm"] = tamano_txt
+            schema.registrar_conflicto(fila, "tamano_pellet_mm", tamano_txt, "calibre_no_emparejable",
+                                       f"proteinas: {proteina_txt} | calibres: {tamano_txt}")
+        filas.append(fila)
+    return filas
 
 
 def _fmt(x: float) -> str:
@@ -92,7 +140,10 @@ def parse_product(url: str, html: str) -> list[dict]:
             record["proteina_pct"] = _parse_proteina(cell("proteina"))
             record["fuente_url"] = url
             record["fecha_extraccion"] = fecha
-            records.append(record)
+            if len(_proteinas(cell("proteina"))) > 1:
+                records.extend(_expandir_proteinas(record, cell("proteina"), cell("tamano")))
+            else:
+                records.append(record)
     return records
 
 

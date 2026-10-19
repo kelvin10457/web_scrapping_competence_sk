@@ -18,7 +18,7 @@
 
 - [x] R2.0 Nicovita pausada (usuario): fuentes.INACTIVAS; `pipeline.py` sin args la salta, `--empresa nicovita` la corre. ecuador/honduras/mexico nicovita = pausado (usuario)
 - [x] R2.1 registro de conflictos: schema.resolver_campo(candidatos, reglas) + regla_coincidencia/regla_preferir; record['_conflictos'] -> pipeline.write_conflictos -> data/processed/{pais}/_conflictos.csv; build_master ignora '_*' y consolida data/conflictos.csv
-- [ ] R2.2 vimifos: celda con varias proteinas -> una fila por SKU
+- [x] R2.2 vimifos: celda con varias proteinas -> una fila por SKU ("Bumper Crop 30%"...). Bumper Crop/Natural Force/Total Range: M=1 calibre (2-6) -> 3 filas c/u. Nulos proteina: antes 3/15, despues 0/21
 - [ ] R2.3 apiaba: proteina contradictoria via resolver_campo (coincidencia / analisis_copiado_de / nombre_comercial)
 - [ ] R2.4 nutrimar: fichas tecnicas (Wix, pdfplumber/OCR HAID), Zeigler vs Nutrimar
 - [ ] R2.5 Nicaragua/Panama: reconfirmar candidatos (1 request c/u)
