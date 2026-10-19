@@ -402,9 +402,11 @@ def resolver_campo(candidatos, reglas):
 def registrar_conflicto(record: dict, campo: str, valor, regla: str, candidatos) -> None:
     """Anota en el record un conflicto resuelto; pipeline.py lo vuelca a
     _conflictos.csv agregando pais/empresa/nombre/fuente/fecha del record."""
-    texto = " | ".join(f"{v} ({o})" for v, o in candidatos) if not isinstance(candidatos, str) else candidatos
+    def fmt(v):
+        return f"{v:g}" if isinstance(v, float) else v
+    texto = " | ".join(f"{fmt(v)} ({o})" for v, o in candidatos) if not isinstance(candidatos, str) else candidatos
     record.setdefault("_conflictos", []).append(
-        {"campo": campo, "valor_elegido": valor, "regla": regla, "candidatos": texto})
+        {"campo": campo, "valor_elegido": fmt(valor), "regla": regla, "candidatos": texto})
 
 
 def conflictos_de(records: list[dict]) -> list[dict]:
@@ -419,3 +421,38 @@ def conflictos_de(records: list[dict]) -> list[dict]:
                 "fecha_extraccion": record.get("fecha_extraccion"),
             })
     return filas
+
+
+def regla_analisis_copiado(analisis: str | None, otros, origen_analisis: str = "analisis",
+                           origen_titulo: str = "titulo"):
+    """Regla "copia detectada": si el bloque de analisis (normalizado) de este
+    producto es igual al de otro producto del mismo sitio y el titulo de ese
+    otro tiene el valor del analisis, el analisis esta copiado: gana el titulo.
+    `otros`: [(nombre, analisis_normalizado, valor_titulo), ...]."""
+    def regla(candidatos):
+        val_an = next((v for v, o in candidatos if o == origen_analisis), None)
+        val_tit = next((v for v, o in candidatos if o == origen_titulo), None)
+        if not analisis or val_an is None or val_tit is None:
+            return None
+        for nombre, an_otro, tit_otro in otros:
+            if an_otro == analisis and tit_otro is not None and _mismo_valor(tit_otro, val_an):
+                return val_tit, f"analisis_copiado_de:{nombre}"
+        return None
+    return regla
+
+
+def reglas_titulo_vs_analisis(analisis: str | None = None, otros=()) -> list:
+    """Jerarquia de RONDA2 R2.3 para cualquier empresa cuyo titulo y tabla de
+    analisis se contradigan: coincidencia > analisis copiado > nombre comercial."""
+    return [regla_coincidencia, regla_analisis_copiado(analisis, otros),
+            regla_preferir("titulo", "nombre_comercial")]
+
+
+def resolver_y_registrar(record: dict, campo: str, candidatos, reglas):
+    """resolver_campo + escribe record[campo] y, si los candidatos no
+    coincidian (regla != "unico"), deja el conflicto en record["_conflictos"]."""
+    valor, regla = resolver_campo(candidatos, reglas)
+    record[campo] = valor
+    if regla not in (None, "unico"):
+        registrar_conflicto(record, campo, valor, regla, candidatos)
+    return valor, regla
