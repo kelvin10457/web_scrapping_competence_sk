@@ -19,6 +19,7 @@ FUENTES: dict[tuple[str, str], dict] = {
     ("honduras", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "honduras"}},
     ("mexico", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "mexico"}},
     ("mexico", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "mexico"}},
+    ("mexico", "vimifos"): {"scraper": "vimifos", "parser": "vimifos", "kind": "listing", "params": {}},
     ("ecuador", "haid"): {"scraper": "haid", "parser": "haid", "kind": "items", "params": {}},
     ("ecuador", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "ecuador"}},
     # biomar.com deshabilitado a proposito (ver MEMORY.md "BioMar -- fuente
@@ -28,7 +29,7 @@ FUENTES: dict[tuple[str, str], dict] = {
 }
 
 # Orden estable de empresas (el de pipeline.ALL_EMPRESAS historico).
-EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac"]
+EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac", "vimifos", "apiaba", "nutrimar"]
 
 
 def listar(pais: str | None = None, empresa: str | None = None) -> list[tuple[str, str]]:
