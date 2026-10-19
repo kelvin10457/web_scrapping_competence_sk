@@ -43,7 +43,6 @@ _PDF_LINK_RE = re.compile(
 _TITLE_RE = re.compile(r"<title>(.*?)</title>", re.S)
 
 
-PAUSE_SECONDS = 2.0
 CACHE_TTL_SECONDS = 24 * 3600
 HTML_CACHE_DIR = RAW_DIR.parent / "nicovita_html"
 
@@ -63,7 +62,6 @@ def fetch(url: str, session: requests.Session | None = None) -> str:
         return path.read_text(encoding="utf-8", errors="replace")
     s = session or requests
     try:
-        time.sleep(PAUSE_SECONDS)
         r = netutil.get(s, url, headers=HEADERS, timeout=30)
         r.raise_for_status()
     except netutil.BlockedError:
@@ -116,7 +114,6 @@ def download_pdf(pdf_url: str, session: requests.Session | None = None) -> bytes
     existing = RAW_DIR / pdf_url.rsplit("/", 1)[-1]
     if existing.exists():
         return existing.read_bytes()
-    time.sleep(PAUSE_SECONDS)
     s = session or requests
     r = netutil.get(s, pdf_url, headers=HEADERS, timeout=30)
     r.raise_for_status()

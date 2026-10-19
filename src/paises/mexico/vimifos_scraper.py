@@ -5,7 +5,6 @@ pagina trae una tabla con presentacion, % proteina, tamano de particula."""
 from __future__ import annotations
 
 import re
-import time
 
 import requests
 
@@ -15,7 +14,6 @@ BASE_URL = "https://vimifos.com"
 CATEGORY_URL = f"{BASE_URL}/categoria/camaron"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
 _PRODUCT_LINK_RE = re.compile(r'href="(/producto/[a-z0-9\-]+)"')
-PAUSE_SECONDS = 1.0
 
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
@@ -36,6 +34,5 @@ def scrape_all() -> list[dict]:
     urls = discover_product_urls(fetch(CATEGORY_URL, session=session))
     items = []
     for url in urls:
-        time.sleep(PAUSE_SECONDS)
         items.append({"url": url, "html": fetch(url, session=session)})
     return items

@@ -163,3 +163,40 @@ def test_build_master_also_writes_one_master_per_pais(tmp_path, monkeypatch):
     for pais in ("ecuador", "mexico"):
         df = pd.read_csv(tmp_path / "processed" / pais / f"master_{pais}.csv")
         assert list(df["pais"]) == [pais]
+
+
+def test_netutil_pause_schedule_is_random_and_long_every_3_to_5(monkeypatch):
+    import netutil
+
+    slept = []
+    monkeypatch.setattr(netutil, "ENABLED", True)
+    monkeypatch.setattr(netutil.time, "sleep", slept.append)
+    monkeypatch.delenv("SCRAPER_NO_PAUSE", raising=False)
+    netutil._state.update(n=0, next_long=4)
+    for _ in range(4):
+        netutil.pause()
+    assert all(1.5 <= s <= 4.0 for s in slept[:3])
+    assert 20.0 <= slept[3] <= 30.0
+    assert 3 <= netutil._state["next_long"] <= 5
+
+
+def test_netutil_blocked_response_raises_and_saves_page(tmp_path, monkeypatch):
+    import netutil
+    import pytest
+
+    class Resp:
+        url = "https://validate.perfdrive.com/?ssa=1"
+        status_code = 200
+        text = "<html>captcha</html>"
+        headers = {}
+
+    class Sess:
+        def get(self, url, **kw):
+            return Resp()
+
+    monkeypatch.setattr(netutil, "BLOQUEOS_DIR", tmp_path)
+    netutil.reset_blocked()
+    with pytest.raises(netutil.BlockedError) as exc:
+        netutil.get(Sess(), "https://nicovita.com/x")
+    assert exc.value.saved.exists()
+    assert netutil.blocked_events()[0]["captcha_url"].startswith("https://validate.perfdrive.com")

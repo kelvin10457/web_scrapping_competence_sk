@@ -8,6 +8,7 @@ al final con lo que haya en processed/ (PLAN.md § 4-5: snapshot, no historico).
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import sys
 import traceback
 from pathlib import Path
@@ -28,6 +29,7 @@ PROCESSED_DIR = ROOT / "data" / "processed"
 MASTER_PATH = ROOT / "data" / "master.csv"
 
 import fuentes  # noqa: E402
+import netutil  # noqa: E402
 
 ALL_EMPRESAS = fuentes.empresas()
 
@@ -106,9 +108,43 @@ def build_master() -> None:
         write_xlsx(df_pais, pais_path.with_suffix(".xlsx"))
 
 
+def reportar_bloqueos(bloqueadas) -> None:
+    """Resumen de fuentes bloqueadas por captcha y como ver el problema. Tambien
+    se guarda en data/bloqueos.md."""
+    if not bloqueadas:
+        return
+    lineas = [
+        "# Fuentes bloqueadas por captcha",
+        "",
+        f"Corrida: {datetime.now():%Y-%m-%d %H:%M}",
+        "",
+        "| pais | empresa | pagina pedida | pagina del captcha que vio el script |",
+        "|---|---|---|---|",
+    ]
+    for pais, empresa, exc in bloqueadas:
+        lineas.append(f"| {pais} | {empresa} | {exc.url} | `{exc.saved}` |")
+    lineas += [
+        "",
+        "## Como ver el problema",
+        "1. Abre en tu navegador el archivo HTML de la ultima columna (doble clic): es lo que recibio el script en vez de la pagina.",
+        "2. Abre tambien la 'pagina pedida' en tu navegador. Si ahi entras normal, el sitio solo bloquea a scripts (lo normal).",
+        "3. El captcha se resuelve en TU navegador y no desbloquea al script. Alternativa: guarda las paginas con Guardar como... HTML en data/raw/nicovita_html/ (ver src/paises/_compartido/README.md) y vuelve a correr.",
+        "4. El script no evade captchas. Esperar unas horas entre corridas y usar el ritmo con pausas ayuda a que no se repita.",
+    ]
+    texto = "\n".join(lineas) + "\n"
+    (ROOT / "data").mkdir(exist_ok=True)
+    (ROOT / "data" / "bloqueos.md").write_text(texto, encoding="utf-8")
+    print("\n=== FUENTES BLOQUEADAS POR CAPTCHA ===")
+    for pais, empresa, exc in bloqueadas:
+        print(f"  - {pais}/{empresa}: {exc.url}\n      pagina del captcha: {exc.saved}")
+    print("  Como verlo: abre ese archivo .html en tu navegador. Detalle en data/bloqueos.md\n")
+
+
 def main(pares: list[tuple[str, str]]) -> int:
     """Corre cada (pais, empresa) de forma aislada. Devuelve la cantidad de errores."""
     errores = 0
+    bloqueadas: list[tuple[str, str, netutil.BlockedError]] = []
+    netutil.reset_blocked()
     for pais, empresa in pares:
         print(f"--- {pais}/{empresa} ---")
         try:
@@ -118,10 +154,16 @@ def main(pares: list[tuple[str, str]]) -> int:
                 raise RuntimeError("0 productos: se conserva el CSV anterior")
             write_csv(records, processed_path(pais, empresa))
             print(f"  OK: {len(records)} productos -> data/processed/{pais}/{empresa}.csv")
+        except netutil.BlockedError as exc:
+            errores += 1
+            bloqueadas.append((pais, empresa, exc))
+            print(f"  BLOQUEADO {pais}/{empresa}: captcha/anti-bot. Se conserva el CSV anterior.")
+            print(f"    Pagina que vio el script: {exc.saved}")
         except Exception:
             errores += 1
             print(f"  ERROR en {pais}/{empresa}:")
             traceback.print_exc()
+    reportar_bloqueos(bloqueadas)
     build_master()
     print(f"--- master.csv regenerado en {MASTER_PATH} ---")
     return errores

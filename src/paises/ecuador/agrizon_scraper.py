@@ -19,6 +19,8 @@ import time
 
 import requests
 
+import netutil
+
 BASE_URL = "https://agrizon.com"
 COLLECTION_URL = f"{BASE_URL}/en/collections/nutricion-animal"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
@@ -35,6 +37,7 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
     page = 1
     while True:
         url = f"{COLLECTION_URL}/products.json?limit={PAGE_LIMIT}&page={page}"
+        netutil.pause()
         r = s.get(url, headers=HEADERS, timeout=30)
         # Shopify devuelve 429 si se piden paginas seguidas muy rapido
         # (verificado 2026-10-19): se respeta Retry-After (o 5 s) y se reintenta.
@@ -51,7 +54,6 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
             break
         products.extend(batch)
         page += 1
-        time.sleep(1)  # pausa cortes entre paginas
     return products
 
 
