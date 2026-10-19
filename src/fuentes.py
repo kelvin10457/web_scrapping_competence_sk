@@ -20,6 +20,7 @@ FUENTES: dict[tuple[str, str], dict] = {
     ("mexico", "nicovita"): {"scraper": "nicovita", "parser": "nicovita", "kind": "items", "params": {"pais_slug": "mexico"}},
     ("mexico", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "mexico"}},
     ("mexico", "vimifos"): {"scraper": "vimifos", "parser": "vimifos", "kind": "listing", "params": {}},
+    ("mexico", "apiaba"): {"scraper": "apiaba", "parser": "apiaba", "kind": "listing", "params": {}},
     ("ecuador", "haid"): {"scraper": "haid", "parser": "haid", "kind": "items", "params": {}},
     ("ecuador", "aquaxcel"): {"scraper": "aquaxcel", "parser": "aquaxcel", "kind": "listing", "params": {"pais_slug": "ecuador"}},
     # biomar.com deshabilitado a proposito (ver MEMORY.md "BioMar -- fuente
