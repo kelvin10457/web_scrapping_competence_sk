@@ -269,3 +269,8 @@ def test_schema_renames_etapa_and_clasificacion_camaron():
     assert "clasificacion_camaron" not in schema.SCHEMA_COLUMNS
     assert "etapa_competidor" in schema.SCHEMA_COLUMNS
     assert "etapa_skt" in schema.SCHEMA_COLUMNS
+
+
+def test_pais_is_first_column_and_values_are_defined():
+    assert schema.SCHEMA_COLUMNS[0] == "pais"
+    assert set(schema.PAIS_VALUES) == {"ecuador", "honduras", "nicaragua", "panama", "mexico"}

@@ -12,8 +12,13 @@ from __future__ import annotations
 import re
 
 # Orden exacto de columnas para todos los CSV (por empresa y master.csv).
+# Paises validos para la columna "pais" (PLAN_REGIONAL.md 2.1): pais donde se
+# vende/publica el producto, no donde se fabrica.
+PAIS_VALUES = ("ecuador", "honduras", "nicaragua", "panama", "mexico")
+
 SCHEMA_COLUMNS = [
     # Identificacion
+    "pais",
     "empresa",
     "nombre_producto",
     "etapa_competidor",
@@ -117,6 +122,13 @@ def etapa_matches(raw_text: str | None) -> set[str]:
 # pestana "Tipo" (ej. "35% Premium Micropellet Agua Dulce") dejan de quedar
 # en None y ahora muestran "Polvo".
 _TECNOLOGIA_RE = re.compile(r"extrui|extrus|extrud|pel{1,2}etiz|\bpolvo\b|particulad|l[ií]quid", re.I)
+
+# Valores validos que puede devolver detect_tecnologia() (o vacio). No existia
+# como constante propia antes de merge_human.py (2026-09-15) -- cada valor
+# vivia solo implicito en el codigo de detect_tecnologia() -- se centraliza
+# aca para que un validador externo (ej. de un archivo llenado a mano) pueda
+# chequear contra la misma lista sin duplicarla.
+TIPO_PRESENTACION_VALUES = {"Extruido", "Pelletizado", "Polvo", "Microparticulado", "Líquido"}
 
 
 def detect_tecnologia(text: str | None) -> str | None:
