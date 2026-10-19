@@ -7,7 +7,7 @@
 - [x] F1 descubrimiento de fuentes (tabla abajo)
 - [x] F2 honduras/nicovita  (ok, validados 3/3: Classic Engorde, Finalis, Terap vs PDF; 38 filas; nota: classic-honduras se deduplica como alias)
 - [x] F2 mexico/nicovita  (ok, validados 3/3: Classic, Katal, Terap vs PDF; 26 filas)
-- [ ] F2 mexico/aquaxcel  (validados: 0/3)
+- [x] F2 mexico/aquaxcel  (ok, 14 filas verificadas vs HTML; sin empaque; el sitio repite "Advance 35%" bajo active)
 - [ ] F3 mexico/vimifos
 - [x] F3 mexico/purina (sin_fuente_publica)
 - [ ] F3 mexico/apiaba
@@ -34,5 +34,5 @@ honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni dis
 ## Bloqueos
 (ninguno)
 
-## Última iteración: F2 honduras+mexico nicovita ok (parser slug generalizado).
+## Última iteración: F2 mexico/aquaxcel ok (parser de tarjetas). Siguiente: F3 vimifos.
 Notas: sitio HAID rediseñado (Next.js, hrefs relativos): arreglado en scrapers/parsers haid. Agrizon da 429: reintento + pausa. Ecuador regenerado = baseline (test_ecuador_identity). aquaxcel parser usa LISTING_URL fijo (ecuador) en fuente_url: ajustar en F2.

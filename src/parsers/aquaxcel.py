@@ -60,10 +60,58 @@ def _line_descriptions(soup: BeautifulSoup) -> dict[str, str]:
     return descriptions
 
 
+def _metric(section, label: str) -> str | None:
+    """Valor grande (h3) de la tarjeta cuyo rotulo (strong) es `label`."""
+    for h3 in section.find_all("h3"):
+        strong = h3.find_next("strong")
+        if strong and strong.get_text(strip=True).lower().startswith(label):
+            return h3.get_text(strip=True)
+    return None
+
+
+def _h4_value(section, label: str) -> str | None:
+    for h4 in section.find_all("h4"):
+        b = h4.find("b")
+        if b and b.get_text(strip=True).lower().startswith(label):
+            return h4.get_text(" ", strip=True).split(":", 1)[-1].strip() or None
+    return None
+
+
+def _parse_cards(soup: BeautifulSoup, fecha: str) -> list[dict]:
+    """Layout del listado de Mexico (verificado 2026-10-19): una <section
+    id="container-{etapa}"> por producto con h1 = etapa/linea, h2 = nombre,
+    h3+strong = proteina/grasa/..., y h4 "Tecnologia:" / "Calibre:". No publica
+    empaque (queda None). fuente_url es la URL canonica de la pagina."""
+    canonical = soup.find("link", rel="canonical")
+    url = canonical["href"] if canonical and canonical.get("href") else LISTING_URL
+    linea_descriptions = _line_descriptions(soup)
+    records = []
+    for section in soup.find_all("section", id=re.compile(r"^container-")):
+        h1, h2 = section.find("h1"), section.find("h2")
+        if not h1 or not h2:
+            continue
+        linea = h1.get_text(strip=True)
+        record = schema.empty_record("Cargill")
+        record["nombre_producto"] = h2.get_text(strip=True)
+        record["etapa_competidor"] = schema.normalize_etapa(linea)
+        record["producto_salud"] = schema.detect_producto_salud(linea_descriptions.get(linea.upper()))
+        mm = _first_number(_h4_value(section, "calibre") or "")
+        record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
+        record["tipo_presentacion"] = _h4_value(section, "tecnolog")
+        record["proteina_pct"] = _first_number(_metric(section, "prote") or "")
+        record["fuente_url"] = url
+        record["fecha_extraccion"] = fecha
+        records.append(record)
+    records.sort(key=lambda r: (r["nombre_producto"] or "",))
+    return records
+
+
 def parse_listing(html: str) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
     fecha = datetime.date.today().isoformat()
     records = []
+    if not any(h2.get_text(strip=True).upper().startswith("PORTAFOLIO") for h2 in soup.find_all("h2")):
+        return _parse_cards(soup, fecha)
     linea_descriptions = _line_descriptions(soup)
 
     for h2 in soup.find_all("h2"):

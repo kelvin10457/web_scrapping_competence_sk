@@ -83,3 +83,19 @@ def test_parse_listing_all_records_have_producto_salud_resolved():
     # las lineas tienen texto de marketing propio que se puede leer.
     records = parser.parse_listing(_load_html())
     assert all(r["producto_salud"] is not None for r in records)
+
+
+def test_parse_listing_mexico_card_layout():
+    # Fixture real de https://aquaxcel.com/productos/mexico/ (2026-10-19): un
+    # <section id="container-..."> por producto, sin bloques "Portafolio".
+    html = (FIXTURES / "aquaxcel_mexico_listing.html").read_text(encoding="utf-8")
+    records = parser.parse_listing(html)
+    assert len(records) == 14
+    by_name = {r["nombre_producto"]: r for r in records}
+    nursery = by_name["Aquaxcel Nursery 45% SmartShield"]
+    assert nursery["proteina_pct"] == 45.0
+    assert nursery["tamano_pellet_mm"] == "0.6"
+    assert nursery["tipo_presentacion"] == "Extruido"
+    assert nursery["empaque_kg"] is None
+    assert nursery["fuente_url"] == "https://aquaxcel.com/productos/mexico/"
+    assert by_name["Aquaxcel Transition 38%"]["tamano_pellet_mm"] == "1.6"
