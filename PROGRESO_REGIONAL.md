@@ -13,7 +13,7 @@
 - [x] F3 mexico/apiaba (ok 3 filas validadas vs paginas; Dorado 35% proteina=None porque la pagina contradice titulo 35 vs analisis 40)
 - [x] F3 mexico/azteca (sin_fuente_publica)
 - [x] F3 mexico/nutrimar (parcial: 17 filas solo nombre; la fuente no publica proteina/calibre/empaque; validadas 3 vs paginas)
-- [ ] F4 Centroamerica sin fuente: documentar en MEMORY.md
+- [x] F4 Centroamerica sin fuente documentada en MEMORY.md "Expansión regional"
 - [ ] F5 cierre: pytest -q, pipeline.py, MEMORY.md "Expansión regional", cierre aquí
 
 ## Fuentes por país
