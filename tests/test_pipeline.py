@@ -200,3 +200,17 @@ def test_netutil_blocked_response_raises_and_saves_page(tmp_path, monkeypatch):
         netutil.get(Sess(), "https://nicovita.com/x")
     assert exc.value.saved.exists()
     assert netutil.blocked_events()[0]["captcha_url"].startswith("https://validate.perfdrive.com")
+
+
+def test_netutil_pause_only_applies_to_paced_hosts(monkeypatch):
+    import netutil
+
+    slept = []
+    monkeypatch.setattr(netutil, "ENABLED", True)
+    monkeypatch.setattr(netutil.time, "sleep", slept.append)
+    monkeypatch.delenv("SCRAPER_NO_PAUSE", raising=False)
+    netutil.pause("https://agripac.com.ec/x")
+    netutil.pause("https://vimifos.com/producto/xtrudix")
+    assert slept == []
+    netutil.pause("https://nicovita.com/categoria/camarones/")
+    assert len(slept) == 1

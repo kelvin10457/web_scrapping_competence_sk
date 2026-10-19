@@ -9,7 +9,7 @@ Scraping de competencia de alimento para camarón, **separado por país**. Estad
 | `pipeline.py` | Orquestador y CLI. Corre cada (país, empresa) de forma aislada, escribe los CSV/XLSX y arma los masters. |
 | `fuentes.py` | Registro de fuentes. **Se deriva de las carpetas** `paises/<pais>/` (no hay lista aparte que mantener). |
 | `schema.py` | Columnas del esquema (`pais` primera), `PAIS_VALUES`, normalización de etapas/tipos. |
-| `netutil.py` | `get()` de todos los scrapers: pausas aleatorias (1.5–4 s entre consultas, 20–30 s cada 3–5 consultas nuevas; no cuentan las que salen de caché), reintentos y detección de bloqueo anti-bot (`BlockedError`: guarda la página del captcha en `data/bloqueos/` y no se evade). |
+| `netutil.py` | `get()` de todos los scrapers: pausas aleatorias (1.5–4 s entre consultas, 20–30 s cada 3–5 consultas nuevas; no cuentan las que salen de caché) **solo para los dominios que mostraron captcha** (`PACED_HOSTS`, hoy `nicovita.com`), reintentos y detección de bloqueo anti-bot (`BlockedError`: guarda la página del captcha en `data/bloqueos/` y no se evade). |
 | `merge_human.py`, `manual_store.py` | Fusión de datos cargados a mano (Excel / SQLite) con el master. `pais` forma parte de la identidad. |
 | `gui.py` | Interfaz para el equipo comercial: una tarjeta por (país, empresa) y formulario manual. |
 | `paises/<pais>/` | **Todo lo específico de un país.** Ver abajo. |

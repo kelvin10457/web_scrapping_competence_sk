@@ -1,6 +1,7 @@
 """GET para los scrapers, en un solo lugar:
 
-- Ritmo cortes y irregular: pausa aleatoria de 1.5-4 s entre consultas y una pausa
+- Ritmo cortes y irregular (solo para PACED_HOSTS, hoy nicovita.com, el unico que
+  mostro captcha): pausa aleatoria de 1.5-4 s entre consultas y una pausa
   larga aleatoria de 20-30 s cada 3-5 consultas nuevas (no cuentan las paginas
   que salen de la cache). Es para no cargar al sitio; NO desbloquea un bloqueo
   que ya existe ni resuelve captchas.
@@ -23,6 +24,11 @@ import requests
 RETRY_STATUS = {429, 502, 503, 504}
 # Servicios anti-bot que responden con un captcha/redireccion en vez del sitio.
 _BLOCK_MARKERS = ("perfdrive.com", "captcha")
+
+# Solo los sitios que SI mostraron captcha se piden con pausas; el resto va sin
+# pausas (decision del usuario). Para agregar un sitio que empiece a bloquear,
+# basta sumar su dominio aqui.
+PACED_HOSTS = {"nicovita.com"}
 
 # Ritmo (se desactiva en tests con ENABLED = False o SCRAPER_NO_PAUSE=1).
 ENABLED = True
@@ -60,10 +66,15 @@ def reset_blocked() -> None:
     _blocked.clear()
 
 
-def pause() -> None:
-    """Pausa aleatoria antes de una consulta nueva a la red."""
+def pause(url: str | None = None) -> None:
+    """Pausa aleatoria antes de una consulta nueva a la red, solo para los
+    dominios de PACED_HOSTS."""
     import os
 
+    if url is not None:
+        host = (urlparse(url).hostname or "").lower().removeprefix("www.")
+        if host not in PACED_HOSTS:
+            return
     if not ENABLED or os.environ.get("SCRAPER_NO_PAUSE") == "1":
         return
     _state["n"] += 1
@@ -89,7 +100,7 @@ def _save_block_page(url: str, response: requests.Response) -> Path | None:
 
 
 def get(session, url: str, retries: int = 4, **kwargs) -> requests.Response:
-    pause()
+    pause(url)
     for intento in range(retries + 1):
         try:
             r = session.get(url, **kwargs)
