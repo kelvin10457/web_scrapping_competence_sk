@@ -21,7 +21,7 @@
 - [x] R2.2 vimifos: celda con varias proteinas -> una fila por SKU ("Bumper Crop 30%"...). Bumper Crop/Natural Force/Total Range: M=1 calibre (2-6) -> 3 filas c/u. Nulos proteina: antes 3/15, despues 0/21
 - [x] R2.3 apiaba: schema.reglas_titulo_vs_analisis (coincidencia > analisis_copiado_de > nombre_comercial) + resolver_y_registrar (reutilizable). Dorado 35%: titulo 35 + texto 35 x2 vs analisis 40 -> 35 (coincidencia). Nulos proteina: antes 1/3, despues 0/3
 - [x] R2.4 nutrimar (ok): 19 filas (Zeigler 13 / Nutrimar 6). Fichas PDF /_files/ugd/*.pdf (pdfplumber via haid_scraper.extract_pdf_text) + imagen 'Tabla de Analisis' de Extensivo (haid_scraper.ocr_image, preproceso umbral 160). Validados vs ficha real: PL Raceway 40-9 (40%, 0.4-1.2 mm, 20 kg), Semi-intensivo (35/30% -> 2 SKUs, 1.6-2.5 mm, 25 kg), Extensivo (OCR 35%). Intensivo sin ficha publicada. Super growth usa el mismo PDF que Semi-intensivo
-- [ ] R2.5 Nicaragua/Panama: reconfirmar candidatos (1 request c/u)
+- [x] R2.5 Nicaragua/Panama: candidatos reconfirmados 2026-10-19 (1 request c/u, tabla abajo). NI y PA siguen con carga manual via GUI
 
 - [x] R1 (pedido del usuario) reorganizar por pais: src/paises/<pais>/<empresa>.py con run(), _compartido/ para motores, master por pais, README por pais + ARQUITECTURA.md (169 tests ok)
 
@@ -40,6 +40,16 @@ mexico | azteca | aztecamexico.mx es sitio avicola/frizado, sin catalogo acuicol
 mexico | nutrimar | grupoacuicolamexicano.com.mx/nutrimar -> nutrimar.mx/<slug> | HTML SSR (Wix) + fichas PDF/imagen | nombre, proteina, calibre, empaque; empresa Zeigler/Nutrimar | ok (R2.4)
 mexico | adm | sin catalogo publico encontrado | - | - | descartado (§6)
 honduras/nicaragua/panama | biomar, cargill, haid, agripac | sin catalogo ni distribuidor publico encontrado (busqueda 2026-10-19) | - | - | sin_fuente_publica (carga manual via GUI; HAID/Agripac fuera por §6)
+
+## R2.5 — Candidatos Nicaragua / Panamá (reconfirmado 2026-10-19)
+pais | candidato | request | resultado | estado
+nicaragua | Vitali Alimentos | vitalialimentos.com -> 200 (www) | home sin menciones de camaron/balanceado ni catalogo | sin_fuente_publica
+nicaragua | Disagro (AQUAPLUS) | disagro.com/linea-acuicola/ -> 200 (redirige a disagro.com.gt) | solo insumos, ninguna mencion de "balanceado" | descartado (no fabrica balanceado)
+panama | INASA / Larro (Grupo Calesa) | grupocalesa.com/inasa/ -> 307 a si misma (sin contenido) | sin productos de camaron publicados | sin_fuente_publica (carga manual: info@grupocalesa.com)
+panama | Rivoflavia Inc., Nutricion Animal S.A. | sin sitio (solo registros FAO) | - | sin_fuente_publica
+panama | Agromarina del Pacifico | sin sitio (importador/distribuidor) | - | sin_fuente_publica (carga manual: marca "Optiline")
+- | Agro La Hacienda (Camaronina) | no reconsultado (Colombia, +57) | - | fuera_de_alcance (pais no objetivo)
+- | Balnova | balnova.com -> 200 tras redirigir a www.adm.com | la marca no tiene sitio propio | descartado (sitio inexistente)
 
 ## Bloqueos
 - 2026-10-19: nicovita.com redirige a validate.perfdrive.com (captcha Radware) tras muchas pruebas del dia. NO se evade (§4). Afecta ecuador/honduras/mexico nicovita: ecuador/nicovita.csv restaurado desde el baseline; honduras y mexico nicovita.csv quedaron vacios (los datos validados en F2 se regeneran con `python src/pipeline.py --empresa nicovita` cuando el bloqueo se levante). Guardas nuevas: netutil.BlockedError y no sobrescribir CSV con 0 filas.
