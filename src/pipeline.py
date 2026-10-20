@@ -31,6 +31,7 @@ CONFLICTOS_PATH = ROOT / "data" / "conflictos.csv"
 
 import fuentes  # noqa: E402
 import netutil  # noqa: E402
+import registros_oficiales  # noqa: E402
 
 ALL_EMPRESAS = fuentes.empresas()
 
@@ -112,10 +113,13 @@ def write_conflictos(records: list[dict], pais: str, empresa: str) -> int:
     return len(schema.conflictos_de(records))
 
 
-def build_conflictos() -> None:
-    """Junta todos los processed/*/_conflictos.csv en data/conflictos.csv."""
+def build_conflictos(extra: list[dict] | None = None) -> None:
+    """Junta todos los processed/*/_conflictos.csv en data/conflictos.csv, mas
+    `extra` (celdas completadas con registros oficiales en build_master)."""
     frames = [pd.read_csv(p, dtype=str, keep_default_na=False, na_values=[""])
               for p in sorted(PROCESSED_DIR.glob("*/_conflictos.csv"))]
+    if extra:
+        frames.append(pd.DataFrame(extra, columns=schema.CONFLICTO_COLUMNS))
     if not frames:
         pd.DataFrame(columns=schema.CONFLICTO_COLUMNS).to_csv(CONFLICTOS_PATH, index=False, encoding="utf-8-sig")
         return
@@ -123,8 +127,26 @@ def build_conflictos() -> None:
         CONFLICTOS_PATH, index=False, encoding="utf-8-sig")
 
 
+def registros_path() -> Path:
+    return PROCESSED_DIR / "_registros_oficiales.csv"
+
+
+def revisar_registros_path() -> Path:
+    return MASTER_PATH.parent / "registros_oficiales.csv"
+
+
+def actualizar_registros(max_dias: int = registros_oficiales.MAX_DIAS_CACHE) -> str:
+    """Fase 5: baja SENASICA/eaduana (cache de `max_dias`). Es complementaria:
+    si falla se avisa y el master se arma igual con los registros anteriores.
+    Devuelve el mensaje para el log (CLI o GUI)."""
+    try:
+        n = registros_oficiales.actualizar(registros_path(), max_dias=max_dias)
+        return f"--- registros oficiales: {n} (SENASICA + eaduana) ---"
+    except Exception as exc:
+        return f"  AVISO: no se pudieron actualizar los registros oficiales ({exc}); se usan los anteriores."
+
+
 def build_master() -> None:
-    build_conflictos()
     frames = []
     for pais, empresa in fuentes.listar():
         csv_path = processed_path(pais, empresa)
@@ -133,9 +155,17 @@ def build_master() -> None:
             frames.append(pd.read_csv(csv_path, dtype=str, keep_default_na=False, na_values=[""]))
     # Cualquier otro processed/{pais}/*.csv que ya no este en el registro igual entra.
     if not frames:
+        build_conflictos()
         return
     master = pd.concat(frames, ignore_index=True)
     master = master[schema.SCHEMA_COLUMNS]
+    # Registros oficiales: solo completan celdas vacias, nunca agregan filas.
+    master, revisar, completados = registros_oficiales.aplicar(
+        master, registros_oficiales.leer_registros(registros_path()))
+    build_conflictos(completados)
+    if not revisar.empty:
+        revisar.to_csv(revisar_registros_path(), index=False, encoding="utf-8-sig")
+        revisar.to_excel(revisar_registros_path().with_suffix(".xlsx"), index=False)
     master.to_csv(MASTER_PATH, index=False, encoding="utf-8-sig")
     write_xlsx(master, MASTER_PATH.with_suffix(".xlsx"))
     # Un master por pais: data/processed/{pais}/master_{pais}.csv|xlsx (cada pais
@@ -178,21 +208,28 @@ def reportar_bloqueos(bloqueadas) -> None:
     print("  Como verlo: abre ese archivo .html en tu navegador. Detalle en data/bloqueos.md\n")
 
 
-def main(pares: list[tuple[str, str]]) -> int:
-    """Corre cada (pais, empresa) de forma aislada. Devuelve la cantidad de errores."""
+def procesar(pais: str, empresa: str) -> tuple[int, int]:
+    """Scrapea un (pais, empresa) y escribe su CSV y sus conflictos. Lo usan el
+    CLI y la GUI. Devuelve (productos, conflictos resueltos)."""
+    records = run_empresa(empresa, pais)
+    if not records:
+        # No pisar un CSV bueno con uno vacio (sitio caido/bloqueado/rediseñado).
+        raise RuntimeError("0 productos: se conserva el CSV anterior")
+    write_csv(records, processed_path(pais, empresa))
+    return len(records), write_conflictos(records, pais, empresa)
+
+
+def main(pares: list[tuple[str, str]], registros: bool = False, max_dias: int | None = None) -> int:
+    """Corre cada (pais, empresa) de forma aislada. Devuelve la cantidad de errores.
+    Con `registros` tambien actualiza SENASICA/eaduana antes de armar el master."""
     errores = 0
     bloqueadas: list[tuple[str, str, netutil.BlockedError]] = []
     netutil.reset_blocked()
     for pais, empresa in pares:
         print(f"--- {pais}/{empresa} ---")
         try:
-            records = run_empresa(empresa, pais)
-            if not records:
-                # No pisar un CSV bueno con uno vacio (sitio caido/bloqueado/rediseñado).
-                raise RuntimeError("0 productos: se conserva el CSV anterior")
-            write_csv(records, processed_path(pais, empresa))
-            print(f"  OK: {len(records)} productos -> data/processed/{pais}/{empresa}.csv")
-            n_conf = write_conflictos(records, pais, empresa)
+            n, n_conf = procesar(pais, empresa)
+            print(f"  OK: {n} productos -> data/processed/{pais}/{empresa}.csv")
             if n_conf:
                 print(f"  {n_conf} conflictos resueltos -> data/processed/{pais}/_conflictos.csv")
         except netutil.BlockedError as exc:
@@ -205,6 +242,8 @@ def main(pares: list[tuple[str, str]]) -> int:
             print(f"  ERROR en {pais}/{empresa}:")
             traceback.print_exc()
     reportar_bloqueos(bloqueadas)
+    if registros:
+        print(actualizar_registros(registros_oficiales.MAX_DIAS_CACHE if max_dias is None else max_dias))
     build_master()
     print(f"--- master.csv regenerado en {MASTER_PATH} ---")
     return errores
@@ -214,6 +253,8 @@ def parse_args(argv: list[str]):
     parser = argparse.ArgumentParser(description="Scrapea competencia y regenera master.csv")
     parser.add_argument("--pais", choices=schema.PAIS_VALUES, help="solo este pais")
     parser.add_argument("--empresa", help="solo esta empresa")
+    parser.add_argument("--registros", action="store_true",
+                        help="volver a bajar SENASICA/eaduana aunque la cache tenga menos de 30 dias")
     return parser.parse_args(argv)
 
 
@@ -225,4 +266,7 @@ if __name__ == "__main__":
     if not pares:
         print(f"Sin fuentes registradas para pais={args.pais} empresa={args.empresa}")
         sys.exit(2)
-    sys.exit(1 if main(pares) else 0)
+    # Registros oficiales: en la corrida completa (cache de 30 dias) o con --registros.
+    completa = args.pais is None and args.empresa is None
+    sys.exit(1 if main(pares, registros=completa or args.registros,
+                       max_dias=0 if args.registros else None) else 0)

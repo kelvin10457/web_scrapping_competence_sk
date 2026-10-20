@@ -38,6 +38,8 @@ Thumbs.db
 
 # Generados por el pipeline / la GUI (se recrean en cada corrida)
 data/conflictos.csv
+data/registros_oficiales.csv
+data/registros_oficiales.xlsx
 data/master_prototipo.xlsx
 data/bloqueos.md
 data/bloqueos/

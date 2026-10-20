@@ -23,6 +23,8 @@
 - [x] R2.4 nutrimar (ok): 19 filas (Zeigler 13 / Nutrimar 6). Fichas PDF /_files/ugd/*.pdf (pdfplumber via haid_scraper.extract_pdf_text) + imagen 'Tabla de Analisis' de Extensivo (haid_scraper.ocr_image, preproceso umbral 160). Validados vs ficha real: PL Raceway 40-9 (40%, 0.4-1.2 mm, 20 kg), Semi-intensivo (35/30% -> 2 SKUs, 1.6-2.5 mm, 25 kg), Extensivo (OCR 35%). Intensivo sin ficha publicada. Super growth usa el mismo PDF que Semi-intensivo
 - [x] R2.5 Nicaragua/Panama: candidatos reconfirmados 2026-10-19 (1 request c/u, tabla abajo). NI y PA siguen con carga manual via GUI
 - [x] R2.6 (2026-10-20) aquaxcel.com bajo un nivel sus encabezados (h1->h2, h2->h3): mexico/aquaxcel daba 0 filas y ecuador/aquaxcel perdia producto_salud (22/37 nulos). Parser acepta ambos niveles; fixture aquaxcel_mexico_listing_2026-10-20.html + test (mismas 14 filas que el 19/10). Ecuador vuelve a coincidir con el baseline
+- [x] R2.8 (2026-10-20, decisión del usuario) Fase 5: src/registros_oficiales.py (SENASICA + eaduana). Solo completa vacíos con coincidencia exacta de nombre; todo queda en data/registros_oficiales.xlsx con estado. 162 registros: 16 coinciden, 1 difiere, 0 completados, 144 pistas sin match. NI/PA: no se duplica Honduras (usuario). HAID/Agripac: sin registros fuera de Ecuador
+- [x] R2.9 (2026-10-20) GUI usaba run_empresa+write_csv: sin guarda de 0 filas ni _conflictos.csv. Ahora GUI y CLI usan pipeline.procesar(); la GUI también actualiza registros oficiales
 - [x] R2.7 (2026-10-20) test_build_master_also_writes_one_master_per_pais no redirigia CONFLICTOS_PATH: cada `pytest` vaciaba data/conflictos.csv real. Arreglado (master.csv y conflictos.csv quedan identicos antes/despues de pytest)
 
 - [x] R1 (pedido del usuario) reorganizar por pais: src/paises/<pais>/<empresa>.py con run(), _compartido/ para motores, master por pais, README por pais + ARQUITECTURA.md (169 tests ok)
@@ -81,4 +83,4 @@ nicaragua, panama | - | 0 | carga manual via GUI
 
 **Conflictos resueltos:** 1 — Api-Aba "APICAMARÓN Dorado 35% 20Kg", proteina_pct = 35 con regla `coincidencia` (título 35 + texto 35 ×2 vs análisis 40). Ninguno con `calibre_no_emparejable` (Vimifos emparejó todo con M=1) ni `ocr_fuera_de_rango` (Nutrimar).
 
-**Queda abierto (decisión del usuario, no bloquea):** Fase 5 (SENASICA/eaduana) no ejecutada; no duplicar Honduras en Nicaragua/Panamá; Agripac Ecuador con 18/38 proteínas nulas (fuera del alcance regional, igual que el baseline).
+**Decisiones de §6 cerradas (usuario, 2026-10-20):** NI/PA sin duplicar Honduras (carga manual); Fase 5 ejecutada (R2.8); HAID/Agripac solo Ecuador. **Queda:** Agripac Ecuador 18/38 proteínas nulas (son artemia/larvicultura, la fuente no las publica); revisar las 144 pistas de data/registros_oficiales.xlsx.

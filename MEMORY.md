@@ -162,6 +162,12 @@ Arreglos de sitio detectados al regenerar Ecuador: HAID se rediseñó (Next.js; 
 | mexico | adm | descartado | sin catálogo público (§6) |
 | nicaragua, panama | nicovita | sin_fuente_publica | `?pais=nicaragua/panama` sin productos; Nicovita los atiende desde Honduras. NO se duplican filas de Honduras; carga manual por GUI |
 | honduras, nicaragua, panama | aquaxcel/Cargill, biomar | sin_fuente_publica | `/productos/{honduras,centroamerica,nicaragua}/` = 404; sin distribuidor público hallado. Carga manual |
-| (fuera de Ecuador) | haid, agripac | descartado | no se revisó venta en otros países (§6) |
+| (fuera de Ecuador) | haid, agripac | descartado | sin catálogo/distribuidor fuera de Ecuador ni registros en SENASICA (2026-10-20). Royal Seafood (línea que vende Agripac) aparece registrado en México por Malta Texo |
 
-Pendiente de revisión por el usuario (defaults de §6): no duplicar Honduras en Nicaragua/Panamá; Fase 5 (SENASICA/eaduana) no ejecutada (URL vigente del dataset SENASICA no buscada); HAID/Agripac solo Ecuador.
+Decisiones de §6 cerradas por el usuario (2026-10-20): **no** se duplica Honduras en Nicaragua/Panamá (carga manual); Fase 5 **ejecutada** (`src/registros_oficiales.py`); HAID/Agripac solo Ecuador.
+
+### Fase 5 — registros oficiales (2026-10-20)
+- SENASICA "Productos regulados y registrados": la versión de datos.gob.mx y repodatos.atdt.gob.mx responde 403 (Akamai) fuera de México; se usa la de agricultura.gob.mx/senasica/datos-junio-2024 (xlsx, 363 filas, 143 alimentos de camarón con fórmula = análisis garantizado). La í viene dañada (U+FFFD) en muchas filas. En varias, la "fórmula" es lista de ingredientes, no análisis (proteína queda None); en otras el nombre y la fórmula se contradicen (p. ej. "Aquatec 25 %" con 35%), por eso nunca se pisa un dato del sitio.
+- eaduana.com: sitemap `subheadings_tariff_sitemap` (~1500 fichas); se filtran por slug y luego por contenido (2309 + camarón). Sin fabricante: solo cruza por nombre exacto. robots.txt permite /fracciones-arancelarias/.
+- Resultado: 162 registros; 16 coinciden con lo scrapeado, 1 difiere (Xtrudix 2: SENASICA 35 vs sitio 38), 0 nulos completados, 144 sin match (pistas en data/registros_oficiales.xlsx).
+- Competidores nuevos en México (SENASICA): Nueva Tecnología en Alimentación (línea "Aquatec", 15), Alimentos de Alta Calidad El Pedregal ("Microtek Crustáceos", "Engorda Extruido", 5), Alimentos Oromar (3), Multiservicios 2001 ("Skilla", 2), Proveedora de Insumos Acuícolas (Winfish Zeigler). En eaduana: Aquatech CM (8), Exia Prime 35.

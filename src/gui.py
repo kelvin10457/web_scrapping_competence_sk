@@ -820,12 +820,11 @@ class App:
             self.root.after(0, self.cards[key].set_estado, ESTADO_CORRIENDO)
             self.root.after(0, self._log, f"--- {key} ---")
             try:
-                records = pipeline.run_empresa(empresa, pais)
-                pipeline.write_csv(records, pipeline.processed_path(pais, empresa))
-                self.root.after(
-                    0, self.cards[key].set_estado, ESTADO_OK, f"({len(records)})"
-                )
-                self.root.after(0, self._log, f"  OK: {len(records)} productos")
+                # Mismo paso que el CLI: no pisa un CSV bueno con 0 filas y guarda conflictos.
+                n, n_conf = pipeline.procesar(pais, empresa)
+                self.root.after(0, self.cards[key].set_estado, ESTADO_OK, f"({n})")
+                self.root.after(0, self._log, f"  OK: {n} productos"
+                                + (f", {n_conf} conflictos resueltos" if n_conf else ""))
             except Exception:
                 detalle = traceback.format_exc()
                 self.errores[key] = detalle
@@ -834,6 +833,7 @@ class App:
             self.root.after(0, self.progress.step, 1)
 
         try:
+            self.root.after(0, self._log, pipeline.actualizar_registros())
             pipeline.build_master()
             self.root.after(0, self._log, f"--- master.csv regenerado en {pipeline.MASTER_PATH} ---")
             self._correr_fusion_manual()

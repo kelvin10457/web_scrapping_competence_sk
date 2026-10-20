@@ -10,6 +10,7 @@ Scraping de competencia de alimento para camarón, **separado por país**. Estad
 | `fuentes.py` | Registro de fuentes. **Se deriva de las carpetas** `paises/<pais>/` (no hay lista aparte que mantener). |
 | `schema.py` | Columnas del esquema (`pais` primera), `PAIS_VALUES`, normalización de etapas/tipos. |
 | `netutil.py` | `get()` de todos los scrapers: pausas aleatorias (1.5–4 s entre consultas, 20–30 s cada 3–5 consultas nuevas; no cuentan las que salen de caché) **solo para los dominios que mostraron captcha** (`PACED_HOSTS`, hoy `nicovita.com`), reintentos y detección de bloqueo anti-bot (`BlockedError`: guarda la página del captcha en `data/bloqueos/` y no se evade). |
+| `registros_oficiales.py` | Fase 5: SENASICA (México) y eaduana (fichas arancelarias). **No crea filas**: solo completa celdas vacías cuando el nombre coincide sin ambigüedad (queda en `data/conflictos.csv`, regla `registro_oficial:<fuente>`) y deja todo lo registrado en `data/registros_oficiales.csv/.xlsx` con su estado (`coincide`, `difiere`, `completa_nulo`, `ambiguo`, `sin_match`). Los `sin_match` son SKUs o competidores que no tenemos: revisarlos y cargarlos por la GUI. |
 | `merge_human.py`, `manual_store.py` | Fusión de datos cargados a mano (Excel / SQLite) con el master. `pais` forma parte de la identidad. |
 | `gui.py` | Interfaz para el equipo comercial: una tarjeta por (país, empresa) y formulario manual. |
 | `paises/<pais>/` | **Todo lo específico de un país.** Ver abajo. |
@@ -44,6 +45,7 @@ python src/pipeline.py                          # todo
 python src/pipeline.py --pais honduras          # un país
 python src/pipeline.py --pais mexico --empresa vimifos
 python src/pipeline.py --empresa nicovita       # una empresa en todos sus países
+python src/pipeline.py --pais mexico --registros # fuerza bajar SENASICA/eaduana (si no, cache de 30 días en la corrida completa y en la GUI)
 .venv/Scripts/python -m pytest -q               # tests (usan fixtures en tests/fixtures/, sin red)
 ```
 
