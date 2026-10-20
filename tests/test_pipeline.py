@@ -154,6 +154,8 @@ def test_build_master_also_writes_one_master_per_pais(tmp_path, monkeypatch):
 
     monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
     monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
+    # sin esto build_master pisaba el data/conflictos.csv real con uno vacio
+    monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
     for pais in ("ecuador", "mexico"):
         rec = {c: None for c in schema.SCHEMA_COLUMNS}
         rec.update(pais=pais, empresa="Nicovita", nombre_producto=f"Nicovita {pais}")
