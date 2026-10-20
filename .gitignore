@@ -35,3 +35,20 @@ data/master.xlsx
 .idea/
 .DS_Store
 Thumbs.db
+
+# Generados por el pipeline / la GUI (se recrean en cada corrida)
+data/conflictos.csv
+data/registros_oficiales.csv
+data/registros_oficiales.xlsx
+data/master_prototipo.xlsx
+data/bloqueos.md
+data/bloqueos/
+
+# Cache de descargas (24 h HTML, PDFs, fichas). Los PDF que ya estaban
+# versionados se quedan porque los tests los usan como fixture real.
+data/raw/
+
+# Datos de cada usuario: carga manual y paginas guardadas desde el navegador
+data/competencia_human.xlsx
+data/*.db
+data/manual/

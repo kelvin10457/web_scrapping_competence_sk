@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 
 from conftest import FIXTURES
-from parsers import aquaxcel as parser
+from paises._compartido import aquaxcel_parser as parser
 
 
 def _load_html() -> str:
@@ -83,3 +83,35 @@ def test_parse_listing_all_records_have_producto_salud_resolved():
     # las lineas tienen texto de marketing propio que se puede leer.
     records = parser.parse_listing(_load_html())
     assert all(r["producto_salud"] is not None for r in records)
+
+
+def test_parse_listing_mexico_card_layout():
+    # Fixture real de https://aquaxcel.com/productos/mexico/ (2026-10-19): un
+    # <section id="container-..."> por producto, sin bloques "Portafolio".
+    html = (FIXTURES / "aquaxcel_mexico_listing.html").read_text(encoding="utf-8")
+    records = parser.parse_listing(html)
+    assert len(records) == 14
+    by_name = {r["nombre_producto"]: r for r in records}
+    nursery = by_name["Aquaxcel Nursery 45% SmartShield"]
+    assert nursery["proteina_pct"] == 45.0
+    assert nursery["tamano_pellet_mm"] == "0.6"
+    assert nursery["tipo_presentacion"] == "Extruido"
+    assert nursery["empaque_kg"] is None
+    assert nursery["fuente_url"] == "https://aquaxcel.com/productos/mexico/"
+    assert by_name["Aquaxcel Transition 38%"]["tamano_pellet_mm"] == "1.6"
+
+
+def test_parse_listing_mexico_headings_bajados_2026_10_20():
+    # El 2026-10-20 el sitio bajo un nivel los encabezados (etapa h1->h2, nombre
+    # h2->h3, marketing h2->h3) y el parser devolvia 0 filas. Debe dar lo mismo
+    # que el fixture del 2026-10-19.
+    def sin_fecha(records):
+        return [{k: v for k, v in r.items() if k != "fecha_extraccion"} for r in records]
+
+    viejo = parser.parse_listing((FIXTURES / "aquaxcel_mexico_listing.html").read_text(encoding="utf-8"))
+    nuevo = parser.parse_listing(
+        (FIXTURES / "aquaxcel_mexico_listing_2026-10-20.html").read_text(encoding="utf-8")
+    )
+    assert len(nuevo) == 14
+    assert sin_fecha(nuevo) == sin_fecha(viejo)
+    assert all(r["producto_salud"] is not None for r in nuevo)

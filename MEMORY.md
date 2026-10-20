@@ -140,3 +140,34 @@ Las 4 empresas están construidas y validadas (ver arriba). `python src/pipeline
 
 ### Suite de tests (`tests/`) — agregada 2026-09-01, ajustada 2026-09-02
 `pytest tests/` (82 tests, todos verdes; eran 35 antes de las correcciones del 2026-09-02 — grano SKU de Nicovita y HAID, etapa por banda de tamaño, formato de numeros float en `pipeline.py`, empaque_kg por diametro en HAID, la columna `etapa_camaron`, la columna `producto_salud`, y `producto_salud` de Aquaxcel por línea de marketing — que agregaron 47 netos entre las ocho; la de formato de numeros agregó `tests/test_pipeline.py`, primer test de ese módulo). Cubre las funciones de parseo puras (`schema.detect_tecnologia`, `normalize_etapa`, `etapa_from_tamano`, y los helpers de cada parser) más los casos reales documentados arriba que ya causaron bugs una vez: contradicción "Speed Pellet" (HAID), ortografía "peletizada" con una L (Nicovita), productos de rango completo que dejan `etapa=None` (Classic/Katal base), `<dd>` de Etapa con dos valores (BioMar EXIA Prime), bloques "Portafolio" de Aquaxcel, tabla "Presentación Comercial" con % y tamaños agrupados (Nicovita, 5 fichas reales reconstruidas como tablas literales de pdfplumber), fan-out de HAID a 1 fila por tamaño repitiendo proteína/grasa, límite de 1.6mm sin resolver en `etapa_from_tamano`. `tests/fixtures/` guarda HTML real descargado en vivo (Aquaxcel listado completo, 3 páginas de producto de BioMar, 1 de Nicovita) — no se generan a mano, para que los tests fallen si el sitio cambia de estructura, no solo si el código tiene un bug. `tests/conftest.py` agrega `src/` a `sys.path`. Pendiente: no hay fixtures de HAID guardadas como PDF (los tests de HAID usan texto/HTML literal reconstruido de las fichas reales) ni tests de integración end-to-end de `pipeline.py` — excepción puntual: `test_nicovita_parser.py` sí tiene 2 tests de integración contra PDFs reales de `data/raw/nicovita/` (Classic AD y Classic, con `pytest.skip` si el archivo no está presente), porque tanto el bug de grano SKU como el fallback de etapa por tamaño solo se validaron con certeza contra los archivos reales (la variante de página 2 de Katal Post Transferencia no la hubiera detectado un test 100% con datos literales).
+
+
+## Expansión regional (PLAN_REGIONAL.md, ejecutada 2026-10-19)
+
+Pipeline por país: `src/fuentes.py` (registro (pais, empresa)), CLI `--pais/--empresa`, salida en `data/processed/{pais}/{empresa}.csv`, `master.csv` con columna `pais` (primera). `merge_human`, `manual_store` (ALTER TABLE, default `ecuador`) y la GUI entienden `pais`. Ecuador regenerado = baseline previo (`tests/test_ecuador_identity.py`).
+
+Arreglos de sitio detectados al regenerar Ecuador: HAID se rediseñó (Next.js; enlaces relativos `/media/...`, og:title con sufijo " - Haid Ecuador"); Agrizon devuelve 429 si se paginan rápido (ahora reintenta y pausa).
+
+| pais | empresa | estado | notas |
+|---|---|---|---|
+| ecuador | nicovita, haid, aquaxcel(Cargill), biomar(Agrizon), agripac | ok | sin cambios funcionales |
+| honduras | nicovita | ok | 38 filas; 3 validadas vs PDF (Classic Engorde, Finalis, Térap). `nicovita-classic-honduras` se deduplica como alias |
+| mexico | nicovita | ok | 26 filas; 3 validadas vs PDF (Classic, Katal, Térap) |
+| mexico | aquaxcel | ok | 14 filas; layout de tarjetas distinto al de Ecuador; sin empaque; el sitio repite "Advance 35%" bajo `active` |
+| mexico | vimifos | ok | 15 filas (6 líneas); micras→mm; proteína con varios valores → None |
+| mexico | apiaba | ok | 3 filas (Dorado 35/40, Raceways). Dorado 35%: la página dice 35% en título y 40% en el análisis → proteína None |
+| mexico | nutrimar | parcial | 17 filas solo nombre (la fuente no publica proteína/calibre/empaque; la ficha PDF es imagen) |
+| mexico | purina | sin_fuente_publica | nutrimentospurina.com solo tilapia/bagre/trucha, sin camarón |
+| mexico | azteca | sin_fuente_publica | aztecamexico.mx es un sitio avícola; no se halló catálogo acuícola |
+| mexico | adm | descartado | sin catálogo público (§6) |
+| nicaragua, panama | nicovita | sin_fuente_publica | `?pais=nicaragua/panama` sin productos; Nicovita los atiende desde Honduras. NO se duplican filas de Honduras; carga manual por GUI |
+| honduras, nicaragua, panama | aquaxcel/Cargill, biomar | sin_fuente_publica | `/productos/{honduras,centroamerica,nicaragua}/` = 404; sin distribuidor público hallado. Carga manual |
+| (fuera de Ecuador) | haid, agripac | descartado | sin catálogo/distribuidor fuera de Ecuador ni registros en SENASICA (2026-10-20). Royal Seafood (línea que vende Agripac) aparece registrado en México por Malta Texo |
+
+Decisiones de §6 cerradas por el usuario (2026-10-20): **no** se duplica Honduras en Nicaragua/Panamá (carga manual); Fase 5 **ejecutada** (`src/registros_oficiales.py`); HAID/Agripac solo Ecuador.
+
+### Fase 5 — registros oficiales (2026-10-20)
+- SENASICA "Productos regulados y registrados": la versión de datos.gob.mx y repodatos.atdt.gob.mx responde 403 (Akamai) fuera de México; se usa la de agricultura.gob.mx/senasica/datos-junio-2024 (xlsx, 363 filas, 143 alimentos de camarón con fórmula = análisis garantizado). La í viene dañada (U+FFFD) en muchas filas. En varias, la "fórmula" es lista de ingredientes, no análisis (proteína queda None); en otras el nombre y la fórmula se contradicen (p. ej. "Aquatec 25 %" con 35%), por eso nunca se pisa un dato del sitio.
+- eaduana.com: sitemap `subheadings_tariff_sitemap` (~1500 fichas); se filtran por slug y luego por contenido (2309 + camarón). Sin fabricante: solo cruza por nombre exacto. robots.txt permite /fracciones-arancelarias/.
+- Resultado: 162 registros; 16 coinciden con lo scrapeado, 1 difiere (Xtrudix 2: SENASICA 35 vs sitio 38), 0 nulos completados, 144 sin match (pistas en data/registros_oficiales.xlsx).
+- Competidores nuevos en México (SENASICA): Nueva Tecnología en Alimentación (línea "Aquatec", 15), Alimentos de Alta Calidad El Pedregal ("Microtek Crustáceos", "Engorda Extruido", 5), Alimentos Oromar (3), Multiservicios 2001 ("Skilla", 2), Proveedora de Insumos Acuícolas (Winfish Zeigler). En eaduana: Aquatech CM (8), Exia Prime 35.

@@ -146,3 +146,94 @@ def test_write_csv_also_writes_xlsx_with_real_numeric_dtype(tmp_path):
     # siendo un numero real (lo que importa), no texto que Excel deba
     # reinterpretar.
     assert pd.api.types.is_numeric_dtype(df["proteina_pct"])
+
+
+def test_build_master_also_writes_one_master_per_pais(tmp_path, monkeypatch):
+    import pandas as pd
+    import schema
+
+    monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
+    monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
+    # sin esto build_master pisaba el data/conflictos.csv real con uno vacio
+    monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
+    for pais in ("ecuador", "mexico"):
+        rec = {c: None for c in schema.SCHEMA_COLUMNS}
+        rec.update(pais=pais, empresa="Nicovita", nombre_producto=f"Nicovita {pais}")
+        pipeline.write_csv([rec], pipeline.processed_path(pais, "nicovita"))
+    pipeline.build_master()
+    assert len(pd.read_csv(tmp_path / "master.csv")) == 2
+    for pais in ("ecuador", "mexico"):
+        df = pd.read_csv(tmp_path / "processed" / pais / f"master_{pais}.csv")
+        assert list(df["pais"]) == [pais]
+
+
+def test_netutil_pause_schedule_is_random_and_long_every_3_to_5(monkeypatch):
+    import netutil
+
+    slept = []
+    monkeypatch.setattr(netutil, "ENABLED", True)
+    monkeypatch.setattr(netutil.time, "sleep", slept.append)
+    monkeypatch.delenv("SCRAPER_NO_PAUSE", raising=False)
+    netutil._state.update(n=0, next_long=4)
+    for _ in range(4):
+        netutil.pause()
+    assert all(1.5 <= s <= 4.0 for s in slept[:3])
+    assert 20.0 <= slept[3] <= 30.0
+    assert 3 <= netutil._state["next_long"] <= 5
+
+
+def test_netutil_blocked_response_raises_and_saves_page(tmp_path, monkeypatch):
+    import netutil
+    import pytest
+
+    class Resp:
+        url = "https://validate.perfdrive.com/?ssa=1"
+        status_code = 200
+        text = "<html>captcha</html>"
+        headers = {}
+
+    class Sess:
+        def get(self, url, **kw):
+            return Resp()
+
+    monkeypatch.setattr(netutil, "BLOQUEOS_DIR", tmp_path)
+    netutil.reset_blocked()
+    with pytest.raises(netutil.BlockedError) as exc:
+        netutil.get(Sess(), "https://nicovita.com/x")
+    assert exc.value.saved.exists()
+    assert netutil.blocked_events()[0]["captcha_url"].startswith("https://validate.perfdrive.com")
+
+
+def test_netutil_pause_only_applies_to_paced_hosts(monkeypatch):
+    import netutil
+
+    slept = []
+    monkeypatch.setattr(netutil, "ENABLED", True)
+    monkeypatch.setattr(netutil.time, "sleep", slept.append)
+    monkeypatch.delenv("SCRAPER_NO_PAUSE", raising=False)
+    netutil.pause("https://agripac.com.ec/x")
+    netutil.pause("https://vimifos.com/producto/xtrudix")
+    assert slept == []
+    netutil.pause("https://nicovita.com/categoria/camarones/")
+    assert len(slept) == 1
+
+
+def test_conflictos_por_pais_y_consolidado_sin_entrar_al_master(tmp_path, monkeypatch):
+    import pipeline
+    import pandas as pd
+    import schema
+    monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
+    monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
+    monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
+    monkeypatch.setattr(pipeline.fuentes, "listar", lambda *a, **k: [("mexico", "apiaba")])
+    record = schema.empty_record("Api-Aba")
+    record.update(pais="mexico", nombre_producto="Dorado 35%", proteina_pct="35")
+    schema.registrar_conflicto(record, "proteina_pct", "35", "nombre_comercial", [("40", "analisis"), ("35", "titulo")])
+    pipeline.write_csv([record], pipeline.processed_path("mexico", "apiaba"))
+    assert pipeline.write_conflictos([record], "mexico", "apiaba") == 1
+    assert pipeline.write_conflictos([record], "mexico", "apiaba") == 1  # re-correr no duplica
+    pipeline.build_master()
+    conf = pd.read_csv(tmp_path / "conflictos.csv", dtype=str)
+    assert len(conf) == 1 and conf.loc[0, "regla"] == "nombre_comercial"
+    master = pd.read_csv(tmp_path / "master.csv", dtype=str)
+    assert len(master) == 1 and "regla" not in master.columns
