@@ -40,7 +40,9 @@ if getattr(sys, "frozen", False):
     _ROOT = Path(sys.executable).resolve().parent
 else:
     _ROOT = Path(__file__).resolve().parent.parent
-BLOQUEOS_DIR = _ROOT / "data" / "bloqueos"
+# data/ junto al .exe (o del repo): los scrapers guardan aqui su cache en data/raw/.
+DATA_DIR = _ROOT / "data"
+BLOQUEOS_DIR = DATA_DIR / "bloqueos"
 
 _state = {"n": 0, "next_long": random.randint(*LONG_EVERY)}
 _blocked: list[dict] = []

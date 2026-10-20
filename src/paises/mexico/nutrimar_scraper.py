@@ -27,7 +27,7 @@ from paises.ecuador import haid_scraper
 LISTING_URL = "https://www.grupoacuicolamexicano.com.mx/nutrimar"
 BASE_URL = "https://www.nutrimar.mx"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
-RAW_DIR = Path(__file__).resolve().parents[3] / "data" / "raw" / "nutrimar"
+RAW_DIR = netutil.DATA_DIR / "raw" / "nutrimar"  # no __file__: en el .exe apunta a _MEIxxxx temporal
 _LINK_RE = re.compile(r"https://www\.nutrimar\.mx/([A-Za-z0-9%\-]+)")
 _PDF_RE = re.compile(r"https://www\.nutrimar\.mx/_files/ugd/[0-9a-f_]+\.pdf")
 # Wix: https://static.wixstatic.com/media/<id>~mv2.png/v1/fill/.../<nombre original>.png

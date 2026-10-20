@@ -47,3 +47,27 @@ def test_todo_modulo_que_usa_netutil_lo_importa():
                   if "netutil." in p.read_text(encoding="utf-8") and p.name != "netutil.py"
                   and "import netutil" not in p.read_text(encoding="utf-8")]
     assert sin_import == []
+
+
+def test_cache_de_scrapers_vive_en_data_junto_al_exe(monkeypatch, tmp_path):
+    # Regresion 2026-10-20: nicovita/haid/nutrimar calculaban data/raw desde
+    # __file__, que en el .exe es la carpeta temporal _MEIxxxx (se borra al
+    # cerrar): el .exe no veia las paginas de Nicovita guardadas a mano.
+    import importlib
+    import sys
+
+    import netutil
+    from paises._compartido import nicovita_scraper
+    from paises.ecuador import haid_scraper
+    from paises.mexico import nutrimar_scraper
+
+    for mod in (nicovita_scraper, haid_scraper, nutrimar_scraper):
+        assert mod.RAW_DIR.parent == netutil.DATA_DIR / "raw"
+
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(sys, "executable", str(tmp_path / "ScraperCompetencia.exe"))
+    try:
+        assert importlib.reload(netutil).DATA_DIR == tmp_path / "data"
+    finally:
+        monkeypatch.undo()
+        importlib.reload(netutil)
