@@ -75,7 +75,7 @@ def test_infer_etapa_pl10_is_precria():
 
 
 def test_infer_etapa_disease_marker_no_longer_returns_salud():
-    # "salud" ya no es un valor de etapa (ver producto_salud abajo) -- sin
+    # "salud" ya no es un valor de etapa (ver es_producto_de_salud abajo) -- sin
     # otro marcador de rango, el texto de enfermedad solo no resuelve etapa.
     assert parser._infer_etapa("x", "previene enfermedades en el intestino del camaron por Vibrio") is None
 
@@ -88,7 +88,7 @@ def test_infer_etapa_keeps_stage_info_alongside_disease_marker():
     assert parser._infer_etapa("x", text) == "engorde"
 
 
-# La deteccion de producto_salud es compartida (schema.detect_producto_salud,
+# La deteccion de es_producto_de_salud es compartida (schema.detect_es_producto_de_salud,
 # probada en test_schema.py) -- ya no vive como funcion local de este parser.
 
 
@@ -197,5 +197,5 @@ def test_parse_product_fitness_keeps_stage_info_and_flags_salud():
         html="",
         pdf_bytes=pdf_path.read_bytes(),
     )
-    assert all(r["producto_salud"] is True for r in records)
+    assert all(r["es_producto_de_salud"] is True for r in records)
     assert all(r["etapa_competidor"] == "engorde" for r in records)

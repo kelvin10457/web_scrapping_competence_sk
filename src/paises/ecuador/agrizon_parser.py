@@ -100,7 +100,7 @@ def parse_product(product: dict) -> dict:
     # espanol ("Pelletizado"/"extruido"/"Extrusado") no siempre esta
     # presente (ej. EXIA Perform/Pro) -- combinar ambos cierra ese hueco.
     record["tipo_presentacion"] = schema.detect_tecnologia(f"{title} {tags_text}")
-    record["producto_salud"] = schema.detect_producto_salud(tags_text)
+    record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(tags_text)
     record["etapa_competidor"] = _etapa(tags_text, record["tamano_pellet_mm"], record["tipo_presentacion"])
 
     variant = (product.get("variants") or [{}])[0]

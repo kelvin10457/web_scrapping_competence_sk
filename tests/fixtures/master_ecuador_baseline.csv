@@ -1,4 +1,4 @@
-﻿empresa,nombre_producto,etapa_competidor,producto_salud,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+﻿empresa,nombre_producto,etapa_competidor,es_producto_de_salud,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
 Nicovita,Nicovita Classic AD,engorde,False,Grower,2.5,2.5,2.5,Pelletizado,25,28,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-09-16
 Nicovita,Nicovita Classic AD,engorde,False,Grower,2.0,2,2,Pelletizado,25,35,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-09-16
 Nicovita,Nicovita Classic AD,engorde,False,Grower,2.5,2.5,2.5,Pelletizado,25,35,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-09-16

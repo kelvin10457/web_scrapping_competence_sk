@@ -88,7 +88,7 @@ FORM_FIELDS = [
     ("empresa", "Empresa", "combobox", EMPRESAS_MANUAL),
     ("nombre_producto", "Nombre del producto", "entry", None),
     ("etapa_competidor", "Etapa (competidor)", "combobox", sorted(schema.ETAPA_VALUES)),
-    ("producto_salud", "¿Producto de salud?", "combobox", ["True", "False"]),
+    ("es_producto_de_salud", "¿Producto de salud?", "combobox", ["True", "False"]),
     ("tamano_pellet_mm", "Tamaño de pellet (mm)", "entry", None),
     ("tipo_presentacion", "Tipo de presentación", "combobox", sorted(schema.TIPO_PRESENTACION_VALUES)),
     ("empaque_kg", "Empaque (kg)", "entry", None),

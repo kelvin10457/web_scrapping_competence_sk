@@ -16,7 +16,7 @@
 
 Objetivo: que el CSV interno ya tenga las columnas y los nombres del Excel de Power BI, normalizados desde el origen.
 
-- [ ] **R3.1** Renombrar `producto_salud` → `es_producto_de_salud` en todo el código (schema, parsers, merge_human, GUI, tests, baseline de Ecuador). Sin cambios de lógica.
+- [x] **R3.1** Renombrar `producto_salud` → `es_producto_de_salud` en todo el código (schema, parsers, merge_human, GUI, tests, baseline de Ecuador). Sin cambios de lógica.
 - [ ] **R3.2** `schema.normalize_presentacion(texto)` con la lista oficial (`Pelletizado` → `Pellet`). Lo desconocido se devuelve tal cual. Solo la función y sus tests.
 - [ ] **R3.3** Los parsers usan `normalize_presentacion` al extraer: `detect_tecnologia`, Agripac y Agrizon. Se regenera Ecuador y se compara con el baseline.
 - [ ] **R3.4** Aviso de presentaciones desconocidas: resumen al final (CLI y GUI) + `data/presentaciones_nuevas.csv` (pais, empresa, producto, valor, url).

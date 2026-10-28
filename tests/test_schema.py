@@ -18,7 +18,7 @@ def test_normalize_etapa_no_match_returns_none():
 def test_normalize_etapa_no_longer_maps_salud_related_terms():
     # "salud" se saco de ETAPA_VALUES/_ETAPA_RULES 2026-09-02 -- un producto
     # con funcion terapeutica no tiene una etapa de ciclo de vida propia
-    # (ver producto_salud en cada parser). Sin otro marcador de etapa real,
+    # (ver es_producto_de_salud en cada parser). Sin otro marcador de etapa real,
     # estos terminos ya no deben resolver a nada.
     assert schema.normalize_etapa("Fitness") is None
     assert schema.normalize_etapa("Tratamiento") is None
@@ -184,14 +184,14 @@ def test_etapa_skt_empty_tamano_stays_none():
     assert schema.etapa_skt_from_row("salud", "", "Pelletizado") is None
 
 
-def test_detect_producto_salud_true_for_disease_marker():
-    assert schema.detect_producto_salud("tratamiento contra Vibrio spp") is True
+def test_detect_es_producto_de_salud_true_for_disease_marker():
+    assert schema.detect_es_producto_de_salud("tratamiento contra Vibrio spp") is True
     # Caso real Aquaxcel Adapt Shock (usuario 2026-09-02): "vibriosis" debe
     # matchear via la raiz "vibrio", igual que "Vibrio spp" en Nicovita/HAID.
-    assert schema.detect_producto_salud("combatir eventos bacterianos como la vibriosis") is True
+    assert schema.detect_es_producto_de_salud("combatir eventos bacterianos como la vibriosis") is True
 
 
-def test_detect_producto_salud_true_for_profilactic_marker():
+def test_detect_es_producto_de_salud_true_for_profilactic_marker():
     # Caso real Agripac (2026-09-03): la "Linea Profilactica" (Ultra,
     # Ultrapro, Premium Profilactico) no menciona vibrio/tratamiento/
     # antibacterian, pero si describe un reclamo especifico de prevencion
@@ -203,21 +203,21 @@ def test_detect_producto_salud_true_for_profilactic_marker():
         "inmune del camaron logrando una mejor resistencia a problemas de "
         "bacterias, virus y parasitos"
     )
-    assert schema.detect_producto_salud(text) is True
-    assert schema.detect_producto_salud("Feedpac 35% Premium Profilactico") is True
+    assert schema.detect_es_producto_de_salud(text) is True
+    assert schema.detect_es_producto_de_salud("Feedpac 35% Premium Profilactico") is True
 
 
-def test_detect_producto_salud_false_when_text_present_without_marker():
-    assert schema.detect_producto_salud("alimento para camaron desde post larva") is False
+def test_detect_es_producto_de_salud_false_when_text_present_without_marker():
+    assert schema.detect_es_producto_de_salud("alimento para camaron desde post larva") is False
     # Mencion generica de "salud" en marketing (ej. Aquaxcel Maxima: "promover
     # la salud del camaron") NO es lo mismo que un reclamo especifico de
     # tratamiento -- la palabra "salud" sola nunca estuvo en este regex.
-    assert schema.detect_producto_salud("ingredientes para promover la salud del camaron") is False
+    assert schema.detect_es_producto_de_salud("ingredientes para promover la salud del camaron") is False
 
 
-def test_detect_producto_salud_none_when_no_text():
-    assert schema.detect_producto_salud("") is None
-    assert schema.detect_producto_salud(None) is None
+def test_detect_es_producto_de_salud_none_when_no_text():
+    assert schema.detect_es_producto_de_salud("") is None
+    assert schema.detect_es_producto_de_salud(None) is None
 
 
 def test_parse_particula_range_single_value_sets_min_equal_to_max():

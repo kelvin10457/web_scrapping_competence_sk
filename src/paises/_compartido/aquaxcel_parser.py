@@ -36,11 +36,11 @@ def _first_number(text: str) -> float | None:
 def _line_descriptions(soup: BeautifulSoup) -> dict[str, str]:
     """Texto de marketing de cada linea de producto (ej. bajo el h2 "Adapt
     Shock": "Para combatir eventos bacterianos extra celulares como la
-    vibriosis"), usado para poblar producto_salud por linea. Este texto NO
+    vibriosis"), usado para poblar es_producto_de_salud por linea. Este texto NO
     esta en los bloques "Portafolio {LINEA}" (esos son solo la tabla de
     SKUs, sin descripcion) sino en secciones de marketing aparte, mas
     arriba en la misma pagina -- hallazgo del usuario 2026-09-02, que
-    pregunto por que Aquaxcel quedaba con producto_salud vacio en las 37
+    pregunto por que Aquaxcel quedaba con es_producto_de_salud vacio en las 37
     filas: no es que no publiquen esa informacion, es que el parser
     original no la leia. Devuelve {NOMBRE_LINEA_EN_MAYUSCULA: texto},
     para cruzar contra el sufijo de cada heading "Portafolio {LINEA}"."""
@@ -105,7 +105,7 @@ def _parse_cards(soup: BeautifulSoup, fecha: str) -> list[dict]:
         record = schema.empty_record("Cargill")
         record["nombre_producto"] = headings[1].get_text(strip=True)
         record["etapa_competidor"] = schema.normalize_etapa(linea)
-        record["producto_salud"] = schema.detect_producto_salud(linea_descriptions.get(linea.upper()))
+        record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(linea_descriptions.get(linea.upper()))
         mm = _first_number(_h4_value(section, "calibre") or "")
         record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
         record["tipo_presentacion"] = _h4_value(section, "tecnolog")
@@ -131,7 +131,7 @@ def parse_listing(html: str) -> list[dict]:
             continue
 
         linea = heading.upper().removeprefix("PORTAFOLIO").strip()
-        producto_salud = schema.detect_producto_salud(linea_descriptions.get(linea))
+        es_producto_de_salud = schema.detect_es_producto_de_salud(linea_descriptions.get(linea))
 
         container = h2.parent
         row_divs = container.find_all("div", class_="row", recursive=False)
@@ -149,7 +149,7 @@ def parse_listing(html: str) -> list[dict]:
             record = schema.empty_record("Cargill")
             record["nombre_producto"] = producto
             record["etapa_competidor"] = schema.normalize_etapa(etapa_txt)
-            record["producto_salud"] = producto_salud
+            record["es_producto_de_salud"] = es_producto_de_salud
             mm = _first_number(calibre)
             record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
             record["tipo_presentacion"] = tecnologia or None

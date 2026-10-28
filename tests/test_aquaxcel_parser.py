@@ -45,7 +45,7 @@ def test_parse_listing_empty_html_returns_no_records():
     assert parser.parse_listing("<html><body>nada aqui</body></html>") == []
 
 
-def test_adapt_shock_line_flagged_producto_salud_true():
+def test_adapt_shock_line_flagged_es_producto_de_salud_true():
     # Caso real que motivo el fix (usuario 2026-09-02): a diferencia de
     # Nicovita/HAID, Aquaxcel no tiene descripcion de producto por SKU --
     # el reclamo de salud vive en texto de marketing aparte de las tablas
@@ -55,20 +55,20 @@ def test_adapt_shock_line_flagged_producto_salud_true():
     records = parser.parse_listing(_load_html())
     adapt_shock = [r for r in records if "ADAPT SH" in r["nombre_producto"]]
     assert len(adapt_shock) == 5
-    assert all(r["producto_salud"] is True for r in adapt_shock)
+    assert all(r["es_producto_de_salud"] is True for r in adapt_shock)
 
 
 def test_other_lines_confirmed_false_not_none():
     # Las otras 5 lineas (Maxima/Rapid/Advance/Active/Adapt Osmo) SI tienen
     # texto de marketing propio, pero ninguna hace un reclamo especifico de
     # salud/tratamiento -- por eso deben quedar False (confirmado, no
-    # None). Ver test_detect_producto_salud_false... en test_schema.py:
+    # None). Ver test_detect_es_producto_de_salud_false... en test_schema.py:
     # mencionar "salud" de forma generica (ej. Maxima) no cuenta.
     records = parser.parse_listing(_load_html())
     active = next(r for r in records if r["nombre_producto"] == "AQUAXCEL ACTIVE 35% 2.0")
-    assert active["producto_salud"] is False
+    assert active["es_producto_de_salud"] is False
     adapt_osmo = [r for r in records if "ADAPT OSM" in r["nombre_producto"]]
-    assert adapt_osmo and all(r["producto_salud"] is False for r in adapt_osmo)
+    assert adapt_osmo and all(r["es_producto_de_salud"] is False for r in adapt_osmo)
 
 
 def test_line_descriptions_finds_adapt_shock_vibriosis_text():
@@ -78,11 +78,11 @@ def test_line_descriptions_finds_adapt_shock_vibriosis_text():
     assert "PORTAFOLIO" not in descriptions  # nunca captura los propios headings de tabla
 
 
-def test_parse_listing_all_records_have_producto_salud_resolved():
+def test_parse_listing_all_records_have_es_producto_de_salud_resolved():
     # Con el fix, ninguna de las 37 filas deberia quedar en None -- todas
     # las lineas tienen texto de marketing propio que se puede leer.
     records = parser.parse_listing(_load_html())
-    assert all(r["producto_salud"] is not None for r in records)
+    assert all(r["es_producto_de_salud"] is not None for r in records)
 
 
 def test_parse_listing_mexico_card_layout():
@@ -114,4 +114,4 @@ def test_parse_listing_mexico_headings_bajados_2026_10_20():
     )
     assert len(nuevo) == 14
     assert sin_fecha(nuevo) == sin_fecha(viejo)
-    assert all(r["producto_salud"] is not None for r in nuevo)
+    assert all(r["es_producto_de_salud"] is not None for r in nuevo)

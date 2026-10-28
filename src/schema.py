@@ -22,7 +22,7 @@ SCHEMA_COLUMNS = [
     "empresa",
     "nombre_producto",
     "etapa_competidor",
-    "producto_salud",
+    "es_producto_de_salud",
     "etapa_skt",
     "tamano_pellet_mm",
     "particula_min_mm",
@@ -63,7 +63,7 @@ ETAPA_VALUES = {
 
 # Reglas de normalizacion: (regex sobre texto en minusculas -> etapa normalizada).
 # Se evalua en orden; la primera regla que matchea gana. Ya NO incluye una
-# regla "salud" (ver "producto_salud" en SCHEMA_COLUMNS, 2026-09-02): un
+# regla "salud" (ver "es_producto_de_salud" en SCHEMA_COLUMNS, 2026-09-02): un
 # producto con funcion terapeutica (ej. tratamiento anti-Vibrio) no tiene
 # una etapa de ciclo de vida propia, puede cubrir cualquier rango de tamano
 # -- forzarlo a "salud" en esta columna descartaba la etapa real que el
@@ -313,7 +313,7 @@ def parse_particula_range(tamano_pellet_mm: str | None) -> tuple[float | None, f
 # "Linea Profilactica" (Ultra, Ultrapro, Premium Profilactico) describe
 # resistencia especifica a "bacterias, virus y parasitos" -- un reclamo
 # concreto de prevencion de enfermedad, no marketing generico de "salud"
-# (ver test_detect_producto_salud_false_when_text_present_without_marker,
+# (ver test_detect_es_producto_de_salud_false_when_text_present_without_marker,
 # que a proposito deja en False una mencion suelta de "salud del camaron"
 # sin ese reclamo especifico). Confirmado que ningun PDF real de Nicovita/
 # HAID ya scrapeado usa esta palabra, asi que el agregado no cambia ninguna
@@ -323,7 +323,7 @@ _DISEASE_MARKER = re.compile(
 )
 
 
-def detect_producto_salud(text: str | None) -> bool | None:
+def detect_es_producto_de_salud(text: str | None) -> bool | None:
     """Detecta si un texto describe funcion terapeutica/de salud (ej.
     tratamiento anti-Vibrio) -- propiedad del producto independiente de la
     etapa del ciclo de vida: un producto de salud puede cubrir cualquier

@@ -51,7 +51,7 @@ def test_infer_etapa_from_description_only_late_marker_is_engorde():
 
 
 def test_infer_etapa_from_description_disease_marker_no_longer_returns_salud():
-    # "salud" ya no es un valor de etapa (ver producto_salud abajo) -- sin
+    # "salud" ya no es un valor de etapa (ver es_producto_de_salud abajo) -- sin
     # otro marcador de rango, el texto de enfermedad solo no resuelve etapa.
     assert parser._infer_etapa_from_description("tratamiento contra Vibrio spp") is None
 
@@ -64,7 +64,7 @@ def test_infer_etapa_from_description_keeps_stage_info_alongside_disease_marker(
     assert parser._infer_etapa_from_description(text) == "engorde"
 
 
-# La deteccion de producto_salud es compartida (schema.detect_producto_salud,
+# La deteccion de es_producto_de_salud es compartida (schema.detect_es_producto_de_salud,
 # probada en test_schema.py) -- ya no vive como funcion local de este parser.
 
 
@@ -220,7 +220,7 @@ def test_parse_product_terap_keeps_stage_info_and_flags_salud():
     # (trata Vibrio) pero su ficha tambien dice "desde post larva hasta
     # tamano de mercado" -- antes se perdia esa info porque el marcador de
     # enfermedad devolvia "salud" y cortaba el resto. Ahora coexisten:
-    # producto_salud=True en las 5 filas, y etapa resuelta por tamano
+    # es_producto_de_salud=True en las 5 filas, y etapa resuelta por tamano
     # (mismo fallback que Classic/Katal base, ya que la descripcion
     # completa sigue siendo ambigua de rango completo).
     pdf_path = ROOT / "data" / "raw" / "nicovita" / "FT-NICOVITA-TERAP-CAMARON.pdf"
@@ -231,7 +231,7 @@ def test_parse_product_terap_keeps_stage_info_and_flags_salud():
         html="",
         pdf_bytes=pdf_path.read_bytes(),
     )
-    assert all(r["producto_salud"] is True for r in records)
+    assert all(r["es_producto_de_salud"] is True for r in records)
     by_tamano = {r["tamano_pellet_mm"]: r["etapa_competidor"] for r in records}
     assert by_tamano["0.8"] == "precria"
     assert by_tamano["1.2"] == "precria"

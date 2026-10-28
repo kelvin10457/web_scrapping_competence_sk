@@ -94,7 +94,7 @@ def test_validate_rows_accepts_valid_values_and_empty_cells():
             etapa_competidor="engorde",
             tipo_presentacion="Pelletizado",
             etapa_skt="Grower",
-            producto_salud=True,
+            es_producto_de_salud=True,
             tamano_pellet_mm=2.0,
             proteina_pct=35,
             empaque_kg=25,
@@ -108,8 +108,8 @@ def test_validate_rows_accepts_boolean_as_0_1_float():
     # columna booleana con alguna celda vacia se lee de vuelta como 0.0/1.0
     # en vez de True/False -- no es un error de captura del usuario.
     df = _human_df(
-        _human_row(empresa="Nicovita", nombre_producto="X", producto_salud=0.0),
-        _human_row(empresa="Nicovita", nombre_producto="Y", producto_salud=1.0),
+        _human_row(empresa="Nicovita", nombre_producto="X", es_producto_de_salud=0.0),
+        _human_row(empresa="Nicovita", nombre_producto="Y", es_producto_de_salud=1.0),
     )
     assert merge_human.validate_rows(df) == []
 
@@ -123,7 +123,7 @@ def _synthetic_master():
             empresa="Nicovita",
             nombre_producto="Nicovita Classic",
             etapa_competidor=None,
-            producto_salud=None,
+            es_producto_de_salud=None,
             tamano_pellet_mm="1.6",
             tipo_presentacion="Pelletizado",
             empaque_kg=25.0,
@@ -135,7 +135,7 @@ def _synthetic_master():
             empresa="Nicovita",
             nombre_producto="Nicovita Classic",
             etapa_competidor="engorde",
-            producto_salud=None,
+            es_producto_de_salud=None,
             tamano_pellet_mm="2.5",
             tipo_presentacion="Pelletizado",
             empaque_kg=25.0,
@@ -147,7 +147,7 @@ def _synthetic_master():
             empresa="Nicovita",
             nombre_producto="Nicovita Classic",
             etapa_competidor="engorde",
-            producto_salud=None,
+            es_producto_de_salud=None,
             tamano_pellet_mm="2.5",
             tipo_presentacion="Pelletizado",
             empaque_kg=25.0,

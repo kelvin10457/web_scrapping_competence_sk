@@ -33,7 +33,7 @@ _LATE_MARKER = re.compile(r"tama[ñn]o de mercado|hasta\s+la\s+cosecha|hasta\s+c
 
 
 def _infer_etapa(slug: str, text: str) -> str | None:
-    """Ya NO prioriza el marcador de enfermedad (ver _detect_producto_salud):
+    """Ya NO prioriza el marcador de enfermedad (ver _detect_es_producto_de_salud):
     un producto con funcion terapeutica (ej. Fitness, "camarones juveniles
     y engorde que... previene enfermedades") no tiene una etapa propia por
     ser 'salud' -- devolverla aca antes descartaba la etapa real que el
@@ -162,7 +162,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
 
     etapa_text = f"{descripcion} {recomendaciones}"
     record["etapa_competidor"] = _infer_etapa(slug, etapa_text)
-    record["producto_salud"] = schema.detect_producto_salud(etapa_text)
+    record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(etapa_text)
 
     tamanos = [t for t in (record["tamano_pellet_mm"] or "").split(",") if t]
     if not tamanos:

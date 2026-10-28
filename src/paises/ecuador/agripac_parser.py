@@ -125,7 +125,7 @@ def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
     etapa_text = " ".join(
         [title, tabs.get("description", ""), tabs.get("modo-de-uso", ""), ingredientes]
     )
-    record["producto_salud"] = schema.detect_producto_salud(etapa_text)
+    record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(etapa_text)
     etapa = schema.normalize_etapa(title)
     if etapa is None:
         etapa = schema.normalize_etapa(etapa_text)

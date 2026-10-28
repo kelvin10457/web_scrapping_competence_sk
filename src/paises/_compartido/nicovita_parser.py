@@ -115,7 +115,7 @@ def _infer_etapa_from_description(text: str) -> str | None:
     'engorde'; si menciona ambos o ninguno, el producto cubre multiples
     etapas y no se fuerza un valor (queda None).
 
-    Ya NO prioriza el marcador de enfermedad (ver _detect_producto_salud):
+    Ya NO prioriza el marcador de enfermedad (ver _detect_es_producto_de_salud):
     un producto con funcion terapeutica (ej. Terap, "post larva hasta
     tamano de mercado para disminuir carga microbiana") NO tiene una etapa
     propia -- puede cubrir cualquier rango de tamano, igual que uno sin esa
@@ -231,7 +231,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     # trae la etapa explicita, se infiere del rango de peso descrito en la
     # ficha.
     etapa_text = f"{descripcion_pdf} {descripcion_html}"
-    record["producto_salud"] = schema.detect_producto_salud(etapa_text)
+    record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(etapa_text)
 
     etapa = schema.normalize_etapa(slug.replace("-", " "))
     if etapa is None:

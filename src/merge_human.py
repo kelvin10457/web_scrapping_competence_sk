@@ -45,7 +45,7 @@ CATEGORICAL_COLUMNS = {
     "tipo_presentacion": schema.TIPO_PRESENTACION_VALUES,
     "etapa_skt": schema.ETAPA_SKT_VALUES,
 }
-BOOLEAN_COLUMNS = ["producto_salud"]
+BOOLEAN_COLUMNS = ["es_producto_de_salud"]
 # Columnas numericas (deben ser numero o vacio en el archivo humano) -- a
 # diferencia de schema.NUMERIC_COLUMNS, que es sobre los CSV/XLSX ya
 # escritos por el pipeline (incluye particula_min_mm/max, no tamano_pellet_mm
@@ -195,7 +195,7 @@ def _typed_value(col: str, raw_value):
         return pipeline._format_value(float(str(raw_value).strip()))
     if col in ("proteina_pct", "empaque_kg"):
         return float(str(raw_value).strip())
-    if col == "producto_salud":
+    if col == "es_producto_de_salud":
         if isinstance(raw_value, bool):
             return raw_value
         if isinstance(raw_value, (int, float)) and raw_value in (0, 1):
@@ -281,7 +281,7 @@ def _normalize_master_dtypes(df: pd.DataFrame) -> pd.DataFrame:
     """pandas infiere el dtype de cada columna de un .xlsx por su contenido:
     una columna que en esta tanda de datos resulta ser 100% numerica (ej.
     tamano_pellet_mm sin ningun rango presente) o 100% vacia (ej. etapa_skt/
-    producto_salud si el master de prueba no trae ninguna) se lee como
+    es_producto_de_salud si el master de prueba no trae ninguna) se lee como
     float64 -- confirmado con un master.xlsx sintetico de pocas filas.
     Escribirle despues un texto o un booleano a esa columna via .at[]
     revienta con TypeError. Se normalizan a texto/objeto todas las columnas
@@ -296,7 +296,7 @@ def _normalize_master_dtypes(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = df[col].map(
                 lambda v: None if pd.isna(v) else (pipeline._format_value(v) if isinstance(v, float) else str(v))
             )
-        elif col == "producto_salud":
+        elif col == "es_producto_de_salud":
             df[col] = df[col].map(lambda v: None if pd.isna(v) else bool(v))
         else:
             df[col] = df[col].astype(object).where(df[col].notna(), None)
