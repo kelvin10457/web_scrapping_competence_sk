@@ -4,7 +4,7 @@ import schema
 from conftest import ROOT
 from paises.ecuador import haid_parser as parser
 
-# Texto real (recortado) de la ficha "Speed Pellet" -- ver MEMORY.md: el
+# Texto real (recortado) de la ficha "Speed Pellet" -- ver docs/historico/MEMORY.md: el
 # encabezado dice PELLETIZADO (coincide con el nombre del producto) pero la
 # descripcion dice, por error propio de la ficha, "elaborado por proceso de
 # extruido".
@@ -93,7 +93,7 @@ def test_infer_etapa_keeps_stage_info_alongside_disease_marker():
 
 
 def test_infer_etapa_starter_slug_fallback():
-    # Unico caso sin marcador textual (MEMORY.md): la ficha de "Starter"
+    # Unico caso sin marcador textual (docs/historico/MEMORY.md): la ficha de "Starter"
     # describe el rango en gramos (1 a 3 g) sin mencionar PL ni tamano de
     # mercado -- se resuelve a mano a precria por el propio agrupamiento
     # del sitio (tab "Iniciadores" junto a Starter Pro).
@@ -105,7 +105,7 @@ def test_infer_etapa_late_marker_without_pl10_is_engorde():
 
 
 def test_parse_product_explodes_one_row_per_tamano_repeating_shared_fields():
-    # Caso real Speed/Happiness/Fitness (MEMORY.md): un solo % de proteina
+    # Caso real Speed/Happiness/Fitness (docs/historico/MEMORY.md): un solo % de proteina
     # para los 3 calibres, asi que el fan-out debe repetir ese valor tal
     # cual en cada fila, no inventar una variacion que la ficha no publica.
     html = (
@@ -135,7 +135,7 @@ def test_parse_product_no_tamano_returns_single_null_row():
 # Texto real extraido (incluye ruido de OCR: "#0"/"#1"/"#2" salen como
 # "++0"/"+1"/"+2") de la ficha Starter Pro -- caso real que motivo el fix:
 # 10kg para los calibres chicos, 25kg para el grande, dentro del MISMO
-# producto. Ver MEMORY.md.
+# producto. Ver docs/historico/MEMORY.md.
 STARTER_PRO_EMPAQUE_TEXT = (
     "Empaque\n\nY” Sacos de polipropileno laminado en presentación de\n"
     "10kg para los diámetros ++0 - 0.3mm, +1 - 0.5 mm.\n\n"

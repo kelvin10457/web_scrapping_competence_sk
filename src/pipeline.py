@@ -3,7 +3,7 @@
 Uso: python src/pipeline.py [--pais P] [--empresa E]
 Sin argumentos corre todos los (pais, empresa) de fuentes.py. Cada empresa se corre de forma aislada
 (un fallo en una no afecta a las demas) y master.csv se regenera siempre
-al final con lo que haya en processed/ (PLAN.md § 4-5: snapshot, no historico).
+al final con lo que haya en processed/ (docs/historico/PLAN.md § 4-5: snapshot, no historico).
 """
 from __future__ import annotations
 

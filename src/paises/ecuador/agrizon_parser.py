@@ -1,5 +1,5 @@
 """Parser de Agrizon: completa los campos tecnicos de BioMar que
-biomar.com no publica (MEMORY.md / PLAN.md § 5) -- tamano_pellet_mm,
+biomar.com no publica (docs/historico/MEMORY.md / docs/historico/PLAN.md § 5) -- tamano_pellet_mm,
 tipo_presentacion, empaque_kg, proteina_pct y etapa -- a partir del listado
 de un distribuidor ecuatoriano.
 

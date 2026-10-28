@@ -1,7 +1,7 @@
 """Parser de Nicovita: HTML de pagina de producto + texto de la ficha
 tecnica PDF -> dict con el esquema unificado (schema.SCHEMA_COLUMNS).
 
-Todo por regex/keyword-matching, sin LLM (PLAN.md § 6). Si un campo no
+Todo por regex/keyword-matching, sin LLM (docs/historico/PLAN.md § 6). Si un campo no
 aparece explicitamente en la fuente, queda None -- no se infiere.
 """
 from __future__ import annotations
@@ -45,7 +45,7 @@ _SLUG_TO_NAME = {
     "terap-e": "Nicovita Térap E+",
 }
 
-# Sufijo de pais (PLAN_REGIONAL.md): -ecuador/-honduras/-mexico, con "-2" opcional
+# Sufijo de pais (docs/historico/PLAN_REGIONAL.md): -ecuador/-honduras/-mexico, con "-2" opcional
 # (ej. nicovita-classic-mexico-2, alias duplicado).
 _SLUG_RE = re.compile(r"nicovita-(?P<slug>[a-z0-9\-]+?)-(?:ecuador|honduras|mexico|peru)(?:-\d+)?/?$")
 # Fallback para la linea Proterra (ver src/scrapers/nicovita.py): su URL no
@@ -121,7 +121,7 @@ def _infer_etapa_from_description(text: str) -> str | None:
     propia -- puede cubrir cualquier rango de tamano, igual que uno sin esa
     funcion. Devolver 'salud' aca antes descartaba la etapa real que el
     mismo texto tambien describia (hallazgo del usuario 2026-09-02, ver
-    MEMORY.md)."""
+    docs/historico/MEMORY.md)."""
     if _REPRODUCTOR_MARKER.search(text):
         return "reproductores"
     early = bool(_EARLY_MARKER.search(text))
@@ -138,7 +138,7 @@ def parse_pdf_text(pdf_text: str) -> dict:
     incluye proteina_pct/tamano_pellet_mm -- esos se leen de la tabla
     estructurada de la ficha (ver _extract_presentacion_pairs) porque un
     regex sobre el texto aplanado no distingue que tamano va con que
-    proteina (MEMORY.md, bug tamano/proteina 2026-09-02)."""
+    proteina (docs/historico/MEMORY.md, bug tamano/proteina 2026-09-02)."""
     fields: dict = {}
 
     fields["tipo_presentacion"] = schema.detect_tecnologia(pdf_text)
@@ -163,7 +163,7 @@ def _extract_presentacion_pairs(pdf) -> list[tuple[str, str]]:
     -- ej. Classic AD: 2.5mm aparece en la fila de 28% Y en la de 35%. No es
     una correspondencia 1 a 1 por posicion, asi que no se puede reconstruir
     leyendo "Proteina (%)" y "Presentacion Comercial" como dos listas de
-    numeros sueltas (enfoque anterior, ver git history / MEMORY.md). Ademas,
+    numeros sueltas (enfoque anterior, ver git history / docs/historico/MEMORY.md). Ademas,
     al menos una ficha (Qualis) tiene el texto de la seccion 3.a
     desincronizado de su propia tabla (25% en el texto, 22% en la tabla) --
     por eso esta funcion lee UNICAMENTE la tabla, celda por celda, sin

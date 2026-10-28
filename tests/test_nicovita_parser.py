@@ -35,7 +35,7 @@ def test_parse_pdf_text_detects_single_l_peletizada_spelling():
 
 
 def test_infer_etapa_from_description_full_range_stays_none():
-    # Caso real Classic/Katal base (MEMORY.md): la ficha menciona el
+    # Caso real Classic/Katal base (docs/historico/MEMORY.md): la ficha menciona el
     # marcador temprano ("post larva") Y el tardio ("tamaño de mercado") a
     # la vez -- el producto cubre todo el ciclo, no se fuerza una etapa.
     text = "desde post larva hasta tamaño de mercado"
@@ -72,7 +72,7 @@ class _FakePage:
     """Stub minimo de pagina pdfplumber -- solo expone extract_tables(),
     unico metodo que usa _extract_presentacion_pairs. Las tablas literales
     son las que devuelve pdfplumber de verdad contra las fichas reales
-    (confirmado 2026-09-02, ver MEMORY.md bug tamano/proteina)."""
+    (confirmado 2026-09-02, ver docs/historico/MEMORY.md bug tamano/proteina)."""
 
     def __init__(self, tables):
         self._tables = tables
@@ -164,7 +164,7 @@ def test_extract_presentacion_pairs_no_matching_table_returns_empty():
 
 
 def test_parse_product_returns_single_null_row_when_no_pdf():
-    # Caso real: Katal Precria no tiene ficha PDF enlazada (MEMORY.md).
+    # Caso real: Katal Precria no tiene ficha PDF enlazada (docs/historico/MEMORY.md).
     records = parser.parse_product(
         "https://nicovita.com/productos/nicovita-katal-precria-ecuador/",
         html="",

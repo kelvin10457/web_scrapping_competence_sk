@@ -1,6 +1,6 @@
 """Parser de Agripac (linea Feedpac): HTML de la pagina de producto -> dict
 con el esquema unificado (schema.SCHEMA_COLUMNS). Todo por regex/keyword-
-matching, sin LLM (PLAN.md § 6).
+matching, sin LLM (docs/historico/PLAN.md § 6).
 
 A diferencia de Nicovita/HAID no hay ficha tecnica PDF: los datos tecnicos
 viven en las pestanas WooCommerce de la propia pagina ("Tipo", "Subtipo",

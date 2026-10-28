@@ -1,4 +1,4 @@
-"""Fase 5 (PLAN_REGIONAL.md): registros oficiales como fuente COMPLEMENTARIA.
+"""Fase 5 (docs/historico/PLAN_REGIONAL.md): registros oficiales como fuente COMPLEMENTARIA.
 
 Nunca crean filas en el master. Solo:
   1. completan celdas vacias (proteina_pct, tamano_pellet_mm, empaque_kg) de un

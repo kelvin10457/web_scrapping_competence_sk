@@ -7,7 +7,7 @@ def _load(name: str) -> str:
 
 
 def test_exia_prime_multi_etapa_leaves_etapa_none():
-    # Caso real (MEMORY.md): EXIA Prime publica DOS valores de Etapa en el
+    # Caso real (docs/historico/MEMORY.md): EXIA Prime publica DOS valores de Etapa en el
     # mismo <dd> ("De Engorde" y "De Alevinaje") -- el producto cubre mas
     # de una etapa, no se fuerza una sola.
     record = parser.parse_product(
@@ -19,7 +19,7 @@ def test_exia_prime_multi_etapa_leaves_etapa_none():
 
 def test_inicio_focus_single_etapa_normalizes_to_post_transferencia():
     # INICIO Focus no tiene <dt>Producto</dt> en absoluto (uno de los 4
-    # productos INICIO sin ese campo, ver MEMORY.md) -- nombre_producto
+    # productos INICIO sin ese campo, ver docs/historico/MEMORY.md) -- nombre_producto
     # debe salir del <h1>, no del <dl>.
     record = parser.parse_product(
         "https://www.biomar.com/.../inicio-focus-shrimp", _load("biomar_inicio_focus.html")

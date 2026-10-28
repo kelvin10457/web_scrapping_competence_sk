@@ -1,6 +1,6 @@
 """Scraper de Aquaxcel (Cargill Ecuador). No existen fichas tecnicas por
 producto ni paginas de producto individuales (confirmado via sitemap.xml en
-MEMORY.md), pero la pagina de listado si publica composicion nutricional y
+docs/historico/MEMORY.md), pero la pagina de listado si publica composicion nutricional y
 datos fisicos por SKU en bloques "Portafolio {LINEA}" (ver
 src/parsers/aquaxcel.py) -- HTML estatico, sin JS necesario.
 """

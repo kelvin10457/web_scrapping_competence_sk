@@ -104,7 +104,7 @@ def validate_headers(df: pd.DataFrame) -> list[str]:
     """Encabezados deben ser EXACTAMENTE schema.SCHEMA_COLUMNS -- ni de mas
     ni de menos (el orden no importa, se reindexa despues)."""
     actual = list(df.columns)
-    # 'pais' es opcional en archivos viejos (PLAN_REGIONAL.md 2.5): se asume ecuador.
+    # 'pais' es opcional en archivos viejos (docs/historico/PLAN_REGIONAL.md 2.5): se asume ecuador.
     if "pais" not in actual:
         actual.append("pais")
     expected = set(schema.SCHEMA_COLUMNS)
@@ -240,7 +240,7 @@ def find_name_candidates(master_df: pd.DataFrame, empresa, nombre_producto, pais
         master_df["nombre_producto"].map(_normalize_key) == nombre_key
     )
     if not _is_empty(pais):
-        # pais forma parte de la identidad (PLAN_REGIONAL.md 2.5).
+        # pais forma parte de la identidad (docs/historico/PLAN_REGIONAL.md 2.5).
         mask &= master_df["pais"].map(_normalize_key) == _normalize_key(pais)
     return master_df.index[mask]
 

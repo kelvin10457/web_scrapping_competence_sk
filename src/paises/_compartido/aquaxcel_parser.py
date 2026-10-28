@@ -3,7 +3,7 @@ cada linea de producto (Maxima, Rapid, Advance, Active, Adapt Shock, Adapt
 Osmo) en la pagina de listado -- una fila HTML (div, no <table>) por SKU con
 PRODUCTO/PROTEINA/GRASA/TECNOLOGIA/CALIBRE/ETAPA DE USO/KG. Confirmado
 presente en el HTML estatico (sin JS) el 2026-09-01; el hallazgo previo de
-"no hay composicion nutricional publicada" (MEMORY.md) estaba desactualizado
+"no hay composicion nutricional publicada" (docs/historico/MEMORY.md) estaba desactualizado
 -- el parser original solo miraba el primer <table class="table"> (la grilla
 comparativa marca x etapa) e ignoraba estos bloques, que no son <table> sino
 <div class="row"> de Bootstrap.

@@ -1,6 +1,6 @@
 """Esquema unificado de datos para el pipeline de scraping de competencia.
 
-Ver PLAN.md § 3 para el diseño completo. Este modulo define:
+Ver docs/historico/PLAN.md § 3 para el diseño completo. Este modulo define:
 - La lista de columnas del esquema unificado (mismo orden para los 4 CSV + master.csv).
 - `normalize_etapa`: mapea el texto de etapa de cada empresa a los valores
   categoricos normalizados usados para poder filtrar entre empresas.
@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 
 # Orden exacto de columnas para todos los CSV (por empresa y master.csv).
-# Paises validos para la columna "pais" (PLAN_REGIONAL.md 2.1): pais donde se
+# Paises validos para la columna "pais" (docs/historico/PLAN_REGIONAL.md 2.1): pais donde se
 # vende/publica el producto, no donde se fabrica.
 PAIS_VALUES = ("ecuador", "honduras", "nicaragua", "panama", "mexico")
 
@@ -49,7 +49,7 @@ SCHEMA_COLUMNS = [
 # interpretado como separador de miles, hallazgo del usuario 2026-09-03).
 NUMERIC_COLUMNS = ["particula_min_mm", "particula_max_mm", "empaque_kg", "proteina_pct"]
 
-# Valores normalizados validos para la columna "etapa_competidor" (PLAN.md § 3).
+# Valores normalizados validos para la columna "etapa_competidor" (docs/historico/PLAN.md § 3).
 # "salud" YA NO es uno de ellos (ver nota abajo, 2026-09-02) -- se dejo aca
 # comentado por si algun caller viejo lo referencia, pero normalize_etapa()
 # no lo devuelve mas.
@@ -67,7 +67,7 @@ ETAPA_VALUES = {
 # producto con funcion terapeutica (ej. tratamiento anti-Vibrio) no tiene
 # una etapa de ciclo de vida propia, puede cubrir cualquier rango de tamano
 # -- forzarlo a "salud" en esta columna descartaba la etapa real que el
-# texto tambien pudiera describir (hallazgo del usuario, ver MEMORY.md).
+# texto tambien pudiera describir (hallazgo del usuario, ver docs/historico/MEMORY.md).
 _ETAPA_RULES: list[tuple[re.Pattern, str]] = [
     (re.compile(r"post[\s\-_]?transfer|transferencia|transici[oó]n|alevinaje"), "post_transferencia"),
     (re.compile(r"larva|hatchery|mysis|\bpl\b|post[\s\-_]?larval"), "larva"),
@@ -137,7 +137,7 @@ def detect_tecnologia(text: str | None) -> str | None:
     (ej. "ALIMENTO BALANCEADO PELLETIZADO PARA CAMARON") precede a la
     descripcion, lo que resuelve el caso "Speed Pellet" -- su encabezado
     dice pelletizado pero el parrafo de descripcion dice, por error de la
-    propia ficha, "elaborado por proceso de extruido" (MEMORY.md). Devuelve
+    propia ficha, "elaborado por proceso de extruido" (docs/historico/MEMORY.md). Devuelve
     None si no se menciona ninguna de las dos -- no se asume una por
     defecto ni se infiere de otros campos.
 

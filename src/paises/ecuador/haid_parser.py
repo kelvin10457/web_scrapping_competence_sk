@@ -23,7 +23,7 @@ from paises.ecuador import haid_scraper as sc  # noqa: E402
 # sin mencionar "PL" ni "tamano de mercado/cosecha", pero HAID lo agrupa en
 # su propio sitio bajo el tab "Iniciadores" junto a Starter Pro, y su rango
 # de peso es continuacion directa del de Starter Pro (que si se resuelve a
-# 'precria' via el marcador PL10). Ver MEMORY.md.
+# 'precria' via el marcador PL10). Ver docs/historico/MEMORY.md.
 _ETAPA_FALLBACK_BY_SLUG = {"starter": "precria"}
 
 _REPRODUCTOR_MARKER = re.compile(r"reproductor|broodstock|maduraci[oó]n", re.I)
@@ -38,7 +38,7 @@ def _infer_etapa(slug: str, text: str) -> str | None:
     y engorde que... previene enfermedades") no tiene una etapa propia por
     ser 'salud' -- devolverla aca antes descartaba la etapa real que el
     mismo texto tambien describia (hallazgo del usuario 2026-09-02, ver
-    MEMORY.md)."""
+    docs/historico/MEMORY.md)."""
     if _REPRODUCTOR_MARKER.search(text):
         return "reproductores"
     late = bool(_LATE_MARKER.search(text))
@@ -130,7 +130,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     A diferencia de Nicovita, aqui no hay ambiguedad que resolver: cada
     ficha HAID publica un unico % de proteina para TODOS sus calibres (son
     la misma formula en distintas moliendas, confirmado contra las 6 fichas
-    reales -- ver MEMORY.md) asi que proteina_pct se repite igual en cada
+    reales -- ver docs/historico/MEMORY.md) asi que proteina_pct se repite igual en cada
     fila explotada."""
     record = schema.empty_record("HAID")
     record["fuente_url"] = url

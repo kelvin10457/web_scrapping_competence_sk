@@ -1,6 +1,6 @@
 """Parser de BioMar: solo identificacion (empresa, nombre_producto, etapa).
 La ficha de producto no publica composicion nutricional ni fisico/funcional
-en ningun lado (MEMORY.md) -- el resto de columnas queda explicitamente
+en ningun lado (docs/historico/MEMORY.md) -- el resto de columnas queda explicitamente
 None, no se infiere ni se inventa.
 """
 from __future__ import annotations

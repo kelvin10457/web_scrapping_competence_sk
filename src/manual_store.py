@@ -58,7 +58,7 @@ def ensure_db(db_path: Path = DEFAULT_DB_PATH) -> None:
 
 def _migrar_pais(conn: sqlite3.Connection) -> None:
     """Bases creadas antes de la expansion regional no tienen la columna
-    `pais`: se agrega con default 'ecuador' (PLAN_REGIONAL.md 2.5)."""
+    `pais`: se agrega con default 'ecuador' (docs/historico/PLAN_REGIONAL.md 2.5)."""
     columnas = [fila[1] for fila in conn.execute(f"PRAGMA table_info({_TABLE})")]
     if "pais" not in columnas:
         conn.execute(f"ALTER TABLE {_TABLE} ADD COLUMN pais TEXT DEFAULT 'ecuador'")

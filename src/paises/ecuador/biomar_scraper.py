@@ -1,6 +1,6 @@
-"""Scraper de BioMar Ecuador: pipeline PARCIAL por diseno (PLAN.md § 0/§ 2).
+"""Scraper de BioMar Ecuador: pipeline PARCIAL por diseno (docs/historico/PLAN.md § 0/§ 2).
 No hay fichas tecnicas ni composicion nutricional publicada -- la pagina de
-producto termina en un formulario de contacto de ventas (MEMORY.md). Solo
+producto termina en un formulario de contacto de ventas (docs/historico/MEMORY.md). Solo
 se extrae identificacion: empresa, nombre_producto, etapa.
 """
 from __future__ import annotations

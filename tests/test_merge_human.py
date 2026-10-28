@@ -476,7 +476,7 @@ def test_main_writes_master_and_revisar_sheets_when_valid(tmp_path, monkeypatch)
     assert len(revisar_sheet) == 1
 
 
-# --- pais (PLAN_REGIONAL.md 2.5) -----------------------------------------
+# --- pais (docs/historico/PLAN_REGIONAL.md 2.5) -----------------------------------------
 
 
 def test_find_matches_respects_pais():

@@ -1,5 +1,5 @@
 """Scraper de Nicovita Ecuador: descubre productos y descarga sus fichas
-tecnicas PDF. Sitio 100% HTML estatico (confirmado en MEMORY.md), sin
+tecnicas PDF. Sitio 100% HTML estatico (confirmado en docs/historico/MEMORY.md), sin
 necesidad de navegador headless.
 """
 from __future__ import annotations
@@ -19,7 +19,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
 RAW_DIR = netutil.DATA_DIR / "raw" / "nicovita"  # no __file__: en el .exe apunta a _MEIxxxx temporal
 
 # PDFs ya descargados en esta corrida (url -> bytes): las fichas se comparten
-# entre paises (PLAN_REGIONAL.md 2.6), asi no se bajan dos veces.
+# entre paises (docs/historico/PLAN_REGIONAL.md 2.6), asi no se bajan dos veces.
 _PDF_CACHE: dict[str, bytes] = {}
 
 # Solo exige el prefijo "nicovita-" tras "/productos/" -- Nicovita NO es
@@ -157,7 +157,7 @@ def save_pdf(pdf_url: str, content: bytes) -> Path:
 def scrape_all(pais_slug: str = "ecuador") -> list[dict]:
     """Devuelve una lista de dicts crudos: {url, html, pdf_url, pdf_bytes,
     pdf_path} listos para pasar al parser. pdf_bytes es None si la pagina no
-    tiene ficha tecnica enlazada (no deberia pasar segun MEMORY.md, pero no
+    tiene ficha tecnica enlazada (no deberia pasar segun docs/historico/MEMORY.md, pero no
     se asume). Salta paginas que son un alias duplicado de una ya vista
     (mismo nombre + mismo PDF, ver _canonical_key) para no generar dos filas
     identicas con distinto fuente_url."""

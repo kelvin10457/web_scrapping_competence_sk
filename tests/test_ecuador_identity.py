@@ -1,4 +1,4 @@
-"""Fase 0 (PLAN_REGIONAL.md): el master de Ecuador regenerado con el pipeline
+"""Fase 0 (docs/historico/PLAN_REGIONAL.md): el master de Ecuador regenerado con el pipeline
 por pais debe tener las mismas filas que el de antes del refactor, ignorando
 `pais` y `fecha_extraccion`. El baseline es una copia del master.csv previo."""
 import pandas as pd

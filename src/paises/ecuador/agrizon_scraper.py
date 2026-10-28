@@ -1,6 +1,6 @@
 """Scraper de Agrizon (distribuidor en Ecuador): fuente complementaria para
 completar los campos tecnicos de BioMar que biomar.com no publica -- ver
-src/parsers/biomar.py y PLAN.md § 5 ("Datos nutricionales de BioMar... via
+src/parsers/biomar.py y docs/historico/PLAN.md § 5 ("Datos nutricionales de BioMar... via
 distribuidores locales").
 
 Usa el endpoint JSON publico de Shopify de la coleccion completa

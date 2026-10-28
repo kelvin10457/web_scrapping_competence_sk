@@ -30,7 +30,7 @@ def test_detect_tecnologia_prefers_first_mention_in_text():
     # "PELLETIZADO" (coincide con el nombre del producto) pero el parrafo
     # de descripcion dice, por error de la propia ficha, "elaborado por
     # proceso de extruido". La primera mencion en el texto (el encabezado)
-    # debe ganar. Ver MEMORY.md.
+    # debe ganar. Ver docs/historico/MEMORY.md.
     text = (
         "SPEED PELLET\nALIMENTO BALANCEADO PELLETIZADO PARA CAMARON\n"
         "Descripcion del producto\nAlimento balanceado... elaborado por "
@@ -99,7 +99,7 @@ def test_etapa_from_tamano_handles_range_string():
 
 
 def test_etapa_from_tamano_exactly_1_6mm_stays_none():
-    # Limite real (MEMORY.md / conversacion con el usuario): la definicion
+    # Limite real (docs/historico/MEMORY.md / conversacion con el usuario): la definicion
     # de negocio da 1.6mm como techo de Nursery Y como tamano tipico de Pre
     # Grower a la vez -- no hay Pre Grower en el esquema actual, y elegir
     # Nursery o Grower para este caso puntual seria inventar dato sin que
