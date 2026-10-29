@@ -69,9 +69,9 @@ ecuador,HAID,HAID Speed,engorde,False,False,False,False,False,False,True,Nursery
 ecuador,HAID,HAID Speed,engorde,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,37,https://www.haid.com.ec/speed/,2026-10-29
 ecuador,HAID,HAID Speed,engorde,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,37,https://www.haid.com.ec/speed/,2026-10-29
 ecuador,HAID,HAID Starter,precria,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,42,https://www.haid.com.ec/starter/,2026-10-29
-ecuador,HAID,HAID Starter Pro,precria,False,False,False,False,True,False,False,Nursery,0.3,0.3,0.3,Extruido,10,45,https://www.haid.com.ec/starter-pro/,2026-10-29
-ecuador,HAID,HAID Starter Pro,precria,False,False,False,False,True,False,False,Nursery,0.5,0.5,0.5,Extruido,10,45,https://www.haid.com.ec/starter-pro/,2026-10-29
-ecuador,HAID,HAID Starter Pro,precria,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://www.haid.com.ec/starter-pro/,2026-10-29
+ecuador,HAID,HAID Starter Pro,precria,False,False,False,True,True,False,False,Nursery,0.3,0.3,0.3,Extruido,10,45,https://www.haid.com.ec/starter-pro/,2026-10-29
+ecuador,HAID,HAID Starter Pro,precria,False,False,False,True,True,False,False,Nursery,0.5,0.5,0.5,Extruido,10,45,https://www.haid.com.ec/starter-pro/,2026-10-29
+ecuador,HAID,HAID Starter Pro,precria,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://www.haid.com.ec/starter-pro/,2026-10-29
 ecuador,Cargill,AQUAXCEL ACTIVE 35% 2.0,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-10-29
 ecuador,Cargill,AQUAXCEL ACTIVE 35% 2.0 AP,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-10-29
 ecuador,Cargill,AQUAXCEL ACTIVE 35%LS 2.0AP,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-10-29

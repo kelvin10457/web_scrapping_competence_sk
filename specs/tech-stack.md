@@ -56,7 +56,7 @@ Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y em
 - "post transferencia", "transición" y "alevinaje" → `post_transferencia`. "transferencia" suelta ("en sistemas de transferencia") no cuenta: es el traslado al final de la precría.
 - Un rango entre dos etapas ("X hasta Y", "X hacia Y", "X a Y") marca los extremos y las intermedias del ciclo larva → post_larva → precria → post_transferencia → engorde. "tamaño de mercado", "a mercado", "tamaño/peso de cosecha" y "hasta (la) cosecha" cuentan como engorde. `reproductores` nunca se rellena.
 - `schema.columnas_etapa(set)`: las detectadas en `true` y las demás en `false`; con un set vacío, todas quedan vacías.
-- Un parser migrado (R4.2 en adelante: Nicovita) marca `_etapas_detectadas` y `pipeline.write_csv` respeta sus `etapa_*` aunque queden vacías; el puente R3.5 sigue solo para los demás. Nicovita usa el slug más la descripción del PDF (la web solo si no hay PDF, sin la etiqueta de categoría).
+- Un parser migrado (R4.2 en adelante: Nicovita, HAID) marca `_etapas_detectadas` y `pipeline.write_csv` respeta sus `etapa_*` aunque queden vacías; el puente R3.5 sigue solo para los demás. Nicovita usa el slug más la descripción del PDF (la web solo si no hay PDF, sin la etiqueta de categoría). HAID usa el slug más la descripción y las recomendaciones de uso del PDF.
 
 ### Regla de `etapa_skt`: una columna, criterio propio de Skretting
 

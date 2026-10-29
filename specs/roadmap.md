@@ -31,7 +31,7 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R4.1** `schema.detectar_etapas(texto) -> set` (función compartida + tests) y columna `etapa_post_larva`
 - [x] **R4.2** Nicovita
 - [x] **R4.2b** Nicovita Classic Orgánico Engorde (Honduras): usar su ficha real (el sitio enlaza la de Origin Orgánico)
-- [ ] **R4.3** HAID
+- [x] **R4.3** HAID
 - [ ] **R4.4** Aquaxcel
 - [ ] **R4.5** Agrizon (BioMar)
 - [ ] **R4.6** Agripac

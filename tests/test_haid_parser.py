@@ -199,3 +199,43 @@ def test_parse_product_fitness_keeps_stage_info_and_flags_salud():
     )
     assert all(r["es_producto_de_salud"] is True for r in records)
     assert all(r["etapa_competidor"] == "engorde" for r in records)
+
+
+def _real_records(pdf_name: str, slug: str) -> list[dict]:
+    pdf_path = ROOT / "data" / "raw" / "haid" / pdf_name
+    if not pdf_path.exists():
+        pytest.skip("PDF real no presente en este entorno (data/raw no poblado)")
+    return parser.parse_product(f"https://www.haid.com.ec/{slug}/", html="", pdf_bytes=pdf_path.read_bytes())
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def test_r43_req1_starter_pro_slug_y_pl10_en_todas_las_filas():
+    # "starter" (slug) + "a partir de PL 10 hasta 0.25 gramos" (recomendaciones)
+    records = _real_records("Ficha-tecnica-Starter-pro-45_-Ext.pdf", "starter-pro")
+    assert len(records) == 3
+    assert all(_etapas_true(r) == {"post_larva", "precria"} for r in records)
+    assert all(r["etapa_engorde"] is False and r["_etapas_detectadas"] for r in records)
+
+
+def test_r43_req1_hasta_la_cosecha_en_recomendaciones_es_engorde():
+    # La descripcion de Speed no nombra etapa; las recomendaciones dicen "hasta la cosecha".
+    records = _real_records("ficha-tecnica-Speed-pellet.pdf", "speed")
+    assert all(_etapas_true(r) == {"engorde"} for r in records)
+
+
+def test_r43_req1_shrimpy_juveniles_y_engorde():
+    records = _real_records("Ficha-tecnica-Shrimpy-fitness-35-pellet.pdf", "fitness")
+    assert all(_etapas_true(r) == {"engorde"} for r in records)
+
+
+def test_r43_req2_gramos_sin_termino_de_etapa_quedan_vacias():
+    # Starter dice "de 1 gramo hasta 3 gramos": con un slug sin termino de etapa, nada.
+    records = _real_records("Ficha-tecnica-Starter-42_-0.8-Ext.pdf", "producto-x")
+    assert all(r[f"etapa_{e}"] is None for r in records for e in schema.ETAPAS)
+    assert all(r["_etapas_detectadas"] for r in records)
+    # Con su slug real, "starter" marca precria.
+    records = _real_records("Ficha-tecnica-Starter-42_-0.8-Ext.pdf", "starter")
+    assert all(_etapas_true(r) == {"precria"} for r in records)

@@ -164,6 +164,12 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     record["etapa_competidor"] = _infer_etapa(slug, etapa_text)
     record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(etapa_text)
 
+    # R4.3: las etapa_* marcan todas las etapas que nombra la fuente: el slug
+    # mas la descripcion y las recomendaciones del PDF, como Nicovita
+    # (decision del usuario 2026-10-29). Los gramos no se traducen a etapa.
+    record.update(schema.columnas_etapa(schema.detectar_etapas(f"{slug.replace('-', ' ')} {etapa_text}")))
+    record["_etapas_detectadas"] = True
+
     tamanos = [t for t in (record["tamano_pellet_mm"] or "").split(",") if t]
     if not tamanos:
         return [record]
