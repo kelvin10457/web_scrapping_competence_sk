@@ -77,7 +77,6 @@ def write_csv(records: list[dict], path: Path) -> None:
         record["etapa_skt"] = schema.etapa_skt_from_row(
             record.get("etapa_competidor"),
             record.get("tamano_pellet_mm"),
-            record.get("tipo_presentacion"),
             record.get("_es_larvicultura", False),
         )
         record.update(schema.etapas_desde_competidor(record.get("etapa_competidor")))

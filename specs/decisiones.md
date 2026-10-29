@@ -43,3 +43,4 @@
 - **2026-10-29:** `merge_human.py` probablemente se reemplace por archivos aislados por país y empresa (para completar a mano sin un Excel gigante). ~~Mientras tanto no se adapta al esquema nuevo.~~ Cambiado el mismo día: sí se adapta (ver abajo).
 - **2026-10-29:** puente R3.5: las `etapa_*` se derivan de `etapa_competidor`, que queda en `true`; las otras 4 van en `false` (no vacías). Sin `etapa_competidor`, las 5 quedan vacías. En el Excel manual son derivadas y opcionales.
 - **2026-10-29:** `merge_human.py` se adapta al esquema nuevo a medida que avanza R3 (las columnas derivadas se recalculan y el Excel manual no necesita traerlas). La GUI sigue congelada.
+- **2026-10-29:** respaldo de `etapa_skt` sin tamaño: `larva` → Hatchery, `precria` → Nursery, `post_transferencia` → Pre Grower, `engorde` → Grower, `reproductores` → vacío. `larva` (y Larvicultura de Agripac) es Hatchery aunque tenga tamaño.

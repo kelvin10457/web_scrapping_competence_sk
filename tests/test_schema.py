@@ -130,58 +130,51 @@ def test_etapa_from_tamano_empty_input_stays_none():
 
 
 def test_etapa_skt_larva_overrides_to_hatchery_regardless_of_tamano():
-    # Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que por
-    # tamano solo hubieran caido en Nursery -- la jefa define Hatchery por
-    # tipo de producto (laboratorio larvario), no por banda de mm.
-    assert schema.etapa_skt_from_row("larva", "0.3", "Extruido") == "Hatchery"
-    assert schema.etapa_skt_from_row("larva", None, None) == "Hatchery"
+    # REQ-4. Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que
+    # por tamano hubieran caido en Nursery (decision del usuario 2026-10-29).
+    assert schema.etapa_skt_from_row("larva", "0.3-0.8") == "Hatchery"
+    assert schema.etapa_skt_from_row("larva", None) == "Hatchery"
 
 
 def test_etapa_skt_es_larvicultura_overrides_to_hatchery_regardless_of_tamano():
-    # Agregado 2026-09-07: a pedido del usuario, TODO producto de la
-    # division Larvicultura de Agripac es Hatchery, incluso si su etapa no
-    # resuelve a "larva" (ej. Mpex, "PL1 a PL6") y aunque su tamano en
-    # micras (100-800um = 0.1-0.8mm) hubiera caido en Nursery por banda.
-    assert schema.etapa_skt_from_row("precria", "0.3", "Extruido", es_larvicultura=True) == "Hatchery"
-    assert schema.etapa_skt_from_row(None, None, None, es_larvicultura=True) == "Hatchery"
-    assert schema.etapa_skt_from_row("engorde", "2.5", "Pelletizado", es_larvicultura=True) == "Hatchery"
+    # REQ-4. Toda la division Larvicultura de Agripac es Hatchery, aunque su
+    # etapa no sea "larva" (ej. Mpex, "PL1 a PL6") y su tamano sea Nursery.
+    assert schema.etapa_skt_from_row("precria", "0.3", es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row(None, None, es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row("engorde", "2.5", es_larvicultura=True) == "Hatchery"
 
 
-def test_etapa_skt_below_1_6mm_is_nursery():
-    assert schema.etapa_skt_from_row("precria", "0.8", "Extruido") == "Nursery"
-    assert schema.etapa_skt_from_row(None, "1.2", "Pelletizado") == "Nursery"
+def test_etapa_skt_cortes_por_tamano_sin_importar_presentacion():
+    # REQ-1. El tamano manda sobre la etapa del competidor.
+    assert schema.etapa_skt_from_row("engorde", "0.8") == "Nursery"
+    assert schema.etapa_skt_from_row(None, "1.2") == "Nursery"
+    assert schema.etapa_skt_from_row("engorde", "1.6") == "Pre Grower"
+    assert schema.etapa_skt_from_row("precria", "1.7") == "Grower"
+    assert schema.etapa_skt_from_row(None, "1.8") == "Grower"
+    assert schema.etapa_skt_from_row(None, "2.5") == "Grower"
 
 
-def test_etapa_skt_handles_range_string():
-    assert schema.etapa_skt_from_row("precria", "0.5-1.0", "Pelletizado") == "Nursery"
+def test_etapa_skt_rango_usa_el_minimo():
+    # REQ-2
+    assert schema.etapa_skt_from_row("engorde", "1.4-2.0") == "Nursery"
+    assert schema.etapa_skt_from_row("engorde", "2.0-1.4") == "Nursery"
+    assert schema.etapa_skt_from_row(None, "1.6 - 2.4") == "Pre Grower"
+    assert schema.etapa_skt_from_row(None, "1.8-2.2") == "Grower"
 
 
-def test_etapa_skt_exactly_1_6mm_is_pre_grower():
-    # A diferencia de etapa_from_tamano (que deja este caso en None porque
-    # reusa las 6 categorias viejas), aca la columna es dedicada a los 4
-    # terminos de la jefa y ella asocio 1.6mm especificamente a Pre Grower.
-    assert schema.etapa_skt_from_row("engorde", "1.6", "Pelletizado") == "Pre Grower"
-    assert schema.etapa_skt_from_row(None, "1.6", "Extruido") == "Pre Grower"
+def test_etapa_skt_sin_tamano_usa_etapa_del_competidor():
+    # REQ-3 (decision del usuario 2026-10-29)
+    assert schema.etapa_skt_from_row("precria", None) == "Nursery"
+    assert schema.etapa_skt_from_row("post_transferencia", "") == "Pre Grower"
+    assert schema.etapa_skt_from_row("engorde", None) == "Grower"
+    assert schema.etapa_skt_from_row("engorde", "s/d") == "Grower"
 
 
-def test_etapa_skt_grower_threshold_depends_on_tipo_presentacion():
-    assert schema.etapa_skt_from_row("engorde", "1.8", "Pelletizado") == "Grower"
-    assert schema.etapa_skt_from_row("engorde", "1.8", "Extruido") is None
-    assert schema.etapa_skt_from_row("engorde", "1.9", "Extruido") == "Grower"
-    assert schema.etapa_skt_from_row("engorde", "2.5", "Pelletizado") == "Grower"
-
-
-def test_etapa_skt_gap_between_1_6_and_grower_threshold_stays_none():
-    assert schema.etapa_skt_from_row("engorde", "1.7", "Pelletizado") is None
-
-
-def test_etapa_skt_unknown_tipo_presentacion_at_grower_size_stays_none():
-    assert schema.etapa_skt_from_row("engorde", "2.5", None) is None
-
-
-def test_etapa_skt_empty_tamano_stays_none():
-    assert schema.etapa_skt_from_row("engorde", None, "Pelletizado") is None
-    assert schema.etapa_skt_from_row("salud", "", "Pelletizado") is None
+def test_etapa_skt_sin_tamano_ni_etapa_conocida_queda_vacio():
+    # REQ-3
+    assert schema.etapa_skt_from_row("reproductores", None) is None
+    assert schema.etapa_skt_from_row("salud", "") is None
+    assert schema.etapa_skt_from_row(None, None) is None
 
 
 def test_detect_es_producto_de_salud_true_for_disease_marker():
@@ -348,11 +341,10 @@ def test_detect_tecnologia_devuelve_la_lista_oficial():
 
 
 def test_umbral_grower_de_pellet_acepta_pellet_y_pelletizado():
-    # REQ-2: la grafia nueva no rompe el umbral de 1.8 mm
+    # REQ-2: la grafia nueva no rompe el umbral de 1.8 mm (etapa_skt ya no
+    # depende de tipo_presentacion desde R3.6)
     for tipo in ("Pellet", "Pelletizado"):
         assert schema.etapa_from_tamano("1.8", tipo) == "engorde"
-        assert schema.etapa_skt_from_row("engorde", "1.8", tipo) == "Grower"
-    assert schema.etapa_skt_from_row("engorde", "1.8", "Extruido") is None
 
 
 def test_normalize_presentacion_alias_de_agripac():

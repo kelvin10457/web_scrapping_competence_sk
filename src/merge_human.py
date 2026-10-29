@@ -56,7 +56,7 @@ NUMERIC_VALIDATE_COLUMNS = ["tamano_pellet_mm", "proteina_pct", "empaque_kg"]
 REQUIRED_COLUMNS = ["empresa", "nombre_producto"]
 # etapa_skt/particula_min_mm/particula_max_mm son siempre derivadas (igual
 # que en pipeline.write_csv()) -- nunca se toma el valor que haya escrito el
-# humano ahi, se recalculan desde tamano_pellet_mm/tipo_presentacion/
+# humano ahi, se recalculan desde tamano_pellet_mm/
 # etapa_competidor despues de aplicar la fusion. Se siguen exigiendo como
 # encabezado (mismas columnas exactas que schema.SCHEMA_COLUMNS) pero su
 # contenido no se valida ni se usa. Las etapa_* (R3.5) tambien son derivadas
@@ -272,8 +272,7 @@ def _recompute_derived(df: pd.DataFrame, idx) -> None:
     esas 3 columnas (son derivadas, nunca dato primario)."""
     etapa_competidor = df.at[idx, "etapa_competidor"]
     tamano = df.at[idx, "tamano_pellet_mm"]
-    tipo = df.at[idx, "tipo_presentacion"]
-    df.at[idx, "etapa_skt"] = schema.etapa_skt_from_row(etapa_competidor, tamano, tipo)
+    df.at[idx, "etapa_skt"] = schema.etapa_skt_from_row(etapa_competidor, tamano)
     for col, valor in schema.etapas_desde_competidor(etapa_competidor).items():
         df.at[idx, col] = valor
     pmin, pmax = schema.parse_particula_range(tamano)
@@ -325,7 +324,7 @@ def apply_merge(master_df: pd.DataFrame, human_df: pd.DataFrame) -> tuple[pd.Dat
             for col in schema.SCHEMA_COLUMNS:
                 record[col] = None if col in DERIVED_COLUMNS else _typed_value(col, human_row[col])
             record["etapa_skt"] = schema.etapa_skt_from_row(
-                record["etapa_competidor"], record["tamano_pellet_mm"], record["tipo_presentacion"]
+                record["etapa_competidor"], record["tamano_pellet_mm"]
             )
             record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
                 record["tamano_pellet_mm"]

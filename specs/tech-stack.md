@@ -52,9 +52,9 @@ Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y em
 
 Se calcula a partir del **tamaño del pellet** y no de cómo llama a la etapa el competidor:
 
-- `etapa_larva` en `true` y sin tamaño → `Hatchery`
+- Etapa del competidor `larva`, o división Larvicultura de Agripac → `Hatchery`, **aunque tenga tamaño** (Nicovita Origin, 0.3-0.8 mm)
 - menos de 1.6 mm → `Nursery`
 - 1.6 mm → `Pre Grower`
 - más de 1.6 mm → `Grower` (sin distinguir entre pellet y extruido; p. ej. 1.7 mm → `Grower`)
 - **Rango** (`1.4-2.0`): manda el tamaño mínimo.
-- **Sin tamaño:** se usa la etapa del competidor como respaldo.
+- **Sin tamaño:** se usa la etapa del competidor como respaldo: `precria` → `Nursery`, `post_transferencia` → `Pre Grower`, `engorde` → `Grower`. `reproductores` o sin etapa → vacío.

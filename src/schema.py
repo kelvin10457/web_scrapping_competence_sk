@@ -294,72 +294,44 @@ def etapa_from_tamano(tamano_pellet_mm: str | None, tipo_presentacion: str | Non
 ETAPA_SKT_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
 
 
+# Respaldo de etapa_skt cuando no hay tamano (decision del usuario
+# 2026-10-29). "reproductores" no entra en las 4 casillas: queda vacio.
+_ETAPA_SKT_RESPALDO = {
+    "larva": "Hatchery",
+    "precria": "Nursery",
+    "post_transferencia": "Pre Grower",
+    "engorde": "Grower",
+}
+
+
 def etapa_skt_from_row(
     etapa_competidor: str | None,
     tamano_pellet_mm: str | None,
-    tipo_presentacion: str | None,
     es_larvicultura: bool = False,
 ) -> str | None:
-    """Clasifica el producto en las 4 etapas que definio la jefa del usuario
-    para el reporte de competencia -- Hatchery/Nursery/Pre Grower/Grower --
-    columna aparte de `etapa_competidor` porque no comparten vocabulario (ver
-    arriba). Nombrada `etapa_skt` (antes `etapa_camaron`, luego
-    `clasificacion_camaron` -- renombrada de nuevo 2026-09-15 a pedido del
-    usuario) para no confundirla con `etapa_competidor`: esta no es "una
-    etapa mas" del mismo vocabulario, sino la clasificacion fija de 4
-    casillas que pide el reporte, derivada sobre todo de tamano de pellet en
-    vez del texto/categoria de la fuente.
+    """Clasifica el producto en las 4 etapas de Skretting (Hatchery/Nursery/
+    Pre Grower/Grower), columna aparte de `etapa_competidor` porque no
+    comparten vocabulario. Regla en tech-stack.md (R3.6):
 
-    Hatchery se decide por el propio valor de `etapa_competidor`
-    (`"larva"`), no por tamano: la jefa la define por tipo de producto ("de
-    laboratorios larvarios"), no por una banda de mm, y el unico producto
-    `larva` de los datos actuales (Nicovita Origin, 0.3-0.8mm) es justamente
-    un caso donde clasificar solo por tamano lo hubiera puesto en Nursery
-    por error.
-
-    `es_larvicultura` (agregado 2026-09-07, division Larvicultura de
-    Agripac) es la MISMA idea aplicada por division en vez de por
-    `etapa_competidor`: a pedido del usuario, CUALQUIER producto de esa
-    division (Larfeed, MeM, Mpex, Artemia Cysts...) es Hatchery sin mirar
-    tamano, aunque su `etapa_competidor` no resuelva a "larva" (ej. Mpex, en
-    estadio "PL1 a PL6", no matchea la regla `larva` de `_ETAPA_RULES` con
-    la misma fuerza que un "larva"/"hatchery" explicito) y aunque su tamano
-    en micras (100-800um) hubiera caido en Nursery por banda. Se revisa
-    ANTES que `etapa_competidor=="larva"` porque es la senal mas fuerte
-    (division completa, no texto ambiguo por producto), pero en la practica
-    nunca compiten: ningun producto fuera de Larvicultura tiene este flag en
-    True.
-
-    El resto se deriva de tamano_pellet_mm (y tipo_presentacion para el
-    umbral de Grower, que la jefa dio distinto por Pellet/Extruido: 1.8mm
-    vs 1.9mm). A diferencia de `etapa_from_tamano` (que deja 1.6mm sin
-    resolver porque esa funcion reusa los 6 valores viejos de ETAPA_VALUES,
-    donde 1.6mm queda ambiguo entre 2 de ellos), aca 1.6mm SI se resuelve a
-    "Pre Grower": al ser una columna dedicada a los 4 terminos de la jefa,
-    y ella asocio ese tamano especificamente a Pre Grower ("#4, normalmente
-    1.6mm"), no hay conflicto con otro valor que tambien lo reclame.
-    Devuelve None para tamano_pellet_mm vacio/sin numero reconocible, el
-    hueco entre 1.6 y el arranque de Grower, y Grower si no se conoce
-    tipo_presentacion -- no se fuerza un valor sin evidencia."""
-    if es_larvicultura:
+    - `larva`, o cualquier producto de la division Larvicultura de Agripac
+      (`es_larvicultura`), es Hatchery aunque tenga tamano: la jefa la define
+      por tipo de producto, no por banda de mm (Nicovita Origin, 0.3-0.8mm,
+      hubiera caido en Nursery).
+    - Por tamano (en un rango manda el minimo): < 1.6mm Nursery, 1.6mm Pre
+      Grower, > 1.6mm Grower, sin distinguir pellet de extruido.
+    - Sin tamano reconocible: la etapa del competidor como respaldo
+      (`_ETAPA_SKT_RESPALDO`); si tampoco hay, vacio."""
+    if es_larvicultura or etapa_competidor == "larva":
         return "Hatchery"
-    if etapa_competidor == "larva":
-        return "Hatchery"
-    if not tamano_pellet_mm:
-        return None
-    m = _TAMANO_NUM_RE.search(tamano_pellet_mm)
-    if not m:
-        return None
-    size = float(m.group(0))
+    pmin, pmax = parse_particula_range(tamano_pellet_mm)
+    if pmin is None:
+        return _ETAPA_SKT_RESPALDO.get(etapa_competidor)
+    size = min(pmin, pmax)
     if size < 1.6:
         return "Nursery"
     if size == 1.6:
         return "Pre Grower"
-    if _es_pellet(tipo_presentacion) and size >= 1.8:
-        return "Grower"
-    if tipo_presentacion == "Extruido" and size >= 1.9:
-        return "Grower"
-    return None
+    return "Grower"
 
 
 _TAMANO_RANGE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)")

@@ -32,7 +32,7 @@ Nicovita,Nicovita Katal Engorde,engorde,False,False,False,False,False,True,Pre G
 Nicovita,Nicovita Katal Engorde,engorde,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-09-16
 Nicovita,Nicovita Katal Engorde,engorde,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-09-16
 Nicovita,Nicovita Katal Post Transferencia,post_transferencia,False,False,False,False,True,False,Nursery,1.2,1.2,1.2,Pellet,25,38,https://nicovita.com/productos/nicovita-katal-post-transferencia-ecuador/,2026-09-16
-Nicovita,Nicovita Katal Precría,precria,False,False,False,True,False,False,,,,,,25,,https://nicovita.com/productos/nicovita-katal-precria-ecuador/,2026-09-16
+Nicovita,Nicovita Katal Precría,precria,False,False,False,True,False,False,Nursery,,,,,25,,https://nicovita.com/productos/nicovita-katal-precria-ecuador/,2026-09-16
 Nicovita,Nicovita Katal Proterra,engorde,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-proterra-ecuador/,2026-09-16
 Nicovita,Nicovita Katal Proterra,engorde,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-proterra-ecuador/,2026-09-16
 Nicovita,Nicovita Origin,larva,False,False,True,False,False,False,Hatchery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-ecuador/,2026-09-16
@@ -118,7 +118,7 @@ BioMar,Exia Start,precria,False,False,False,True,False,False,Nursery,0.9-1.2,0.9
 BioMar,Exia Pro,engorde,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento,2026-09-16
 BioMar,Exia Prime,precria,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,Microgranulado,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg,2026-09-16
 BioMar,Exia Prime,precria,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado,2026-09-16
-BioMar,Exia Prime,engorde,False,False,False,False,False,True,,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-09-16
+BioMar,Exia Prime,engorde,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-09-16
 BioMar,Exia Perform,engorde,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-perform-32-2-0-mm-25-kg,2026-09-16
 BioMar,Exia Prime,engorde,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-prime-28-2-0-mm-25-kg,2026-09-16
 BioMar,Larviva,larva,False,False,True,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-09-16
