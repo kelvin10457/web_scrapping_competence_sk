@@ -112,6 +112,15 @@ def parse_product(product: dict) -> dict:
     record["tipo_presentacion"] = schema.detect_tecnologia(f"{title} {tags_text}") or _tag_microgranulado(product)
     record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(tags_text)
     record["etapa_competidor"] = _etapa(tags_text, record["tamano_pellet_mm"], record["tipo_presentacion"])
+    # R4.5: todas las etapas que nombran titulo y tags ("engorde" + "Iniciadores"
+    # -> las dos); sin termino, la banda de tamano de pellet (decision 2026-10-29).
+    # El slug no se usa: "exia-start-...-dieta-para-larvas" tiene tag "Precrias".
+    etapas = schema.detectar_etapas(f"{title} {tags_text}")
+    if not etapas:
+        por_tamano = schema.etapa_from_tamano(record["tamano_pellet_mm"], record["tipo_presentacion"])
+        etapas = {por_tamano} if por_tamano else set()
+    record.update(schema.columnas_etapa(etapas))
+    record["_etapas_detectadas"] = True
 
     variant = (product.get("variants") or [{}])[0]
     grams = variant.get("grams")

@@ -33,7 +33,7 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R4.2b** Nicovita Classic Orgánico Engorde (Honduras): usar su ficha real (el sitio enlaza la de Origin Orgánico)
 - [x] **R4.3** HAID
 - [x] **R4.4** Aquaxcel
-- [ ] **R4.5** Agrizon (BioMar)
+- [x] **R4.5** Agrizon (BioMar)
 - [ ] **R4.6** Agripac
 - [ ] **R4.7** Vimifos
 - [ ] **R4.8** Api-Aba

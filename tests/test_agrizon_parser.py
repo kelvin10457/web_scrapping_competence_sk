@@ -1,5 +1,6 @@
 import json
 
+import schema
 from conftest import FIXTURES
 from paises.ecuador import agrizon_parser as parser
 
@@ -120,3 +121,33 @@ def test_parse_listing_tags_all_records_as_biomar():
     records = parser.parse_listing(products)
     assert len(records) == len(products)
     assert all(r["empresa"] == "BioMar" for r in records)
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def test_r45_req1_titulo_mas_tags_marca_todas_las_etapas():
+    by_handle = {p["handle"]: parser.parse_product(p) for p in _load_products()}
+    # tags "engorde" + "Iniciadores" -> las dos (decision 2026-10-29)
+    assert _etapas_true(by_handle["exia-prime-35-1-2-mm-25-kg"]) == {"precria", "engorde"}
+    assert _etapas_true(by_handle["exia-prime-35-1-6-mm-25-kg"]) == {"precria", "engorde"}
+    # tags "larvas" + "Post-larva"
+    assert _etapas_true(by_handle["larviva-55-250-375-micras-1-kg"]) == {"larva", "post_larva"}
+    assert _etapas_true(by_handle["exia-prime-35-precria-0-6-0-9-mm-25-kg"]) == {"precria"}
+    assert _etapas_true(by_handle["exia-perform-35-2-0-mm-25-kg"]) == {"engorde"}
+    assert by_handle["exia-perform-35-2-0-mm-25-kg"]["etapa_precria"] is False
+    assert all(r["_etapas_detectadas"] for r in by_handle.values())
+
+
+def test_r45_req2_sin_termino_de_etapa_usa_el_tamano_de_pellet():
+    # Exia Pro 2.0 mm Pelletized: tags sin etapa -> banda de tamano (>= 1.8 -> engorde)
+    record = parser.parse_product(_find(_load_products(), "exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento"))
+    assert _etapas_true(record) == {"engorde"}
+    assert record["_etapas_detectadas"] is True
+
+
+def test_r45_req3_el_slug_no_se_usa():
+    # el slug dice "dieta-para-larvas", los tags dicen "Precrias"
+    record = parser.parse_product(_find(_load_products(), "exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas"))
+    assert _etapas_true(record) == {"precria"}

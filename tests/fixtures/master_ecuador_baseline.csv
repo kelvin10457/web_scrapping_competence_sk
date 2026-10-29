@@ -110,8 +110,8 @@ ecuador,Cargill,AQUAXCEL RAPID 35% SLD 1.2,precria,False,False,False,False,True,
 ecuador,Cargill,AQUAXCEL RAPID 42% SLD 0.8,precria,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,42,https://aquaxcel.com/productos/ecuador/,2026-10-29
 ecuador,Cargill,AQUAXCEL RAPID 45% SLD 0.6,precria,False,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-10-29
 ecuador,BioMar,Exia Prime,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-2-0mm-25-kg-alimento-pelletizado,2026-10-29
-ecuador,BioMar,Exia Prime,precria,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-2-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Prime,,False,,,,,,,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-6-mm-25-kg,2026-10-29
+ecuador,BioMar,Exia Prime,precria,False,False,False,False,True,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-2-mm-25-kg,2026-10-29
+ecuador,BioMar,Exia Prime,,False,False,False,False,True,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-6-mm-25-kg,2026-10-29
 ecuador,BioMar,Exia Perform,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-perform-35-2-0-mm-25-kg,2026-10-29
 ecuador,BioMar,Exia Prime,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-prime-32-2-0-mm-25-kg,2026-10-29
 ecuador,BioMar,Exia Start,precria,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,,10,38,https://agrizon.com/en/products/exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas,2026-10-29
@@ -121,11 +121,11 @@ ecuador,BioMar,Exia Prime,precria,False,False,False,False,True,False,False,Nurse
 ecuador,BioMar,Exia Prime,engorde,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-10-29
 ecuador,BioMar,Exia Perform,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-perform-32-2-0-mm-25-kg,2026-10-29
 ecuador,BioMar,Exia Prime,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-prime-28-2-0-mm-25-kg,2026-10-29
-ecuador,BioMar,Larviva,larva,False,False,True,False,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-10-29
+ecuador,BioMar,Larviva,larva,False,False,True,True,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-10-29
 ecuador,BioMar,Exia Perform,engorde,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-perform-28-2-0-mm-25-kg-alimento-para-camaron,2026-10-29
-ecuador,BioMar,Larviva,larva,False,False,True,False,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Extruido,1,55,https://agrizon.com/en/products/larviva-55-150-250-micras-1-kg,2026-10-29
+ecuador,BioMar,Larviva,larva,False,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Extruido,1,55,https://agrizon.com/en/products/larviva-55-150-250-micras-1-kg,2026-10-29
 ecuador,BioMar,Exia Start,precria,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,,10,38,https://agrizon.com/en/products/exia-start-38-0-6-0-9-mm-10-kg,2026-10-29
-ecuador,BioMar,Larviva,larva,False,False,True,False,False,False,False,Hatchery,0.375-0.5,0.375,0.5,Extruido,1,55,https://agrizon.com/en/products/larviva-55-375-500-micras-1-kg,2026-10-29
+ecuador,BioMar,Larviva,larva,False,False,True,True,False,False,False,Hatchery,0.375-0.5,0.375,0.5,Extruido,1,55,https://agrizon.com/en/products/larviva-55-375-500-micras-1-kg,2026-10-29
 ecuador,Agripac,35% Premium Micropellet Agua Dulce 1.2mm,precria,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Polvo,25,35,https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-2mm/,2026-10-29
 ecuador,Agripac,35% Premium Micropellet Agua Dulce 1.5mm,precria,False,False,False,False,True,False,False,Nursery,1.5,1.5,1.5,Polvo,25,35,https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-5mm/,2026-10-29
 ecuador,Agripac,Feedpac 22% Premium,,False,,,,,,,,,,,Pellet,25,22,https://agripac.com.ec/productos/feedpac-22-premium/,2026-10-29
