@@ -30,6 +30,7 @@
 - **2026-10-20:** Fase 5 (SENASICA / eaduana) ejecutada como fuente complementaria. Nunca pisa un dato del sitio.
 - ~~**2026-10-20:** Nicovita pausada en todos los países (`fuentes.INACTIVAS`).~~
 - **2026-10-28:** Nicovita se reactiva con cuidado: pausas aleatorias solo para las páginas problemáticas, con un límite de ≤3 min por país en la primera corrida, sin caché (roadmap R6).
+- **2026-10-29:** Agrizon (complemento de BioMar) pasa a `netutil.PACED_HOSTS` con las mismas pausas aleatorias que Nicovita, tras responder 429 el 2026-10-28.
 - **2026-10-28:** Centroamérica: buscar registros oficiales de cada país; lo que no aparezca se carga a mano con una plantilla.
 - No se borran módulos viejos que quedan sin uso.
 

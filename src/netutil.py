@@ -1,7 +1,7 @@
 """GET para los scrapers, en un solo lugar:
 
-- Ritmo cortes y irregular (solo para PACED_HOSTS, hoy nicovita.com, el unico que
-  mostro captcha): pausa aleatoria de 1.5-4 s entre consultas y una pausa
+- Ritmo cortes y irregular (solo para PACED_HOSTS: nicovita.com, que mostro captcha,
+  y agrizon.com, que respondio 429): pausa aleatoria de 1.5-4 s entre consultas y una pausa
   larga aleatoria de 20-30 s cada 3-5 consultas nuevas (no cuentan las paginas
   que salen de la cache). Es para no cargar al sitio; NO desbloquea un bloqueo
   que ya existe ni resuelve captchas.
@@ -25,10 +25,10 @@ RETRY_STATUS = {429, 502, 503, 504}
 # Servicios anti-bot que responden con un captcha/redireccion en vez del sitio.
 _BLOCK_MARKERS = ("perfdrive.com", "captcha")
 
-# Solo los sitios que SI mostraron captcha se piden con pausas; el resto va sin
+# Solo los sitios que SI mostraron captcha o 429 se piden con pausas; el resto va sin
 # pausas (decision del usuario). Para agregar un sitio que empiece a bloquear,
 # basta sumar su dominio aqui.
-PACED_HOSTS = {"nicovita.com"}
+PACED_HOSTS = {"nicovita.com", "agrizon.com"}
 
 # Ritmo (se desactiva en tests con ENABLED = False o SCRAPER_NO_PAUSE=1).
 ENABLED = True

@@ -15,9 +15,9 @@ array real (no string separado por comas, a diferencia del endpoint
 """
 from __future__ import annotations
 
-import time
-
 import requests
+
+import netutil
 
 BASE_URL = "https://agrizon.com"
 COLLECTION_URL = f"{BASE_URL}/en/collections/nutricion-animal"
@@ -35,16 +35,10 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
     page = 1
     while True:
         url = f"{COLLECTION_URL}/products.json?limit={PAGE_LIMIT}&page={page}"
-        r = s.get(url, headers=HEADERS, timeout=30)
         # Shopify devuelve 429 si se piden paginas seguidas muy rapido
-        # (verificado 2026-10-19): se respeta Retry-After (o 5 s) y se reintenta.
-        for intento in range(5):
-            if r.status_code != 429:
-                break
-            retry_after = r.headers.get("Retry-After", "")
-            espera = int(retry_after) if retry_after.isdigit() else 5 * 2**intento
-            time.sleep(min(espera, 60))
-            r = s.get(url, headers=HEADERS, timeout=30)
+        # (verificado 2026-10-19 y 2026-10-28): netutil pausa al azar (agrizon.com
+        # esta en PACED_HOSTS) y reintenta respetando Retry-After.
+        r = netutil.get(s, url, headers=HEADERS, timeout=30)
         r.raise_for_status()
         batch = r.json().get("products", [])
         if not batch:
