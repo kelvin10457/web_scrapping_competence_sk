@@ -28,7 +28,7 @@ PAGE_LIMIT = 250  # maximo permitido por Shopify en products.json
 
 def fetch_collection_products(session: requests.Session | None = None) -> list[dict]:
     """Pagina products.json (250 por pagina) hasta que una pagina vuelva
-    vacia. Con 181 productos totales en la coleccion (2026-09-03) alcanza
+    incompleta o vacia. Con 181 productos totales en la coleccion (2026-09-03) alcanza
     con 1 pagina, pero se pagina igual por si la coleccion crece."""
     s = session or requests
     products: list[dict] = []
@@ -44,6 +44,10 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
         if not batch:
             break
         products.extend(batch)
+        # Pagina incompleta = ultima: no se pide una vacia de mas (cada pedido
+        # extra suma al 429 de Shopify).
+        if len(batch) < PAGE_LIMIT:
+            break
         page += 1
     return products
 
