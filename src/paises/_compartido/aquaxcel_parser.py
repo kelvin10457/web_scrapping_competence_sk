@@ -108,7 +108,7 @@ def _parse_cards(soup: BeautifulSoup, fecha: str) -> list[dict]:
         record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(linea_descriptions.get(linea.upper()))
         mm = _first_number(_h4_value(section, "calibre") or "")
         record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
-        record["tipo_presentacion"] = _h4_value(section, "tecnolog")
+        record["tipo_presentacion"] = schema.normalize_presentacion(_h4_value(section, "tecnolog"))
         record["proteina_pct"] = _first_number(_metric(section, "prote") or "")
         record["fuente_url"] = url
         record["fecha_extraccion"] = fecha
@@ -152,7 +152,7 @@ def parse_listing(html: str) -> list[dict]:
             record["es_producto_de_salud"] = es_producto_de_salud
             mm = _first_number(calibre)
             record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
-            record["tipo_presentacion"] = tecnologia or None
+            record["tipo_presentacion"] = schema.normalize_presentacion(tecnologia)
             kg_val = _first_number(kg)
             record["empaque_kg"] = f"{kg_val:g}" if kg_val is not None else None
             record["proteina_pct"] = _first_number(proteina)

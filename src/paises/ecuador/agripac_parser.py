@@ -119,7 +119,10 @@ def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
     # schema.detect_tecnologia), asi que ya no quedan en None -- a pedido
     # del usuario, tras encontrar estos 3 casos reales en la division
     # Larvicultura (Artemia Cysts, Mpex, Royal Pepper Protein).
-    record["tipo_presentacion"] = schema.detect_tecnologia(tabs.get("tipo"))
+    # Desde R3.3 el texto de la pestana va directo a normalize_presentacion
+    # (no a detect_tecnologia, que colapsaba "Microextruido" en "Extruido").
+    tipo = re.sub(r"^\s*tipo\b", "", tabs.get("tipo") or "", flags=re.I)
+    record["tipo_presentacion"] = schema.normalize_presentacion(tipo)
     record["empaque_kg"] = _empaque_kg(presentaciones)
 
     etapa_text = " ".join(

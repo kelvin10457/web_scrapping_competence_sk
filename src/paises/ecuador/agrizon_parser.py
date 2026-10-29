@@ -84,6 +84,16 @@ def _etapa(tags_text: str, tamano_pellet_mm: str | None, tipo_presentacion: str 
     return schema.etapa_from_tamano(tamano_pellet_mm, tipo_presentacion)
 
 
+def _tag_microgranulado(product: dict) -> str | None:
+    """Respaldo solo si titulo y tags no dicen la tecnologia: "Microgranulado"
+    no esta en la lista oficial y no se fuerza a "Granulado" (decision
+    2026-10-29); se conserva tal cual para que R3.4 lo avise."""
+    for tag in product.get("tags") or []:
+        if tag.strip().lower() == "microgranulado":
+            return schema.normalize_presentacion(tag)
+    return None
+
+
 def parse_product(product: dict) -> dict:
     record = schema.empty_record("BioMar")
     title = product.get("title") or ""
@@ -99,7 +109,7 @@ def parse_product(product: dict) -> dict:
     # los productos que tienen tecnologia mencionada, pero el tag en
     # espanol ("Pelletizado"/"extruido"/"Extrusado") no siempre esta
     # presente (ej. EXIA Perform/Pro) -- combinar ambos cierra ese hueco.
-    record["tipo_presentacion"] = schema.detect_tecnologia(f"{title} {tags_text}")
+    record["tipo_presentacion"] = schema.detect_tecnologia(f"{title} {tags_text}") or _tag_microgranulado(product)
     record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(tags_text)
     record["etapa_competidor"] = _etapa(tags_text, record["tamano_pellet_mm"], record["tipo_presentacion"])
 

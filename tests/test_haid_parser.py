@@ -36,11 +36,11 @@ proporciona los nutrientes esenciales para el camarón.
 
 
 def test_speed_pellet_contradiction_resolves_to_pelletizado():
-    assert schema.detect_tecnologia(SPEED_TEXT) == "Pelletizado"
+    assert schema.detect_tecnologia(SPEED_TEXT) == "Pellet"
 
 
 def test_shrimpy_template_reads_tecnologia_from_description():
-    assert schema.detect_tecnologia(SHRIMPY_TEXT) == "Pelletizado"
+    assert schema.detect_tecnologia(SHRIMPY_TEXT) == "Pellet"
 
 
 def test_line_number_extracts_first_number_on_matching_line():

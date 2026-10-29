@@ -15,7 +15,7 @@ def test_feedpac_35_premium_has_no_subtipo_tab_so_tamano_stays_none():
     assert record["empresa"] == "Agripac"
     assert record["proteina_pct"] == "35"
     assert record["tamano_pellet_mm"] is None
-    assert record["tipo_presentacion"] == "Pelletizado"
+    assert record["tipo_presentacion"] == "Pellet"
     assert record["empaque_kg"] == "25"
 
 
@@ -26,7 +26,7 @@ def test_tamano_pellet_mm_reads_from_subtipo_tab():
     )
     assert record["tamano_pellet_mm"] == "1.2"
     assert record["proteina_pct"] == "35"
-    assert record["tipo_presentacion"] == "Pelletizado"
+    assert record["tipo_presentacion"] == "Pellet"
 
 
 def test_tamano_pellet_mm_falls_back_to_title_when_subtipo_tab_is_missing():
@@ -115,3 +115,10 @@ def test_parse_listing_tags_all_records_as_agripac():
     )
     assert len(records) == 1
     assert records[0]["empresa"] == "Agripac"
+
+
+def test_tipo_presentacion_microextruido_desde_la_pestana_tipo():
+    # R3.3 REQ-3: MeM dice "Microextruido" (valor oficial); antes se colapsaba a Extruido.
+    html = _html("agripac_mem_300_500.html")
+    record = parser.parse_product("https://agripac.com.ec/productos/mem-300-500/", html, es_larvicultura=True)
+    assert record["tipo_presentacion"] == "Microextruido"

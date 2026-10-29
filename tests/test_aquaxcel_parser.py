@@ -115,3 +115,11 @@ def test_parse_listing_mexico_headings_bajados_2026_10_20():
     assert len(nuevo) == 14
     assert sin_fecha(nuevo) == sin_fecha(viejo)
     assert all(r["es_producto_de_salud"] is not None for r in nuevo)
+
+
+def test_tipo_presentacion_pelletizado_pasa_a_pellet():
+    # R3.3 REQ-5: la columna "Tecnologia" publica "Pelletizado" -> grafia oficial
+    records = parser.parse_listing(_load_html())
+    tipos = {r["tipo_presentacion"] for r in records}
+    assert "Pellet" in tipos
+    assert "Pelletizado" not in tipos

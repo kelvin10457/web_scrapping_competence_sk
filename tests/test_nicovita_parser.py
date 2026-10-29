@@ -31,7 +31,7 @@ def test_parse_pdf_text_detects_single_l_peletizada_spelling():
     # peletizada" (una sola L), no "pelletizada".
     text = "2. Descripcion del Producto\nDieta balanceada peletizada para camaron"
     fields = parser.parse_pdf_text(text)
-    assert fields["tipo_presentacion"] == "Pelletizado"
+    assert fields["tipo_presentacion"] == "Pellet"
 
 
 def test_infer_etapa_from_description_full_range_stays_none():

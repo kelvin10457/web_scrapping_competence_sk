@@ -22,6 +22,7 @@
 - **2026-10-28:** cortes de `etapa_skt`: menos de 1.6 mm → Nursery; 1.6 mm → Pre Grower; más de 1.6 mm → Grower (1.7 mm es Grower). Se elimina la distinción 1.8 pellet / 1.9 extruido.
 - **2026-10-28:** `proteina_pct` va como porcentaje decimal (`37.5`).
 - **2026-10-28:** lista oficial de `tipo_presentacion` (ver `tech-stack.md`); `Pelletizado` pasa a `Pellet`. Se normaliza al extraer, no al final. Los valores nuevos no son error: se conservan y se avisan.
+- **2026-10-29:** Agripac MeM queda `Microextruido` (valor oficial), no `Extruido`. El tag `Microgranulado` de Agrizon se conserva tal cual (no se fuerza a `Granulado`) y lo avisará R3.4.
 
 ## Fuentes
 - **2026-09-03:** BioMar solo por Agrizon. biomar.com queda deshabilitado aunque se pierdan productos sin match (los módulos se conservan).
@@ -39,3 +40,4 @@
 ## Salida
 - **2026-09-01:** `master.csv` es snapshot y se sobrescribe. Es provisorio (ver [roadmap](roadmap.md)).
 - **2026-10-29:** La prioridad es que los datos se puedan analizar; el dashboard lo arma el usuario y la gerencia no necesita correr el script. La GUI (`gui.py`) queda congelada: no se le agregan funciones nuevas ni se la adapta al esquema nuevo, y tampoco se borra. Las salidas y los avisos van solo por CLI y archivos en `data/`.
+- **2026-10-29:** `merge_human.py` probablemente se reemplace por archivos aislados por país y empresa (para completar a mano sin un Excel gigante). Mientras tanto no se adapta al esquema nuevo.

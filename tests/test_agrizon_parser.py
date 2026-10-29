@@ -64,7 +64,7 @@ def test_tipo_presentacion_reads_english_title_when_tag_is_missing():
     # pero el titulo dice "Pelletized" (ingles) -- debe detectarse igual.
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-perform-35-2-0-mm-25-kg"))
-    assert record["tipo_presentacion"] == "Pelletizado"
+    assert record["tipo_presentacion"] == "Pellet"
 
 
 def test_tipo_presentacion_recognizes_extrusado_tag():
@@ -75,12 +75,19 @@ def test_tipo_presentacion_recognizes_extrusado_tag():
     assert record["tipo_presentacion"] == "Extruido"
 
 
-def test_tipo_presentacion_none_for_microgranulado_only():
-    # Microgranulado es una 3ra categoria fuera de la dicotomia Extruido/
-    # Pelletizado del schema -- no se fuerza a ninguna de las dos.
+def test_tipo_presentacion_microgranulado_se_conserva_si_es_la_unica_tecnologia():
+    # R3.3 REQ-4: Microgranulado no esta en la lista oficial ni se fuerza a
+    # Granulado (decision 2026-10-29) -- se guarda tal cual para que R3.4 lo avise.
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-precria-0-6-0-9-mm-25-kg"))
-    assert record["tipo_presentacion"] is None
+    assert record["tipo_presentacion"] == "Microgranulado"
+
+
+def test_tipo_presentacion_pelletizado_gana_sobre_microgranulado():
+    # Exia Prime Prebreeding trae ambos tags: la tecnologia reconocida gana.
+    products = _load_products()
+    record = parser.parse_product(_find(products, "exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado"))
+    assert record["tipo_presentacion"] == "Pellet"
 
 
 def test_etapa_falls_back_to_tamano_when_tags_are_ambiguous():

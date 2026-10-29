@@ -36,12 +36,12 @@ def test_detect_tecnologia_prefers_first_mention_in_text():
         "Descripcion del producto\nAlimento balanceado... elaborado por "
         "proceso de extruido."
     )
-    assert schema.detect_tecnologia(text) == "Pelletizado"
+    assert schema.detect_tecnologia(text) == "Pellet"
 
 
 def test_detect_tecnologia_tolerates_single_l_spelling():
     # Nicovita a veces escribe "peletizada" con una sola L (no "pelletizada").
-    assert schema.detect_tecnologia("Dieta balanceada peletizada para camaron") == "Pelletizado"
+    assert schema.detect_tecnologia("Dieta balanceada peletizada para camaron") == "Pellet"
 
 
 def test_detect_tecnologia_extruido():
@@ -55,9 +55,9 @@ def test_detect_tecnologia_no_mention_returns_none():
 
 
 def test_detect_tecnologia_microextruido_resolves_to_extruido():
-    # Caso real: MeM (Agripac, division Larvicultura) usa "Microextruido" en
-    # su pestana "Tipo" -- ya contiene "extrui" como substring, asi que
-    # resuelve a "Extruido" sin necesitar una regla aparte.
+    # "Microextruido" contiene "extrui" y resuelve a "Extruido". Desde R3.3
+    # Agripac (MeM) ya no pasa por aca: usa normalize_presentacion y guarda
+    # "Microextruido", que es valor oficial.
     assert schema.detect_tecnologia("Tipo Microextruido") == "Extruido"
 
 
@@ -331,3 +331,31 @@ def test_normalize_presentacion_vacio_es_none():
     assert schema.normalize_presentacion(None) is None
     assert schema.normalize_presentacion("") is None
     assert schema.normalize_presentacion("   ") is None
+
+
+# --- R3.3: los parsers usan normalize_presentacion ---
+
+def test_detect_tecnologia_devuelve_la_lista_oficial():
+    # REQ-1: textos reales (HAID, Agrizon, Agripac) -> grafia oficial
+    assert schema.detect_tecnologia("ALIMENTO BALANCEADO PELLETIZADO PARA CAMARON") == "Pellet"
+    assert schema.detect_tecnologia("Exia Perform 35% Pelletized 2.0 mm") == "Pellet"
+    assert schema.detect_tecnologia("Larviva Extrusado") == "Extruido"
+    assert schema.detect_tecnologia("Tipo Polvo") == "Polvo"
+    assert schema.detect_tecnologia("Tipo Micro particulado") == "Microparticulado"
+    assert schema.detect_tecnologia("Tipo Líquidos") == "Líquido"
+    for valor in ("Pellet", "Extruido", "Polvo", "Microparticulado", "Líquido"):
+        assert valor in schema.TIPO_PRESENTACION_OFICIAL
+
+
+def test_umbral_grower_de_pellet_acepta_pellet_y_pelletizado():
+    # REQ-2: la grafia nueva no rompe el umbral de 1.8 mm
+    for tipo in ("Pellet", "Pelletizado"):
+        assert schema.etapa_from_tamano("1.8", tipo) == "engorde"
+        assert schema.etapa_skt_from_row("engorde", "1.8", tipo) == "Grower"
+    assert schema.etapa_skt_from_row("engorde", "1.8", "Extruido") is None
+
+
+def test_normalize_presentacion_alias_de_agripac():
+    # REQ-3: grafias reales de la pestana "Tipo" de Agripac
+    assert schema.normalize_presentacion("Micro particulado") == "Microparticulado"
+    assert schema.normalize_presentacion("Líquidos") == "Líquido"

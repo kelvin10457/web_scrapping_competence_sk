@@ -132,8 +132,8 @@ _TECNOLOGIA_RE = re.compile(r"extrui|extrus|extrud|pel{1,2}etiz|\bpolvo\b|partic
 TIPO_PRESENTACION_VALUES = {"Extruido", "Pelletizado", "Polvo", "Microparticulado", "Líquido"}
 
 # Lista oficial del Excel de Power BI (specs/tech-stack.md, decision
-# 2026-10-28). Reemplaza a TIPO_PRESENTACION_VALUES cuando los parsers pasen
-# a usar normalize_presentacion() (R3.3).
+# 2026-10-28). Los parsers la usan desde R3.3; TIPO_PRESENTACION_VALUES queda
+# solo para merge_human/GUI (el usuario planea reemplazar merge_human).
 TIPO_PRESENTACION_OFICIAL = {
     "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
     "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
@@ -152,6 +152,9 @@ _PRESENTACION_POR_CLAVE.update({
     "pelletizada": "Pellet",
     "peletizado": "Pellet",
     "peletizada": "Pellet",
+    # Grafias reales de la pestana "Tipo" de Agripac (R3.3)
+    "micro particulado": "Microparticulado",
+    "liquidos": "Líquido",
 })
 
 
@@ -195,12 +198,18 @@ def detect_tecnologia(text: str | None) -> str | None:
     if token.startswith(("extrui", "extrus", "extrud")):
         return "Extruido"
     if token.startswith("pel"):
-        return "Pelletizado"
+        return "Pellet"
     if token == "polvo":
         return "Polvo"
     if token.startswith("particulad"):
         return "Microparticulado"
     return "Líquido"
+
+
+def _es_pellet(tipo_presentacion: str | None) -> bool:
+    """Umbral de Grower de pellet: acepta la grafia oficial ("Pellet") y la
+    vieja ("Pelletizado", todavia posible en el archivo humano)."""
+    return normalize_presentacion(tipo_presentacion) == "Pellet"
 
 
 _TAMANO_NUM_RE = re.compile(r"\d+(?:\.\d+)?")
@@ -233,7 +242,7 @@ def etapa_from_tamano(tamano_pellet_mm: str | None, tipo_presentacion: str | Non
         return "precria"
     if size == 1.6:
         return None
-    if tipo_presentacion == "Pelletizado" and size >= 1.8:
+    if _es_pellet(tipo_presentacion) and size >= 1.8:
         return "engorde"
     if tipo_presentacion == "Extruido" and size >= 1.9:
         return "engorde"
@@ -307,7 +316,7 @@ def etapa_skt_from_row(
         return "Nursery"
     if size == 1.6:
         return "Pre Grower"
-    if tipo_presentacion == "Pelletizado" and size >= 1.8:
+    if _es_pellet(tipo_presentacion) and size >= 1.8:
         return "Grower"
     if tipo_presentacion == "Extruido" and size >= 1.9:
         return "Grower"
