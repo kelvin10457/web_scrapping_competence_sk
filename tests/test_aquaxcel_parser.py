@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 
 from conftest import FIXTURES
+import schema
 from paises._compartido import aquaxcel_parser as parser
 
 
@@ -123,3 +124,41 @@ def test_tipo_presentacion_pelletizado_pasa_a_pellet():
     tipos = {r["tipo_presentacion"] for r in records}
     assert "Pellet" in tipos
     assert "Pelletizado" not in tipos
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def test_r44_req1_ecuador_etapa_de_uso_inicio_es_precria_engorde_es_engorde():
+    records = parser.parse_listing(_load_html())
+    by_name = {r["nombre_producto"]: r for r in records}
+    assert _etapas_true(by_name["AQUAXCEL ADVANCE 35% 0.8"]) == {"precria"}  # INICIO
+    assert _etapas_true(by_name["AQUAXCEL ADVANCE 35% 2.0"]) == {"engorde"}  # ENGORDE
+    assert by_name["AQUAXCEL ADVANCE 35% 0.8"]["etapa_engorde"] is False
+    assert all(_etapas_true(r) in ({"precria"}, {"engorde"}) for r in records)
+    assert all(r["_etapas_detectadas"] for r in records)
+
+
+def _mexico_records() -> dict[str, dict]:
+    html = (FIXTURES / "aquaxcel_mexico_listing_2026-10-20.html").read_text(encoding="utf-8")
+    return {r["nombre_producto"]: r for r in parser.parse_listing(html)}
+
+
+def test_r44_req2_mexico_linea_mas_descripcion():
+    by_name = _mexico_records()
+    # "etapa de transicion hacia la fase de engorde"
+    assert _etapas_true(by_name["Aquaxcel Transition 38%"]) == {"post_transferencia", "engorde"}
+    # "para la etapa de post-larva ... o precrias"
+    assert _etapas_true(by_name["Aquaxcel Nursery 45% SmartShield"]) == {"post_larva", "precria"}
+    # "desde los 12g hasta peso de cosecha"
+    assert _etapas_true(by_name["Aquaxcel Advance 35% AP"]) == {"engorde"}
+    assert _etapas_true(by_name["Aquaxcel Starter 40%"]) == {"precria"}
+    assert all(r["_etapas_detectadas"] for r in by_name.values())
+
+
+def test_r44_req3_mexico_adapt_sin_termino_de_etapa_queda_vacio():
+    by_name = _mexico_records()
+    adapt = [r for n, r in by_name.items() if "Adapt Shock" in n]
+    assert len(adapt) == 5
+    assert all(r[f"etapa_{e}"] is None for r in adapt for e in schema.ETAPAS)

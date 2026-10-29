@@ -26,6 +26,9 @@ _NUMBER_RE = re.compile(r"\d+(?:\.\d+)?")
 _CARD_ID_RE = re.compile(r"^container-")
 # una descripcion de marketing termina en el siguiente encabezado de su nivel o superior
 _HEADINGS_HASTA = {"h2": ("h2",), "h3": ("h2", "h3")}
+# R4.4: en la columna "ETAPA DE USO" (Ecuador) INICIO es una etapa explicita,
+# no la palabra generica que ignora detectar_etapas (decision del usuario 2026-10-29).
+_ETAPA_DE_USO = {"INICIO": {"precria"}}
 
 
 def _first_number(text: str) -> float | None:
@@ -106,7 +109,11 @@ def _parse_cards(soup: BeautifulSoup, fecha: str) -> list[dict]:
         record["nombre_producto"] = headings[1].get_text(strip=True)
         record["etapa_competidor"] = schema.normalize_etapa(linea)
         record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(linea_descriptions.get(linea.upper()))
-        mm = _first_number(_h4_value(section, "calibre") or "")
+        # R4.4: todas las etapas de la linea y su descripcion ("transicion hacia la fase de engorde")
+        etapas = schema.detectar_etapas(f"{linea} {linea_descriptions.get(linea.upper(), '')}")
+        record.update(schema.columnas_etapa(etapas))
+        record["_etapas_detectadas"] = True
+        mm =_first_number(_h4_value(section, "calibre") or "")
         record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
         record["tipo_presentacion"] = schema.normalize_presentacion(_h4_value(section, "tecnolog"))
         record["proteina_pct"] = schema.normalize_proteina(_metric(section, "prote"))
@@ -150,6 +157,10 @@ def parse_listing(html: str) -> list[dict]:
             record["nombre_producto"] = producto
             record["etapa_competidor"] = schema.normalize_etapa(etapa_txt)
             record["es_producto_de_salud"] = es_producto_de_salud
+            # R4.4: solo la columna "ETAPA DE USO"; las descripciones de linea no nombran etapas
+            etapas = _ETAPA_DE_USO.get(etapa_txt.upper()) or schema.detectar_etapas(etapa_txt)
+            record.update(schema.columnas_etapa(etapas))
+            record["_etapas_detectadas"] = True
             mm = _first_number(calibre)
             record["tamano_pellet_mm"] = f"{mm:g}" if mm is not None else None
             record["tipo_presentacion"] = schema.normalize_presentacion(tecnologia)
