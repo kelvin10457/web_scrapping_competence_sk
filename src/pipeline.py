@@ -80,6 +80,7 @@ def write_csv(records: list[dict], path: Path) -> None:
             record.get("tipo_presentacion"),
             record.get("_es_larvicultura", False),
         )
+        record.update(schema.etapas_desde_competidor(record.get("etapa_competidor")))
         record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
             record.get("tamano_pellet_mm")
         )
@@ -147,13 +148,24 @@ def actualizar_registros(max_dias: int = registros_oficiales.MAX_DIAS_CACHE) -> 
         return f"  AVISO: no se pudieron actualizar los registros oficiales ({exc}); se usan los anteriores."
 
 
+def _con_etapas(df: pd.DataFrame) -> pd.DataFrame:
+    """Un CSV escrito antes de R3.5 no trae las etapa_*: se derivan de su
+    etapa_competidor igual que en write_csv (texto, como el resto del CSV)."""
+    if set(schema.ETAPA_COLUMNS) <= set(df.columns):
+        return df
+    etapas = [schema.etapas_desde_competidor(e) for e in df["etapa_competidor"]]
+    for col in schema.ETAPA_COLUMNS:
+        df[col] = [None if e[col] is None else str(e[col]) for e in etapas]
+    return df
+
+
 def build_master() -> None:
     frames = []
     for pais, empresa in fuentes.listar():
         csv_path = processed_path(pais, empresa)
         # Los archivos que empiezan con "_" (ej. _conflictos.csv) no son productos.
         if csv_path.exists() and not csv_path.name.startswith("_"):
-            frames.append(pd.read_csv(csv_path, dtype=str, keep_default_na=False, na_values=[""]))
+            frames.append(_con_etapas(pd.read_csv(csv_path, dtype=str, keep_default_na=False, na_values=[""])))
     # Cualquier otro processed/{pais}/*.csv que ya no este en el registro igual entra.
     if not frames:
         build_conflictos()

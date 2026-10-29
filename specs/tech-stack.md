@@ -30,7 +30,7 @@ Una fila por **SKU** (un tamaño de pellet concreto) cuando la fuente lo publica
 | `empresa` | texto | Marca del fabricante (p. ej. `Cargill` para Aquaxcel) |
 | `nombre_producto` | texto | Incluye marca y submarca |
 | `es_producto_de_salud` | booleano | Función terapéutica (p. ej. anti-Vibrio), independiente de la etapa |
-| `etapa_reproductores` | booleano | Un producto puede tener varias etapas en `true`. Vacío si la fuente no dice nada |
+| `etapa_reproductores` | booleano | Un producto puede tener varias etapas en `true`. Vacío si la fuente no dice nada. **Hoy (puente R3.5)** se derivan de `etapa_competidor`: esa etapa en `true` y las otras 4 en `false`; sin etapa, las 5 vacías. Son derivadas: el Excel manual puede no traerlas |
 | `etapa_larva` | booleano | |
 | `etapa_precria` | booleano | |
 | `etapa_post_transferencia` | booleano | |

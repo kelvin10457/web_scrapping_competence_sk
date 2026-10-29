@@ -503,3 +503,27 @@ def test_human_row_without_pais_defaults_to_ecuador_in_apply_merge():
 def test_validate_rows_rejects_unknown_pais():
     errors = merge_human.validate_rows(_human_df(_human_row(pais="peru", empresa="X", nombre_producto="Y")))
     assert any("pais" in e for e in errors)
+
+
+# --- R3.5: etapa_* derivadas, opcionales en el Excel manual ---------------
+
+
+def test_validate_headers_acepta_excel_sin_columnas_etapa():
+    sin_etapas = [c for c in schema.SCHEMA_COLUMNS if c not in schema.ETAPA_COLUMNS]
+    assert merge_human.validate_headers(pd.DataFrame(columns=sin_etapas)) == []
+
+
+def test_apply_merge_recalcula_etapas_desde_etapa_competidor():
+    master = _master_df(_master_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Classic AD",
+                                    etapa_competidor="engorde", tamano_pellet_mm="2.5", proteina_pct=28.0))
+    sin_etapas = [c for c in schema.SCHEMA_COLUMNS if c not in schema.ETAPA_COLUMNS]
+    human = pd.DataFrame([
+        {**_human_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Classic AD",
+                      tamano_pellet_mm="2.5", proteina_pct=28.0, etapa_competidor="precria")},
+        {**_human_row(pais="ecuador", empresa="Acme", nombre_producto="Acme Larva", etapa_competidor="larva")},
+    ])[sin_etapas]
+    out, _, n_new, n_upd = merge_human.apply_merge(master, human)
+    assert (n_new, n_upd) == (1, 1)
+    assert out.loc[0, "etapa_precria"] is True and out.loc[0, "etapa_engorde"] is False
+    nuevo = out[out["empresa"] == "Acme"].iloc[0]
+    assert nuevo["etapa_larva"] is True and nuevo["etapa_engorde"] is False

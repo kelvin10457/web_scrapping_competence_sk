@@ -59,8 +59,9 @@ REQUIRED_COLUMNS = ["empresa", "nombre_producto"]
 # humano ahi, se recalculan desde tamano_pellet_mm/tipo_presentacion/
 # etapa_competidor despues de aplicar la fusion. Se siguen exigiendo como
 # encabezado (mismas columnas exactas que schema.SCHEMA_COLUMNS) pero su
-# contenido no se valida ni se usa.
-DERIVED_COLUMNS = ["etapa_skt", "particula_min_mm", "particula_max_mm"]
+# contenido no se valida ni se usa. Las etapa_* (R3.5) tambien son derivadas
+# (de etapa_competidor) pero el Excel puede no traerlas: son opcionales.
+DERIVED_COLUMNS = ["etapa_skt", "particula_min_mm", "particula_max_mm", *schema.ETAPA_COLUMNS]
 
 
 def _is_empty(value) -> bool:
@@ -107,6 +108,7 @@ def validate_headers(df: pd.DataFrame) -> list[str]:
     # 'pais' es opcional en archivos viejos (docs/historico/PLAN_REGIONAL.md 2.5): se asume ecuador.
     if "pais" not in actual:
         actual.append("pais")
+    actual += [c for c in schema.ETAPA_COLUMNS if c not in actual]
     expected = set(schema.SCHEMA_COLUMNS)
     actual_set = set(actual)
     missing = [c for c in schema.SCHEMA_COLUMNS if c not in actual_set]
@@ -272,6 +274,8 @@ def _recompute_derived(df: pd.DataFrame, idx) -> None:
     tamano = df.at[idx, "tamano_pellet_mm"]
     tipo = df.at[idx, "tipo_presentacion"]
     df.at[idx, "etapa_skt"] = schema.etapa_skt_from_row(etapa_competidor, tamano, tipo)
+    for col, valor in schema.etapas_desde_competidor(etapa_competidor).items():
+        df.at[idx, col] = valor
     pmin, pmax = schema.parse_particula_range(tamano)
     df.at[idx, "particula_min_mm"] = pmin
     df.at[idx, "particula_max_mm"] = pmax
@@ -296,7 +300,7 @@ def _normalize_master_dtypes(df: pd.DataFrame) -> pd.DataFrame:
             df[col] = df[col].map(
                 lambda v: None if pd.isna(v) else (pipeline._format_value(v) if isinstance(v, float) else str(v))
             )
-        elif col == "es_producto_de_salud":
+        elif col == "es_producto_de_salud" or col in schema.ETAPA_COLUMNS:
             df[col] = df[col].map(lambda v: None if pd.isna(v) else bool(v))
         else:
             df[col] = df[col].astype(object).where(df[col].notna(), None)
@@ -326,6 +330,7 @@ def apply_merge(master_df: pd.DataFrame, human_df: pd.DataFrame) -> tuple[pd.Dat
             record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
                 record["tamano_pellet_mm"]
             )
+            record.update(schema.etapas_desde_competidor(record["etapa_competidor"]))
             new_records.append(record)
             continue
 
@@ -429,7 +434,7 @@ def main() -> int:
         print("Corrige los encabezados y corre de nuevo. No se aplico ningun cambio.")
         return 1
 
-    human_df = _with_default_pais(human_df)[schema.SCHEMA_COLUMNS]
+    human_df = _with_default_pais(human_df).reindex(columns=schema.SCHEMA_COLUMNS)
     human_df = _drop_fully_empty_rows(human_df)
 
     if human_df.empty:

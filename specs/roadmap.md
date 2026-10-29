@@ -20,7 +20,7 @@ Objetivo: que el CSV interno ya tenga las columnas y los nombres del Excel de Po
 - [x] **R3.2** `schema.normalize_presentacion(texto)` con la lista oficial (`Pelletizado` → `Pellet`). Lo desconocido se devuelve tal cual. Solo la función y sus tests.
 - [x] **R3.3** Los parsers usan `normalize_presentacion` al extraer: `detect_tecnologia`, Agripac y Agrizon. Se regenera Ecuador y se compara con el baseline.
 - [x] **R3.4** Aviso de presentaciones desconocidas: resumen al final del CLI + `data/presentaciones_nuevas.csv` (pais, empresa, producto, valor, url).
-- [ ] **R3.5** Agregar las 5 columnas `etapa_*` (booleanas), derivadas por ahora del `etapa_competidor` actual. Es un paso puente: todavía marca una sola etapa por fila.
+- [x] **R3.5** Agregar las 5 columnas `etapa_*` (booleanas), derivadas por ahora del `etapa_competidor` actual. Es un paso puente: todavía marca una sola etapa por fila.
 - [ ] **R3.6** `etapa_skt` con la regla nueva: más de 1.6 mm → Grower (cierra el hueco de 1.6–1.8 mm y deja de depender de `tipo_presentacion`); rango → mínimo; sin tamaño → etapa del competidor como respaldo.
 - [ ] **R3.7** `proteina_pct` siempre numérico decimal (`37.5`), con un test que lo verifique en todas las fuentes.
 

@@ -284,3 +284,40 @@ def test_reportar_presentaciones_nuevas_calla_si_no_hay(tmp_path, capsys):
     path.write_text("pais,empresa,producto,valor,url\n", encoding="utf-8-sig")
     pipeline.reportar_presentaciones_nuevas(path)
     assert capsys.readouterr().out == ""
+
+
+def test_write_csv_completa_etapas_booleanas(tmp_path):
+    import pandas as pd
+
+    records = [
+        {"empresa": "Nicovita", "nombre_producto": "Nicovita Classic AD", "etapa_competidor": "engorde",
+         "tamano_pellet_mm": "2.5", "tipo_presentacion": "Pellet",
+         "fuente_url": "https://nicovita.com/productos/nicovita-classic-ad-ecuador/"},
+        {"empresa": "Cargill", "nombre_producto": "Sin etapa", "etapa_competidor": None},
+    ]
+    path = tmp_path / "nicovita.csv"
+    pipeline.write_csv(records, path)
+    df = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
+    assert df.loc[0, "etapa_engorde"] == "True"
+    assert df.loc[0, "etapa_precria"] == "False"
+    assert df.loc[1, ["etapa_engorde", "etapa_larva"]].isna().all()
+
+
+def test_build_master_deriva_etapas_de_csv_viejos(tmp_path, monkeypatch):
+    import pandas as pd
+    import schema
+
+    monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
+    monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
+    monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
+    monkeypatch.setattr(pipeline, "PRESENTACIONES_NUEVAS_PATH", tmp_path / "presentaciones_nuevas.csv")
+    # CSV de Honduras escrito antes de R3.5: sin columnas etapa_*
+    viejo = pipeline.processed_path("honduras", "nicovita")
+    viejo.parent.mkdir(parents=True)
+    fila = {c: None for c in schema.SCHEMA_COLUMNS if c not in schema.ETAPA_COLUMNS}
+    fila.update(pais="honduras", empresa="Nicovita", nombre_producto="Nicovita Classic Engorde",
+                etapa_competidor="engorde")
+    pd.DataFrame([fila]).to_csv(viejo, index=False)
+    pipeline.build_master()
+    master = pd.read_csv(tmp_path / "master.csv", dtype=str)
+    assert master.loc[0, "etapa_engorde"] == "True" and master.loc[0, "etapa_larva"] == "False"

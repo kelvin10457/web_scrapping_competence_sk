@@ -392,3 +392,30 @@ def test_presentaciones_nuevas_solo_valores_fuera_de_la_lista_oficial():
          "valor": "Pelletizado",
          "url": "https://nicovita.com/productos/nicovita-classic-engorde-honduras/"},
     ]
+
+
+# --- R3.5: etapa_* booleanas desde etapa_competidor ------------------------
+
+
+def test_etapas_desde_competidor_marca_una_true_y_las_demas_false():
+    # Nicovita Classic Precria (master Ecuador): etapa_competidor = precria
+    etapas = schema.etapas_desde_competidor("precria")
+    assert etapas == {
+        "etapa_reproductores": False,
+        "etapa_larva": False,
+        "etapa_precria": True,
+        "etapa_post_transferencia": False,
+        "etapa_engorde": False,
+    }
+    assert schema.etapas_desde_competidor("post_transferencia")["etapa_post_transferencia"] is True
+
+
+def test_etapas_desde_competidor_vacio_deja_las_cinco_vacias():
+    for etapa in (None, "", "salud"):
+        assert schema.etapas_desde_competidor(etapa) == {c: None for c in schema.ETAPA_COLUMNS}
+
+
+def test_schema_columns_incluye_etapas_despues_de_salud():
+    i = schema.SCHEMA_COLUMNS.index("es_producto_de_salud")
+    assert schema.SCHEMA_COLUMNS[i + 1:i + 6] == schema.ETAPA_COLUMNS
+    assert "etapa_competidor" in schema.SCHEMA_COLUMNS

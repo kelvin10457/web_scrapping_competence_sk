@@ -24,6 +24,11 @@ SCHEMA_COLUMNS = [
     "nombre_producto",
     "etapa_competidor",
     "es_producto_de_salud",
+    "etapa_reproductores",
+    "etapa_larva",
+    "etapa_precria",
+    "etapa_post_transferencia",
+    "etapa_engorde",
     "etapa_skt",
     "tamano_pellet_mm",
     "particula_min_mm",
@@ -89,6 +94,26 @@ def normalize_etapa(raw_text: str | None) -> str | None:
         if pattern.search(text):
             return etapa
     return None
+
+
+# Booleanos de etapa para Power BI (tech-stack.md). R3.5 es un paso puente:
+# se derivan de etapa_competidor (una sola etapa por fila); R4 hace que cada
+# parser marque todas las que declara la fuente.
+ETAPA_COLUMNS = [
+    "etapa_reproductores",
+    "etapa_larva",
+    "etapa_precria",
+    "etapa_post_transferencia",
+    "etapa_engorde",
+]
+
+
+def etapas_desde_competidor(etapa: str | None) -> dict[str, bool | None]:
+    """La etapa conocida en True y las otras 4 en False (decision del usuario
+    2026-10-29). Sin etapa (o una que no esta en ETAPA_VALUES), las 5 vacias."""
+    if etapa not in ETAPA_VALUES:
+        return {col: None for col in ETAPA_COLUMNS}
+    return {col: col == f"etapa_{etapa}" for col in ETAPA_COLUMNS}
 
 
 def etapa_matches(raw_text: str | None) -> set[str]:
