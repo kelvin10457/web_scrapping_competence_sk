@@ -40,5 +40,6 @@
 ## Salida
 - **2026-09-01:** `master.csv` es snapshot y se sobrescribe. Es provisorio (ver [roadmap](roadmap.md)).
 - **2026-10-29:** La prioridad es que los datos se puedan analizar; el dashboard lo arma el usuario y la gerencia no necesita correr el script. La GUI (`gui.py`) queda congelada: no se le agregan funciones nuevas ni se la adapta al esquema nuevo, y tampoco se borra. Las salidas y los avisos van solo por CLI y archivos en `data/`.
-- **2026-10-29:** `merge_human.py` probablemente se reemplace por archivos aislados por país y empresa (para completar a mano sin un Excel gigante). Mientras tanto no se adapta al esquema nuevo.
+- **2026-10-29:** `merge_human.py` probablemente se reemplace por archivos aislados por país y empresa (para completar a mano sin un Excel gigante). ~~Mientras tanto no se adapta al esquema nuevo.~~ Cambiado el mismo día: sí se adapta (ver abajo).
 - **2026-10-29:** puente R3.5: las `etapa_*` se derivan de `etapa_competidor`, que queda en `true`; las otras 4 van en `false` (no vacías). Sin `etapa_competidor`, las 5 quedan vacías. En el Excel manual son derivadas y opcionales.
+- **2026-10-29:** `merge_human.py` se adapta al esquema nuevo a medida que avanza R3 (las columnas derivadas se recalculan y el Excel manual no necesita traerlas). La GUI sigue congelada.
