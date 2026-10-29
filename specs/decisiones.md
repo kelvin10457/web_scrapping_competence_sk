@@ -38,3 +38,4 @@
 
 ## Salida
 - **2026-09-01:** `master.csv` es snapshot y se sobrescribe. Es provisorio (ver [roadmap](roadmap.md)).
+- **2026-10-29:** La prioridad es que los datos se puedan analizar; el dashboard lo arma el usuario y la gerencia no necesita correr el script. La GUI (`gui.py`) queda congelada: no se le agregan funciones nuevas ni se la adapta al esquema nuevo, y tampoco se borra. Las salidas y los avisos van solo por CLI y archivos en `data/`.

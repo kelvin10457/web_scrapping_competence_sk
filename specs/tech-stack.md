@@ -5,7 +5,7 @@
 ## Stack
 
 - **Python** con `requests` (siempre a través de `netutil.get()`), `BeautifulSoup` + `lxml`, `pdfplumber` / `PyMuPDF`, `pytesseract` (Tesseract instalado aparte, en español), `pandas` y `openpyxl`.
-- **App de escritorio:** Tkinter (`gui.py`) empaquetada con PyInstaller (`ScraperCompetencia.spec`).
+- **App de escritorio:** Tkinter (`gui.py`) empaquetada con PyInstaller (`ScraperCompetencia.spec`). **Congelada** desde el 2026-10-29 (ver `decisiones.md`): no se adapta al esquema nuevo.
 - **Tests:** `pytest`, con fixtures **reales** (descargados, no armados a mano) en `tests/fixtures/`. Corren sin red.
 - **Prohibido:** Playwright o Selenium (rompen el `.exe`), LLM o APIs pagas, proxies o suplantar el navegador.
 
@@ -14,7 +14,7 @@
 - **Una fuente = un módulo `paises/<pais>/<empresa>.py` con `run()`**, que une un `_scraper` (descarga) y un `_parser` (devuelve `list[dict]`). Los parsers no escriben `pais`.
 - Una empresa presente en varios países usa un motor en `paises/_compartido/` con `pais_slug`.
 - **Cada (país, empresa) corre aislado:** si falla uno, el resto sigue. Si una corrida trae 0 filas, nunca sobrescribe el archivo anterior.
-- **El vocabulario se normaliza en el parser**, con funciones de `schema.py` (`normalize_presentacion`, etapas). Lo que no está en el vocabulario se conserva y se reporta en `data/presentaciones_nuevas.csv` y en el resumen final de la corrida (CLI y GUI).
+- **El vocabulario se normaliza en el parser**, con funciones de `schema.py` (`normalize_presentacion`, etapas). Lo que no está en el vocabulario se conserva y se reporta en `data/presentaciones_nuevas.csv` y en el resumen final del CLI.
 - **Conflictos:** cuando hay varios valores para un mismo campo, `schema.resolver_campo` elige uno con reglas fijas y deja el caso en `_conflictos.csv`.
 - **Ritmo:** pausas aleatorias solo para los dominios en `netutil.PACED_HOSTS`, más caché de HTML y PDF, dentro de un presupuesto de tiempo por corrida.
 
@@ -42,7 +42,7 @@ Una fila por **SKU** (un tamaño de pellet concreto) cuando la fuente lo publica
 | `tipo_presentacion` | texto | `Extruido`, `Granulado`, `Líquido`, `Microencapsulado`, `Microextruido`, `Microparticulado`, `Nauplios de artemia`, `Otro`, `Pellet`, `Polvo`, `Quistes de artemia`, `Suspensión`. Un valor fuera de esta lista **no es un error**: se conserva y se avisa |
 | `proteina_pct` | número decimal | Porcentaje tal cual: `35`, `37.5` (no `0.375`) |
 
-Incluye las filas cargadas a mano desde la GUI para ese país y empresa.
+Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y empresa.
 
 ### Columnas solo internas (CSV en `data/processed/<pais>/<empresa>.csv`)
 

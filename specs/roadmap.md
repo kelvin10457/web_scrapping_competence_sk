@@ -19,7 +19,7 @@ Objetivo: que el CSV interno ya tenga las columnas y los nombres del Excel de Po
 - [x] **R3.1** Renombrar `producto_salud` → `es_producto_de_salud` en todo el código (schema, parsers, merge_human, GUI, tests, baseline de Ecuador). Sin cambios de lógica.
 - [x] **R3.2** `schema.normalize_presentacion(texto)` con la lista oficial (`Pelletizado` → `Pellet`). Lo desconocido se devuelve tal cual. Solo la función y sus tests.
 - [ ] **R3.3** Los parsers usan `normalize_presentacion` al extraer: `detect_tecnologia`, Agripac y Agrizon. Se regenera Ecuador y se compara con el baseline.
-- [ ] **R3.4** Aviso de presentaciones desconocidas: resumen al final (CLI y GUI) + `data/presentaciones_nuevas.csv` (pais, empresa, producto, valor, url).
+- [ ] **R3.4** Aviso de presentaciones desconocidas: resumen al final del CLI + `data/presentaciones_nuevas.csv` (pais, empresa, producto, valor, url).
 - [ ] **R3.5** Agregar las 5 columnas `etapa_*` (booleanas), derivadas por ahora del `etapa_competidor` actual. Es un paso puente: todavía marca una sola etapa por fila.
 - [ ] **R3.6** `etapa_skt` con la regla nueva: más de 1.6 mm → Grower (cierra el hueco de 1.6–1.8 mm y deja de depender de `tipo_presentacion`); rango → mínimo; sin tamaño → etapa del competidor como respaldo.
 - [ ] **R3.7** `proteina_pct` siempre numérico decimal (`37.5`), con un test que lo verifique en todas las fuentes.
@@ -37,12 +37,12 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [ ] **R4.7** Vimifos
 - [ ] **R4.8** Api-Aba
 - [ ] **R4.9** Nutrimar
-- [ ] **R4.10** Quitar `etapa_competidor` (ya reemplazada por los booleanos). Se actualizan merge_human, la GUI y el baseline.
+- [ ] **R4.10** Quitar `etapa_competidor` (ya reemplazada por los booleanos). Se actualizan merge_human y el baseline.
 
 ## R5 — Excel para Power BI
 
 - [ ] **R5.1** `pipeline` escribe `data/powerbi/<pais>/<empresa>.xlsx`: selección de columnas con tipos fijos (booleano, decimal, texto). Sin transformaciones.
-- [ ] **R5.2** Incluir las filas cargadas a mano (GUI / `competencia_human.xlsx`) en el Excel de su país y empresa.
+- [ ] **R5.2** Incluir las filas cargadas a mano (`competencia_human.xlsx`) en el Excel de su país y empresa.
 - [ ] **R5.3** Test de contrato: todos los Excel tienen exactamente las mismas columnas, en el mismo orden y con los mismos tipos. Así Power BI los puede unir sin errores.
 - [ ] **R5.4** Guía `docs/powerbi.md` (1 página): cómo unir los Excel de `data/powerbi/` desde una carpeta y cómo despivotar las 5 columnas `etapa_*` para graficar por etapa. Incluye el código M listo para pegar en Power Query y la advertencia de que un producto con varias etapas se cuenta una vez en cada una.
 
