@@ -293,3 +293,41 @@ def test_conflictos_de_arma_filas_con_columnas_fijas():
     (fila,) = schema.conflictos_de([record])
     assert list(fila) == schema.CONFLICTO_COLUMNS
     assert fila["candidatos"] == "40 (analisis) | 35 (titulo)" and fila["empresa"] == "Api-Aba"
+
+
+# --- R3.2: normalize_presentacion ---
+
+def test_tipo_presentacion_oficial_es_la_lista_de_tech_stack():
+    assert schema.TIPO_PRESENTACION_OFICIAL == {
+        "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
+        "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
+        "Quistes de artemia", "Suspensión",
+    }
+
+
+def test_normalize_presentacion_valor_oficial_con_grafia_oficial():
+    # Valores reales del master.csv actual
+    assert schema.normalize_presentacion("Extruido") == "Extruido"
+    assert schema.normalize_presentacion("Microparticulado") == "Microparticulado"
+    assert schema.normalize_presentacion("líquido ") == "Líquido"
+    assert schema.normalize_presentacion("LIQUIDO") == "Líquido"
+    assert schema.normalize_presentacion("quistes de ARTEMIA") == "Quistes de artemia"
+    assert schema.normalize_presentacion("Suspension") == "Suspensión"
+
+
+def test_normalize_presentacion_pelletizado_pasa_a_pellet():
+    assert schema.normalize_presentacion("Pelletizado") == "Pellet"
+    assert schema.normalize_presentacion("PELLETIZADA") == "Pellet"
+    assert schema.normalize_presentacion("Peletizado") == "Pellet"
+    assert schema.normalize_presentacion("pellet") == "Pellet"
+
+
+def test_normalize_presentacion_desconocido_se_conserva():
+    assert schema.normalize_presentacion("Microgranulado") == "Microgranulado"
+    assert schema.normalize_presentacion("  Crumble ") == "Crumble"
+
+
+def test_normalize_presentacion_vacio_es_none():
+    assert schema.normalize_presentacion(None) is None
+    assert schema.normalize_presentacion("") is None
+    assert schema.normalize_presentacion("   ") is None

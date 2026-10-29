@@ -10,6 +10,7 @@ Ver docs/historico/PLAN.md § 3 para el diseño completo. Este modulo define:
 from __future__ import annotations
 
 import re
+import unicodedata
 
 # Orden exacto de columnas para todos los CSV (por empresa y master.csv).
 # Paises validos para la columna "pais" (docs/historico/PLAN_REGIONAL.md 2.1): pais donde se
@@ -129,6 +130,39 @@ _TECNOLOGIA_RE = re.compile(r"extrui|extrus|extrud|pel{1,2}etiz|\bpolvo\b|partic
 # aca para que un validador externo (ej. de un archivo llenado a mano) pueda
 # chequear contra la misma lista sin duplicarla.
 TIPO_PRESENTACION_VALUES = {"Extruido", "Pelletizado", "Polvo", "Microparticulado", "Líquido"}
+
+# Lista oficial del Excel de Power BI (specs/tech-stack.md, decision
+# 2026-10-28). Reemplaza a TIPO_PRESENTACION_VALUES cuando los parsers pasen
+# a usar normalize_presentacion() (R3.3).
+TIPO_PRESENTACION_OFICIAL = {
+    "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
+    "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
+    "Quistes de artemia", "Suspensión",
+}
+
+
+def _clave_presentacion(text: str) -> str:
+    sin_tildes = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    return " ".join(sin_tildes.lower().split())
+
+
+_PRESENTACION_POR_CLAVE = {_clave_presentacion(v): v for v in TIPO_PRESENTACION_OFICIAL}
+_PRESENTACION_POR_CLAVE.update({
+    "pelletizado": "Pellet",
+    "pelletizada": "Pellet",
+    "peletizado": "Pellet",
+    "peletizada": "Pellet",
+})
+
+
+def normalize_presentacion(text: str | None) -> str | None:
+    """Lleva un tipo_presentacion a la grafia oficial (TIPO_PRESENTACION_OFICIAL),
+    sin importar mayusculas, tildes ni espacios; "Pelletizado" -> "Pellet".
+    Un valor desconocido NO es error: se devuelve tal cual (sin espacios en
+    los extremos) para que R3.4 lo avise, en vez de forzarlo a "Otro"."""
+    if not text or not text.strip():
+        return None
+    return _PRESENTACION_POR_CLAVE.get(_clave_presentacion(text), text.strip())
 
 
 def detect_tecnologia(text: str | None) -> str | None:
