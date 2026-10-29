@@ -292,6 +292,13 @@ def _normalize_master_dtypes(df: pd.DataFrame) -> pd.DataFrame:
     schema.NUMERIC_COLUMNS, que si deben seguir siendo float real) para no
     depender de que dtype le toque adivinar a pandas en cada corrida."""
     df = _with_default_pais(df)
+    # Un master anterior a una columna etapa_* (p. ej. etapa_post_larva, R4.1)
+    # no la trae: se deriva de etapa_competidor como en pipeline._con_etapas.
+    faltan = [c for c in schema.ETAPA_COLUMNS if c not in df.columns]
+    if faltan:
+        etapas = [schema.etapas_desde_competidor(e) for e in df["etapa_competidor"]]
+        for col in faltan:
+            df[col] = [e[col] for e in etapas]
     for col in schema.SCHEMA_COLUMNS:
         if col in schema.NUMERIC_COLUMNS:
             continue

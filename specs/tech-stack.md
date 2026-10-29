@@ -30,8 +30,9 @@ Una fila por **SKU** (un tamaño de pellet concreto) cuando la fuente lo publica
 | `empresa` | texto | Marca del fabricante (p. ej. `Cargill` para Aquaxcel) |
 | `nombre_producto` | texto | Incluye marca y submarca |
 | `es_producto_de_salud` | booleano | Función terapéutica (p. ej. anti-Vibrio), independiente de la etapa |
-| `etapa_reproductores` | booleano | Un producto puede tener varias etapas en `true`. Vacío si la fuente no dice nada. **Hoy (puente R3.5)** se derivan de `etapa_competidor`: esa etapa en `true` y las otras 4 en `false`; sin etapa, las 5 vacías. Son derivadas: el Excel manual puede no traerlas |
-| `etapa_larva` | booleano | |
+| `etapa_reproductores` | booleano | Un producto puede tener varias etapas en `true`. Vacío si la fuente no dice nada. **Hoy (puente R3.5)** se derivan de `etapa_competidor`: esa etapa en `true` y las otras en `false`; sin etapa, todas vacías. Son derivadas: el Excel manual puede no traerlas. Desde R4, cada parser las marca con `schema.detectar_etapas` (ver regla abajo) |
+| `etapa_larva` | booleano | Hatchery, mysis, zoea, nauplio |
+| `etapa_post_larva` | booleano | Post larva / PL: fase intermedia entre larva y precría |
 | `etapa_precria` | booleano | |
 | `etapa_post_transferencia` | booleano | |
 | `etapa_engorde` | booleano | |
@@ -48,6 +49,13 @@ Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y em
 
 `empaque_kg`, `fuente_url` y `fecha_extraccion`, además de `_conflictos.csv` y `master.csv` (unión de todo, usada por la GUI y por `merge_human`).
 
+### Regla de las `etapa_*`: `schema.detectar_etapas`
+
+- Solo cuentan los términos de etapa explícitos. Las palabras genéricas ("crecimiento", "inicio") no marcan nada.
+- "post larva", "postlarval" y "PL" → `post_larva`, no `larva`.
+- Un rango entre dos etapas ("X hasta Y", "X hacia Y", "X a Y") marca los extremos y las intermedias del ciclo larva → post_larva → precria → post_transferencia → engorde. "tamaño de mercado" y "a mercado" cuentan como engorde. `reproductores` nunca se rellena.
+- `schema.columnas_etapa(set)`: las detectadas en `true` y las demás en `false`; con un set vacío, todas quedan vacías.
+
 ### Regla de `etapa_skt`: una columna, criterio propio de Skretting
 
 Se calcula a partir del **tamaño del pellet** y no de cómo llama a la etapa el competidor:
@@ -57,4 +65,4 @@ Se calcula a partir del **tamaño del pellet** y no de cómo llama a la etapa el
 - 1.6 mm → `Pre Grower`
 - más de 1.6 mm → `Grower` (sin distinguir entre pellet y extruido; p. ej. 1.7 mm → `Grower`)
 - **Rango** (`1.4-2.0`): manda el tamaño mínimo.
-- **Sin tamaño:** se usa la etapa del competidor como respaldo: `precria` → `Nursery`, `post_transferencia` → `Pre Grower`, `engorde` → `Grower`. `reproductores` o sin etapa → vacío.
+- **Sin tamaño:** se usa la etapa del competidor como respaldo: `post_larva` y `precria` → `Nursery`, `post_transferencia` → `Pre Grower`, `engorde` → `Grower`. `reproductores` o sin etapa → vacío.

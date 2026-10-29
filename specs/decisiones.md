@@ -44,3 +44,6 @@
 - **2026-10-29:** puente R3.5: las `etapa_*` se derivan de `etapa_competidor`, que queda en `true`; las otras 4 van en `false` (no vacías). Sin `etapa_competidor`, las 5 quedan vacías. En el Excel manual son derivadas y opcionales.
 - **2026-10-29:** `merge_human.py` se adapta al esquema nuevo a medida que avanza R3 (las columnas derivadas se recalculan y el Excel manual no necesita traerlas). La GUI sigue congelada.
 - **2026-10-29:** respaldo de `etapa_skt` sin tamaño: `larva` → Hatchery, `precria` → Nursery, `post_transferencia` → Pre Grower, `engorde` → Grower, `reproductores` → vacío. `larva` (y Larvicultura de Agripac) es Hatchery aunque tenga tamaño.
+- **2026-10-29:** se agrega el booleano `etapa_post_larva`, entre `etapa_larva` y `etapa_precria`: la post larva es una fase intermedia entre larva y precría. "post larva" / "PL" deja de marcarse como `larva`. En `etapa_skt` sin tamaño, `post_larva` → Nursery. Se implementa dentro de R4.1.
+- **2026-10-29:** en un rango de etapas ("post larva hasta tamaño de mercado"), se marcan los extremos y también las intermedias.
+- **2026-10-29:** las palabras genéricas ("crecimiento", "inicio") no marcan etapa en `detectar_etapas`.

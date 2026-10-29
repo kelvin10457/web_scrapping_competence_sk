@@ -26,6 +26,7 @@ SCHEMA_COLUMNS = [
     "es_producto_de_salud",
     "etapa_reproductores",
     "etapa_larva",
+    "etapa_post_larva",
     "etapa_precria",
     "etapa_post_transferencia",
     "etapa_engorde",
@@ -116,22 +117,71 @@ def normalize_etapa(raw_text: str | None) -> str | None:
 
 # Booleanos de etapa para Power BI (tech-stack.md). R3.5 es un paso puente:
 # se derivan de etapa_competidor (una sola etapa por fila); R4 hace que cada
-# parser marque todas las que declara la fuente.
+# parser marque todas las que declara la fuente (detectar_etapas).
 ETAPA_COLUMNS = [
     "etapa_reproductores",
     "etapa_larva",
+    "etapa_post_larva",
     "etapa_precria",
     "etapa_post_transferencia",
     "etapa_engorde",
 ]
 
 
-def etapas_desde_competidor(etapa: str | None) -> dict[str, bool | None]:
-    """La etapa conocida en True y las otras 4 en False (decision del usuario
-    2026-10-29). Sin etapa (o una que no esta en ETAPA_VALUES), las 5 vacias."""
-    if etapa not in ETAPA_VALUES:
+def columnas_etapa(etapas: set[str]) -> dict[str, bool | None]:
+    """Las etapas del set en True y las demas en False. Set vacio: todas
+    vacias (la fuente no dijo nada, no se infiere)."""
+    if not etapas:
         return {col: None for col in ETAPA_COLUMNS}
-    return {col: col == f"etapa_{etapa}" for col in ETAPA_COLUMNS}
+    return {col: col.removeprefix("etapa_") in etapas for col in ETAPA_COLUMNS}
+
+
+def etapas_desde_competidor(etapa: str | None) -> dict[str, bool | None]:
+    """La etapa conocida en True y las otras en False (decision del usuario
+    2026-10-29). Sin etapa (o una que no esta en ETAPA_VALUES), todas vacias."""
+    return columnas_etapa({etapa} if etapa in ETAPA_VALUES else set())
+
+
+# R4.1: etapas que marca detectar_etapas, en el orden del ciclo de cultivo.
+# post_larva es la fase intermedia entre larva y precria (decision del
+# usuario 2026-10-29); reproductores queda fuera del ciclo.
+ETAPAS = ("reproductores", "larva", "post_larva", "precria", "post_transferencia", "engorde")
+_CICLO = ETAPAS[1:]
+
+# Solo terminos de etapa explicitos: "crecimiento" e "inicio" se usan como
+# palabras genericas en las fichas ("favorece el crecimiento") y no cuentan.
+_DETECTAR_RULES: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"reproductor|broodstock|maduraci[oó]n"), "reproductores"),
+    (re.compile(r"(?<!post)(?<!post )(?<!post-)(?<!post_)larv\w*|hatchery|mysis|zoea|nauplio"), "larva"),
+    (re.compile(r"post[\s\-_]?larva|\bpl\b"), "post_larva"),
+    (re.compile(r"precr[ií]a|nursery|starter|iniciador"), "precria"),
+    (re.compile(r"post[\s\-_]?transfer|transferencia|transici[oó]n|alevinaje"), "post_transferencia"),
+    (re.compile(r"engorde|grow[\s\-_]?out|finalizador|finish|(?:tama[nñ]o|talla) de mercado"
+                r"|talla comercial|(?<=\ba )mercado|(?<=hasta )mercado|(?<=hasta el )mercado"), "engorde"),
+]
+# Conector de rango entre dos etapas: "X hasta Y", "X hacia Y", "X a Y".
+_RANGO = re.compile(r"\b(?:hasta|hacia|a)\b")
+
+
+def detectar_etapas(texto: str | None) -> set[str]:
+    """Todas las etapas explicitas del texto (valores de ETAPAS). Un rango
+    entre dos etapas del ciclo marca tambien las intermedias: "post larva
+    hasta tamano de mercado" (Nicovita Terap) -> post_larva, precria,
+    post_transferencia y engorde. Sin termino explicito, set vacio."""
+    if not texto:
+        return set()
+    text = texto.strip().lower()
+    hallazgos = sorted(
+        (m.start(), m.end(), etapa)
+        for pattern, etapa in _DETECTAR_RULES
+        for m in pattern.finditer(text)
+    )
+    etapas = {etapa for _, _, etapa in hallazgos}
+    for (_, fin, a), (inicio, _, b) in zip(hallazgos, hallazgos[1:]):
+        if a in _CICLO and b in _CICLO and _RANGO.search(text[fin:inicio]):
+            i, j = sorted((_CICLO.index(a), _CICLO.index(b)))
+            etapas.update(_CICLO[i:j + 1])
+    return etapas
 
 
 def etapa_matches(raw_text: str | None) -> set[str]:
@@ -316,6 +366,7 @@ ETAPA_SKT_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
 # 2026-10-29). "reproductores" no entra en las 4 casillas: queda vacio.
 _ETAPA_SKT_RESPALDO = {
     "larva": "Hatchery",
+    "post_larva": "Nursery",
     "precria": "Nursery",
     "post_transferencia": "Pre Grower",
     "engorde": "Grower",

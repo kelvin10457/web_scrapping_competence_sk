@@ -395,6 +395,7 @@ def test_etapas_desde_competidor_marca_una_true_y_las_demas_false():
     assert etapas == {
         "etapa_reproductores": False,
         "etapa_larva": False,
+        "etapa_post_larva": False,
         "etapa_precria": True,
         "etapa_post_transferencia": False,
         "etapa_engorde": False,
@@ -409,8 +410,82 @@ def test_etapas_desde_competidor_vacio_deja_las_cinco_vacias():
 
 def test_schema_columns_incluye_etapas_despues_de_salud():
     i = schema.SCHEMA_COLUMNS.index("es_producto_de_salud")
-    assert schema.SCHEMA_COLUMNS[i + 1:i + 6] == schema.ETAPA_COLUMNS
+    assert schema.SCHEMA_COLUMNS[i + 1:i + 1 + len(schema.ETAPA_COLUMNS)] == schema.ETAPA_COLUMNS
     assert "etapa_competidor" in schema.SCHEMA_COLUMNS
+
+
+# --- R4.1: detectar_etapas y etapa_post_larva -------------------------------
+# Frases reales de las fuentes (tests/fixtures/ y la ficha de Nicovita Terap).
+
+
+def test_req1_etapa_post_larva_entre_larva_y_precria():
+    cols = schema.ETAPA_COLUMNS
+    assert cols.index("etapa_post_larva") == cols.index("etapa_larva") + 1
+    assert cols.index("etapa_precria") == cols.index("etapa_post_larva") + 1
+    assert "etapa_post_larva" in schema.SCHEMA_COLUMNS
+    assert schema.etapas_desde_competidor("larva")["etapa_post_larva"] is False
+    assert schema.etapas_desde_competidor(None)["etapa_post_larva"] is None
+
+
+def test_req2_detectar_etapas_devuelve_todas_las_explicitas():
+    # Aquaxcel Mexico (listing): post-larva y precrias en la misma ficha
+    texto = ("Alimento completo con 45% de proteína para la etapa de post-larva en sistemas "
+             "semi-intensivos y en raceways o precrías hasta los 0.20g de peso vivo.")
+    assert schema.detectar_etapas(texto) == {"post_larva", "precria"}
+    assert schema.detectar_etapas("Reproductores / maduración") == {"reproductores"}
+    assert schema.detectar_etapas(None) == set()
+    assert schema.detectar_etapas("") == set()
+    assert set().union(*(schema.detectar_etapas(e) for e in ("larva", "engorde"))) <= set(schema.ETAPAS)
+
+
+def test_req3_post_larva_no_es_larva():
+    # Nutrimar: "para post larvas hasta 1.0g"; Api-Aba: "fase postlarval hasta 3-4 g"
+    assert schema.detectar_etapas(
+        "Alimento balanceado extruido de alta densidad nutricional para post larvas hasta 1.0g de peso vivo."
+    ) == {"post_larva"}
+    assert schema.detectar_etapas(
+        "diseñado para camarón en fase postlarval hasta 3–4 g de peso.") == {"post_larva"}
+    assert schema.detectar_etapas("Formulado para camarón en etapa de postlarva") == {"post_larva"}
+    assert schema.detectar_etapas("Nicovita Origin PL") == {"post_larva"}
+    assert schema.detectar_etapas("Alimento para larvas en hatchery, mysis y zoea") == {"larva"}
+
+
+def test_req4_palabras_genericas_no_marcan_etapa():
+    # Api-Aba: "Favorece el crecimiento rapido"
+    assert schema.detectar_etapas(
+        "Favorece el crecimiento rápido, la sobrevivencia y el desarrollo inmunológico") == set()
+    assert schema.detectar_etapas("Ideal para el inicio del ciclo") == set()
+
+
+def test_req5_rango_marca_extremos_e_intermedias():
+    # Nicovita Terap: "post larva hasta tamaño de mercado"
+    assert schema.detectar_etapas("Desde post larva hasta tamaño de mercado") == {
+        "post_larva", "precria", "post_transferencia", "engorde"}
+    # Nicovita Classic/Katal base: "post-larva a mercado"
+    assert schema.detectar_etapas("cubre post-larva a mercado") == {
+        "post_larva", "precria", "post_transferencia", "engorde"}
+    # Nutrimar: transicion hacia engorde
+    assert schema.detectar_etapas(
+        "durante la etapa de transición hacia la fase de engorde hasta los 12g de peso vivo."
+    ) == {"post_transferencia", "engorde"}
+    assert schema.detectar_etapas("desde precría hasta engorde") == {
+        "precria", "post_transferencia", "engorde"}
+    # Sin conector de rango, solo las mencionadas
+    assert schema.detectar_etapas("Larva y engorde") == {"larva", "engorde"}
+    # reproductores nunca se rellena
+    assert schema.detectar_etapas("reproductores hasta engorde") == {"reproductores", "engorde"}
+
+
+def test_req6_columnas_etapa():
+    cols = schema.columnas_etapa({"precria", "engorde"})
+    assert set(cols) == set(schema.ETAPA_COLUMNS)
+    assert cols["etapa_precria"] is True and cols["etapa_engorde"] is True
+    assert cols["etapa_larva"] is False and cols["etapa_post_larva"] is False
+    assert schema.columnas_etapa(set()) == {c: None for c in schema.ETAPA_COLUMNS}
+
+
+def test_req7_respaldo_skt_post_larva_es_nursery():
+    assert schema.etapa_skt_from_row("post_larva", None) == "Nursery"
 
 
 # --- R3.7: normalize_proteina ---
