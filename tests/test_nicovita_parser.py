@@ -324,3 +324,47 @@ def test_r42_req1_sin_texto_de_etapa_quedan_vacias():
                                    html="", pdf_bytes=None)
     assert records[0]["_etapas_detectadas"] is True
     assert all(records[0][c] is None for c in schema.ETAPA_COLUMNS)
+
+
+# --- R4.2b: Classic Organico Engorde (Honduras) enlaza la ficha equivocada ---
+
+_ORGANIC_ENGORDE_HN = "https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/"
+
+
+def test_r42b_req1_corrige_solo_el_enlace_equivocado():
+    from paises._compartido import nicovita_scraper as sc
+
+    html_path = ROOT / "data" / "raw" / "nicovita_html" / \
+        "https_nicovita_com_productos_nicovita_classic_organic_engorde_honduras.html"
+    if not html_path.exists():
+        pytest.skip("dato real no presente en este entorno (data/raw no poblado)")
+    html = html_path.read_text(encoding="utf-8", errors="ignore")
+    assert sc.find_pdf_url(html).endswith("FT-NICOVITA-ORIGIN-ORGANIC.pdf")
+    assert sc.find_pdf_url(html, _ORGANIC_ENGORDE_HN).endswith("FT-NICOVITA-CLASSIC-ORGANIC-CAMARON-HO.pdf")
+    # Otra pagina con la misma ficha de Origin Organico no se toca.
+    origin = "https://nicovita.com/productos/nicovita-origin-organic-honduras/"
+    assert sc.find_pdf_url(html, origin).endswith("FT-NICOVITA-ORIGIN-ORGANIC.pdf")
+    # Si el sitio corrige (u otra ficha), se usa lo que publique.
+    otro = html.replace("2020/07/FT-NICOVITA-ORIGIN-ORGANIC.pdf", "2024/01/FT-NUEVA.pdf")
+    assert sc.find_pdf_url(otro, _ORGANIC_ENGORDE_HN).endswith("FT-NUEVA.pdf")
+
+
+def test_r42b_req2_queda_como_alias_de_classic_organic(monkeypatch):
+    from paises._compartido import nicovita_scraper as sc
+
+    carpeta = ROOT / "data" / "raw" / "nicovita_html"
+    paginas = {
+        _ORGANIC_ENGORDE_HN: carpeta / "https_nicovita_com_productos_nicovita_classic_organic_engorde_honduras.html",
+        "https://nicovita.com/productos/nicovita-classic-organic-honduras/":
+            carpeta / "https_nicovita_com_productos_nicovita_classic_organic_honduras.html",
+    }
+    if not all(p.exists() for p in paginas.values()):
+        pytest.skip("dato real no presente en este entorno (data/raw no poblado)")
+    html = {u: p.read_text(encoding="utf-8", errors="ignore") for u, p in paginas.items()}
+    monkeypatch.setattr(sc, "discover_product_urls", lambda session, pais_slug: sorted(html))
+    monkeypatch.setattr(sc, "fetch", lambda u, session=None: html[u])
+    monkeypatch.setattr(sc, "download_pdf", lambda pdf_url, session=None: b"%PDF")
+    monkeypatch.setattr(sc, "save_pdf", lambda pdf_url, content: None)
+    resultados = sc.scrape_all("honduras")
+    assert len(resultados) == 1
+    assert resultados[0]["pdf_url"].endswith("FT-NICOVITA-CLASSIC-ORGANIC-CAMARON-HO.pdf")

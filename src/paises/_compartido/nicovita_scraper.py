@@ -109,9 +109,24 @@ def discover_product_urls(session: requests.Session | None = None, pais_slug: st
     return sorted(urls, key=lambda u: (not u.rstrip("/").endswith(f"-{pais_slug}"), u))
 
 
-def find_pdf_url(product_html: str) -> str | None:
+# Fichas mal enlazadas por el sitio: (pagina, PDF que enlaza) -> PDF real.
+# Solo se corrige mientras la pagina siga enlazando ese PDF exacto (R4.2b).
+# Classic Organico Engorde (Honduras) enlaza la de Origin Organico
+# (microesferas, PL4 a 1 g); su descripcion dice "peletizado... desde 1 g" y
+# la pagina hermana con el mismo titulo enlaza la de Classic Organico.
+_PDF_CORREGIDO = {
+    ("https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/",
+     "https://nicovita.com/wp-content/uploads/2020/07/FT-NICOVITA-ORIGIN-ORGANIC.pdf"):
+        "https://nicovita.com/wp-content/uploads/2020/09/FT-NICOVITA-CLASSIC-ORGANIC-CAMARON-HO.pdf",
+}
+
+
+def find_pdf_url(product_html: str, url: str | None = None) -> str | None:
     m = _PDF_LINK_RE.search(product_html)
-    return m.group(1) if m else None
+    pdf_url = m.group(1) if m else None
+    if url is not None:
+        return _PDF_CORREGIDO.get((url.rstrip("/") + "/", pdf_url), pdf_url)
+    return pdf_url
 
 
 def _canonical_key(html: str, pdf_url: str | None) -> tuple[str | None, str | None]:
@@ -176,7 +191,7 @@ def scrape_all(pais_slug: str = "ecuador") -> list[dict]:
         get_html = manual.__getitem__
     for url in urls:
         html = get_html(url)
-        pdf_url = find_pdf_url(html)
+        pdf_url = find_pdf_url(html, url)
         key = _canonical_key(html, pdf_url)
         if key[0] is not None and key in seen_keys:
             continue

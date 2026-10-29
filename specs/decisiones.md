@@ -50,3 +50,4 @@
 - **2026-10-29:** las `etapa_*` de Nicovita salen del slug más la descripción del PDF. La descripción de la web solo se usa si no hay PDF, y sin la etiqueta de categoría del sitio (R4.2).
 - **2026-10-29:** "tamaño/peso de cosecha" y "hasta la cosecha" cuentan como engorde en `detectar_etapas`.
 - **2026-10-29:** "transferencia" suelta ("en sistemas de transferencia") no marca post transferencia: nombra el traslado al final de la precría. Sí lo marcan "post transferencia" y "transición".
+- **2026-10-29:** Classic Orgánico Engorde (Honduras) usa la ficha de Classic Orgánico, porque el sitio enlaza por error la de Origin Orgánico. La corrección solo se aplica mientras el sitio siga enlazando esa ficha exacta (R4.2b).
