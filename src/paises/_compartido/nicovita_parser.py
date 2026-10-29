@@ -151,7 +151,7 @@ def parse_pdf_text(pdf_text: str) -> dict:
     return fields
 
 
-_PROTEIN_CELL_RE = re.compile(r"^\d+(?:\.\d+)?%$")
+_PROTEIN_CELL_RE = re.compile(r"^\d+(?:[.,]\d+)?%$")
 _SIZE_CELL_RE = re.compile(r"^\d+(?:\.\d+)?(?:-\d+(?:\.\d+)?)?$")
 
 
@@ -246,7 +246,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     records = []
     for proteina, tamano in pairs:
         row = dict(record)
-        row["proteina_pct"] = proteina
+        row["proteina_pct"] = schema.normalize_proteina(proteina)
         row["tamano_pellet_mm"] = tamano
         # Fallback de ultimo recurso, por fila: si ni el slug ni la
         # descripcion del producto completo resolvieron etapa (ej. Classic/

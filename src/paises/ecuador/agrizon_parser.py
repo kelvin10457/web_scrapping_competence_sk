@@ -35,7 +35,7 @@ import schema  # noqa: E402
 # arranca con un digito (proteina), asi que alcanza con cortar antes del
 # primer token numerico.
 _LINE_NAME_RE = re.compile(r"^(\D+?)\s*\d")
-_PROTEIN_RE = re.compile(r"(\d+(?:\.\d+)?)\s*%")
+_PROTEIN_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*%")
 _SIZE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*-?\s*(\d+(?:\.\d+)?)?\s*(mm|microns?)", re.I)
 
 
@@ -103,7 +103,7 @@ def parse_product(product: dict) -> dict:
     record["fuente_url"] = f"https://agrizon.com/en/products/{handle}"
     record["fecha_extraccion"] = datetime.date.today().isoformat()
     record["nombre_producto"] = _line_name(title)
-    record["proteina_pct"] = _proteina_pct(title)
+    record["proteina_pct"] = schema.normalize_proteina(_proteina_pct(title))
     record["tamano_pellet_mm"] = _tamano_mm(title)
     # title+tags: el titulo dice "Pelletized"/"Extruded" (ingles) para todos
     # los productos que tienen tecnologia mencionada, pero el tag en

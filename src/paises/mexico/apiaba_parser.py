@@ -36,9 +36,9 @@ def _title(soup: BeautifulSoup) -> str | None:
 def _guaranteed_protein(lines: list[str]) -> float | None:
     for i, line in enumerate(lines):
         if re.fullmatch(r"prote[ií]na", line, re.I) and i > 0:
-            m = re.fullmatch(r"(\d+(?:\.\d+)?)\s*%", lines[i - 1])
+            m = re.fullmatch(r"(\d+(?:[.,]\d+)?)\s*%", lines[i - 1])
             if m:
-                return float(m.group(1))
+                return schema.normalize_proteina(m.group(1))
     return None
 
 
@@ -62,7 +62,7 @@ def _menciones_texto(lines: list[str], nombre: str) -> list[float]:
     for l in lines:
         if nombre in l:
             continue
-        vals += [float(n) for n in re.findall(r"(\d+(?:\.\d+)?)\s*%\s*de\s+prote", l, re.I)]
+        vals += [float(n) for n in re.findall(r"(\d+(?:[.,]\d+)?)\s*%\s*de\s+prote", l, re.I)]
     return vals
 
 
@@ -87,8 +87,8 @@ def parse_product(url: str, html: str) -> list[dict]:
     if not nombre:
         return []
     lines = _lines(soup)
-    in_title = re.search(r"(\d+(?:\.\d+)?)\s*%", nombre)
-    candidatos = [(float(in_title.group(1)) if in_title else None, "titulo"),
+    in_title = re.search(r"(\d+(?:[.,]\d+)?)\s*%", nombre)
+    candidatos = [(schema.normalize_proteina(in_title.group(1)) if in_title else None, "titulo"),
                   (_guaranteed_protein(lines), "analisis")]
     candidatos += [(v, "texto") for v in _menciones_texto(lines, nombre)]
     kg = re.search(r"(\d+(?:\.\d+)?)\s*kg", nombre, re.I)

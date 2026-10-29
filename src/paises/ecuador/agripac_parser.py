@@ -29,8 +29,8 @@ _TAB_RE = re.compile(
     re.S,
 )
 
-_PROTEIN_RE = re.compile(r"(\d+(?:\.\d+)?)\s*%")
-_NUCLEO_PROTEIN_RE = re.compile(r"n[uú]cleo\s+(\d+(?:\.\d+)?)\s*%", re.I)
+_PROTEIN_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*%")
+_NUCLEO_PROTEIN_RE = re.compile(r"n[uú]cleo\s+(\d+(?:[.,]\d+)?)\s*%", re.I)
 # Acepta "." y "," como separador decimal -- el sitio usa ambos segun el
 # producto (ej. "1.2mm" en unos, "1,8 Mm" en Santa Monica/Ultra Gregarinas).
 _MM_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*mm", re.I)
@@ -108,7 +108,7 @@ def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
     subtipo = tabs.get("subtipo", "")
     presentaciones = tabs.get("presentaciones", "")
 
-    record["proteina_pct"] = _proteina_pct(title, ingredientes)
+    record["proteina_pct"] = schema.normalize_proteina(_proteina_pct(title, ingredientes))
     record["tamano_pellet_mm"] = _tamano_mm(title, subtipo)
     # Solo la pestana "Tipo" (campo dedicado) decide tipo_presentacion -- la
     # "Descripcion" es texto de marketing que en al menos 2 productos

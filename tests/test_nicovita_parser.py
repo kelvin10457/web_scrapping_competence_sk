@@ -186,7 +186,7 @@ def test_parse_product_explodes_one_row_per_real_sku():
         pdf_bytes=pdf_path.read_bytes(),
     )
     pairs = {(r["proteina_pct"], r["tamano_pellet_mm"]) for r in records}
-    assert pairs == {("28", "2.5"), ("35", "2.0"), ("35", "2.5")}
+    assert pairs == {(28.0, "2.5"), (35.0, "2.0"), (35.0, "2.5")}
     # Los campos que no varian por SKU deben ser identicos en las 3 filas.
     assert {r["nombre_producto"] for r in records} == {"Nicovita Classic AD"}
     assert {r["empresa"] for r in records} == {"Nicovita"}

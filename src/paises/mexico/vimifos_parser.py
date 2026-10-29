@@ -76,7 +76,7 @@ def _expandir_proteinas(record: dict, proteina_txt: str, tamano_txt: str) -> lis
     for i, prot in enumerate(prots):
         fila = dict(record)
         fila["_conflictos"] = []
-        fila["proteina_pct"] = prot
+        fila["proteina_pct"] = schema.normalize_proteina(prot)
         fila["nombre_producto"] = f"{record['nombre_producto']} {_fmt(prot)}%"
         if prot in asociados:
             fila["tamano_pellet_mm"] = _parse_tamano(asociados[prot]) or record["tamano_pellet_mm"]
@@ -137,7 +137,7 @@ def parse_product(url: str, html: str) -> list[dict]:
             record["tamano_pellet_mm"] = _parse_tamano(cell("tamano"))
             record["tipo_presentacion"] = schema.detect_tecnologia(cell("presentacion"))
             record["empaque_kg"] = _parse_empaque(cell("presentacion"))
-            record["proteina_pct"] = _parse_proteina(cell("proteina"))
+            record["proteina_pct"] = schema.normalize_proteina(_parse_proteina(cell("proteina")))
             record["fuente_url"] = url
             record["fecha_extraccion"] = fecha
             if len(_proteinas(cell("proteina"))) > 1:

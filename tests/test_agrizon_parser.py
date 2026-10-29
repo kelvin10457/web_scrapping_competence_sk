@@ -37,7 +37,7 @@ def test_proteina_pct_reads_from_title_not_body_html():
     # como el dato correcto (2026-09-03).
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-precria-0-6-0-9-mm-25-kg"))
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
 
 
 def test_tamano_mm_preserves_range_as_text():

@@ -55,6 +55,24 @@ SCHEMA_COLUMNS = [
 # interpretado como separador de miles, hallazgo del usuario 2026-09-03).
 NUMERIC_COLUMNS = ["particula_min_mm", "particula_max_mm", "empaque_kg", "proteina_pct"]
 
+_PROTEINA_NUM_RE = re.compile(r"\d+(?:[.,]\d+)?")
+
+
+def normalize_proteina(valor) -> float | None:
+    """proteina_pct como porcentaje decimal (37.5, no 0.375 ni "37,5").
+    Vacio si no hay un unico numero o si queda fuera de (1, 100]: un 0.375
+    no se convierte a 37.5 (no se infiere que era una fraccion). R3.7."""
+    if valor is None or isinstance(valor, bool):
+        return None
+    if isinstance(valor, (int, float)):
+        num = float(valor)
+    else:
+        nums = _PROTEINA_NUM_RE.findall(str(valor))
+        if len(nums) != 1:
+            return None
+        num = float(nums[0].replace(",", "."))
+    return num if 1 < num <= 100 else None
+
 # Valores normalizados validos para la columna "etapa_competidor" (docs/historico/PLAN.md § 3).
 # "salud" YA NO es uno de ellos (ver nota abajo, 2026-09-02) -- se dejo aca
 # comentado por si algun caller viejo lo referencia, pero normalize_etapa()

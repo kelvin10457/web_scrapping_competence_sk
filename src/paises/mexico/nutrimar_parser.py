@@ -97,12 +97,12 @@ def parse_product(url: str, html: str, marca: str = "Nutrimar", ficha_texto: str
                                    [(p, "ocr") for p in proteinas])
         return [record]
     if len(proteinas) <= 1:
-        record["proteina_pct"] = proteinas[0] if proteinas else None
+        record["proteina_pct"] = schema.normalize_proteina(proteinas[0] if proteinas else None)
         return [record]
     filas = []
     for p in proteinas:
         fila = dict(record, _conflictos=list(record.get("_conflictos", [])))
-        fila["proteina_pct"] = p
+        fila["proteina_pct"] = schema.normalize_proteina(p)
         fila["nombre_producto"] = f"{nombre} {_fmt(p)}%"
         filas.append(fila)
     return filas

@@ -40,7 +40,7 @@ Una fila por **SKU** (un tamaño de pellet concreto) cuando la fuente lo publica
 | `particula_min_mm` | número decimal | Extremo inferior del rango; si es un solo valor, ese mismo |
 | `particula_max_mm` | número decimal | Extremo superior |
 | `tipo_presentacion` | texto | `Extruido`, `Granulado`, `Líquido`, `Microencapsulado`, `Microextruido`, `Microparticulado`, `Nauplios de artemia`, `Otro`, `Pellet`, `Polvo`, `Quistes de artemia`, `Suspensión`. Un valor fuera de esta lista **no es un error**: se conserva y se avisa |
-| `proteina_pct` | número decimal | Porcentaje tal cual: `35`, `37.5` (no `0.375`) |
+| `proteina_pct` | número decimal | Porcentaje tal cual: `35`, `37.5` (no `0.375`). Los parsers lo asignan con `schema.normalize_proteina` (acepta coma decimal; ambiguo o fuera de (1, 100] → vacío) |
 
 Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y empresa.
 

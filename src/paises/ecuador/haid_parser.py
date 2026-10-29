@@ -55,9 +55,9 @@ def _infer_etapa(slug: str, text: str) -> str | None:
 def _line_number(text: str, label: str) -> float | None:
     for line in text.splitlines():
         if re.search(label, line, re.I):
-            m = re.search(r"\d+(?:\.\d+)?", line)
+            m = re.search(r"\d+(?:[.,]\d+)?", line)
             if m:
-                return float(m.group(0))
+                return schema.normalize_proteina(m.group(0))
     return None
 
 

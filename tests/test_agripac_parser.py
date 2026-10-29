@@ -13,7 +13,7 @@ def test_feedpac_35_premium_has_no_subtipo_tab_so_tamano_stays_none():
     record = parser.parse_product("https://agripac.com.ec/productos/feedpac-35-premium/", html)
     assert record["nombre_producto"] == "Feedpac 35% Premium"
     assert record["empresa"] == "Agripac"
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
     assert record["tamano_pellet_mm"] is None
     assert record["tipo_presentacion"] == "Pellet"
     assert record["empaque_kg"] == "25"
@@ -25,7 +25,7 @@ def test_tamano_pellet_mm_reads_from_subtipo_tab():
         "https://agripac.com.ec/productos/feedpac-35-ultra-micropellet-1-2mm/", html
     )
     assert record["tamano_pellet_mm"] == "1.2"
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
     assert record["tipo_presentacion"] == "Pellet"
 
 
@@ -84,7 +84,7 @@ def test_proteina_pct_falls_back_to_ingredientes_nucleo_when_title_has_no_percen
     html = _html("agripac_premium_agua_dulce.html")
     record = parser.parse_product("https://agripac.com.ec/productos/premium-agua-dulce/", html)
     assert record["nombre_producto"] == "Premium Agua Dulce"
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
 
 
 def test_tamano_pellet_mm_handles_comma_decimal_separator():

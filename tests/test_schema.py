@@ -411,3 +411,19 @@ def test_schema_columns_incluye_etapas_despues_de_salud():
     i = schema.SCHEMA_COLUMNS.index("es_producto_de_salud")
     assert schema.SCHEMA_COLUMNS[i + 1:i + 6] == schema.ETAPA_COLUMNS
     assert "etapa_competidor" in schema.SCHEMA_COLUMNS
+
+
+# --- R3.7: normalize_proteina ---
+
+def test_normalize_proteina_acepta_numero_texto_y_coma_decimal():
+    assert schema.normalize_proteina(35) == 35.0
+    assert schema.normalize_proteina("35") == 35.0
+    assert schema.normalize_proteina("37.5") == 37.5
+    assert schema.normalize_proteina("37,5") == 37.5
+    assert schema.normalize_proteina(" 35 % ") == 35.0
+    assert type(schema.normalize_proteina("35")) is float
+
+
+def test_normalize_proteina_ambiguo_o_fuera_de_rango_queda_vacio():
+    for valor in (None, "", "s/d", "30%, 35%", 0.375, "0,375", 0, 120):
+        assert schema.normalize_proteina(valor) is None, valor
