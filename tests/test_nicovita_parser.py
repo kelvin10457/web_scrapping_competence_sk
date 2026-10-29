@@ -1,6 +1,7 @@
 import pytest
 
 from conftest import FIXTURES, ROOT
+import schema
 from paises._compartido import nicovita_parser as parser
 
 
@@ -264,3 +265,62 @@ def test_manual_pages_recognized_by_canonical_url(tmp_path, monkeypatch):
     pages = sc.manual_pages("honduras")
     assert list(pages) == ["https://nicovita.com/productos/nicovita-katal-honduras/"]
     assert sc.manual_pages("mexico") == {}
+
+
+# --- R4.2: etapas desde el slug + la descripcion del PDF ---------------------
+
+def _parse_raw(url, pdf_name, html_name=None):
+    pdf_path = ROOT / "data" / "raw" / "nicovita" / pdf_name if pdf_name else None
+    html_path = ROOT / "data" / "raw" / "nicovita_html" / html_name if html_name else None
+    for path in (pdf_path, html_path):
+        if path is not None and not path.exists():
+            pytest.skip("dato real no presente en este entorno (data/raw no poblado)")
+    html = html_path.read_text(encoding="utf-8", errors="ignore") if html_path else ""
+    return parser.parse_product(url, html=html, pdf_bytes=pdf_path.read_bytes() if pdf_path else None)
+
+
+def _etapas(record):
+    return {c.removeprefix("etapa_") for c in schema.ETAPA_COLUMNS if record[c] is True}
+
+
+def test_r42_req1_terap_marca_todo_el_rango_en_todas_las_filas():
+    # PDF: "desde post larva hasta tamaño de mercado"
+    records = _parse_raw("https://nicovita.com/productos/nicovita-terap-ecuador/",
+                         "FT-NICOVITA-TERAP-CAMARON.pdf")
+    assert len(records) > 1
+    for r in records:
+        assert r["_etapas_detectadas"] is True
+        assert _etapas(r) == {"post_larva", "precria", "post_transferencia", "engorde"}
+        assert r["etapa_larva"] is False and r["etapa_reproductores"] is False
+
+
+def test_r42_req1_slug_y_pdf_se_suman():
+    # Slug "classic-precria" + PDF "PL10 a 1 gramo, en sistemas de transferencia"
+    records = _parse_raw("https://nicovita.com/productos/nicovita-classic-precria-ecuador/",
+                         "FT-NICOVITA-CLASSIC-PRECRÍA-CAMARÓN-español.pdf")
+    assert {frozenset(_etapas(r)) for r in records} == {frozenset({"post_larva", "precria"})}
+    # Slug "classic-post-transferencia" + PDF "desde 1 hasta 3 gramos" (sin etapa)
+    records = _parse_raw("https://nicovita.com/productos/nicovita-classic-post-transferencia-ecuador/",
+                         "FT-NICOVITA-CLASSIC-CAMARÓN-POST-TRANSFERENCIA.pdf")
+    assert {frozenset(_etapas(r)) for r in records} == {frozenset({"post_transferencia"})}
+
+
+def test_r42_req1_web_solo_sin_pdf_y_sin_etiqueta_de_categoria():
+    # Katal Precria no tiene PDF: se usa la web, sin su etiqueta "Pre engorde"
+    # (que marcaria engorde). Dice "para precrías desde PL20 hasta 1 g".
+    records = _parse_raw("https://nicovita.com/productos/nicovita-katal-precria-ecuador/", None,
+                         "https_nicovita_com_productos_nicovita_katal_precria_ecuador.html")
+    assert _etapas(records[0]) == {"post_larva", "precria"}
+    # Con PDF, la web no suma: Classic AD dice "Engorde" en la web, el PDF
+    # "desde los 3 gramos hasta tamaño de mercado".
+    records = _parse_raw("https://nicovita.com/productos/nicovita-classic-ad-ecuador/",
+                         "FT-NICOVITA-CLASSIC-CAMARON-AD.pdf",
+                         "https_nicovita_com_productos_nicovita_classic_ad_ecuador.html")
+    assert {frozenset(_etapas(r)) for r in records} == {frozenset({"engorde"})}
+
+
+def test_r42_req1_sin_texto_de_etapa_quedan_vacias():
+    records = parser.parse_product("https://nicovita.com/productos/nicovita-classic-ad-ecuador/",
+                                   html="", pdf_bytes=None)
+    assert records[0]["_etapas_detectadas"] is True
+    assert all(records[0][c] is None for c in schema.ETAPA_COLUMNS)

@@ -79,7 +79,9 @@ def write_csv(records: list[dict], path: Path) -> None:
             record.get("tamano_pellet_mm"),
             record.get("_es_larvicultura", False),
         )
-        record.update(schema.etapas_desde_competidor(record.get("etapa_competidor")))
+        # Puente R3.5 solo para los parsers que todavia no marcan sus etapas (R4).
+        if not record.get("_etapas_detectadas"):
+            record.update(schema.etapas_desde_competidor(record.get("etapa_competidor")))
         record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
             record.get("tamano_pellet_mm")
         )

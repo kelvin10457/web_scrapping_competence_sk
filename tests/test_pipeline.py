@@ -321,3 +321,22 @@ def test_build_master_deriva_etapas_de_csv_viejos(tmp_path, monkeypatch):
     pipeline.build_master()
     master = pd.read_csv(tmp_path / "master.csv", dtype=str)
     assert master.loc[0, "etapa_engorde"] == "True" and master.loc[0, "etapa_larva"] == "False"
+
+
+def test_write_csv_respeta_etapas_del_parser(tmp_path):
+    # R4.2 REQ-2: un parser migrado (_etapas_detectadas) manda sobre el puente,
+    # aunque sus etapas queden vacias.
+    import pandas as pd
+    import schema
+
+    marcadas = {"empresa": "Nicovita", "nombre_producto": "Nicovita Classic", "etapa_competidor": "engorde",
+                "_etapas_detectadas": True, **schema.columnas_etapa({"post_larva", "engorde"})}
+    vacias = {"empresa": "Nicovita", "nombre_producto": "Sin texto", "etapa_competidor": "engorde",
+              "_etapas_detectadas": True, **schema.columnas_etapa(set())}
+    path = tmp_path / "nicovita.csv"
+    pipeline.write_csv([marcadas, vacias], path)
+    df = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
+    assert df.loc[0, "etapa_post_larva"] == "True"
+    assert df.loc[0, "etapa_engorde"] == "True"
+    assert df.loc[0, "etapa_precria"] == "False"
+    assert df.loc[1, schema.ETAPA_COLUMNS].isna().all()

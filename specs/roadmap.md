@@ -29,7 +29,7 @@ Objetivo: que el CSV interno ya tenga las columnas y los nombres del Excel de Po
 Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por ejemplo, Térap: precria + engorde), en vez de dejar vacío cuando hay más de una.
 
 - [x] **R4.1** `schema.detectar_etapas(texto) -> set` (función compartida + tests) y columna `etapa_post_larva`
-- [ ] **R4.2** Nicovita
+- [x] **R4.2** Nicovita
 - [ ] **R4.3** HAID
 - [ ] **R4.4** Aquaxcel
 - [ ] **R4.5** Agrizon (BioMar)

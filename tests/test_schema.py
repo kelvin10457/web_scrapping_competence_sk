@@ -488,6 +488,36 @@ def test_req7_respaldo_skt_post_larva_es_nursery():
     assert schema.etapa_skt_from_row("post_larva", None) == "Nursery"
 
 
+# --- R4.2: reglas nuevas de detectar_etapas (fichas de Nicovita) -----------
+
+def test_r42_req3_cosecha_es_engorde():
+    # Nicovita Katal AD (PDF): "desde 1 gramo de peso vivo hasta tamaño de cosecha"
+    assert schema.detectar_etapas(
+        "desde 1 gramo de peso vivo hasta tamaño de cosecha.") == {"engorde"}
+    # Nicovita Finalis Honduras (web): "hasta peso de cosecha"
+    assert schema.detectar_etapas("desde los 3.0 gramos de peso hasta peso de cosecha") == {"engorde"}
+    # Nicovita Finalis Proterra (web): "desde los 3 gramos hasta la cosecha"
+    assert schema.detectar_etapas("desde los 3 gramos hasta la cosecha") == {"engorde"}
+
+
+def test_r42_req4_transferencia_suelta_no_es_post_transferencia():
+    # Nicovita Classic/Origin Precria (PDF)
+    assert schema.detectar_etapas(
+        "Dieta balanceada extruida para alimentar Post Larvas de Camarones de Mar o Langostinos "
+        "(Litopenaeus vannamei) en estadios de PL10 a 1 gramo de peso, en sistemas de transferencia."
+    ) == {"post_larva"}
+    assert schema.detectar_etapas("classic post transferencia") == {"post_transferencia"}
+    assert schema.detectar_etapas("post-transferencia") == {"post_transferencia"}
+    assert schema.detectar_etapas("etapa de transición") == {"post_transferencia"}
+
+
+def test_r42_req5_pl_con_numero_es_post_larva():
+    # Nicovita Katal Precria (web): "para precrías desde PL20 hasta 1 g"
+    assert schema.detectar_etapas("para precrías desde PL20 hasta 1 g") == {"precria", "post_larva"}
+    assert schema.detectar_etapas("en estadios de PL 4 a 1g") == {"post_larva"}
+    assert schema.detectar_etapas("explora y plantea") == set()
+
+
 # --- R3.7: normalize_proteina ---
 
 def test_normalize_proteina_acepta_numero_texto_y_coma_decimal():

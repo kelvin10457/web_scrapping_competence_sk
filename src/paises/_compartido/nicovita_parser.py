@@ -68,11 +68,17 @@ def product_name_from_slug(slug: str) -> str:
     return "Nicovita " + " ".join(w.upper() if w == "ad" else w.capitalize() for w in slug.split("-"))
 
 
-def _extract_descripcion_html(html: str) -> str | None:
+def _extract_descripcion_html(html: str, sin_categoria: bool = False) -> str | None:
+    """Con sin_categoria se quita la etiqueta de categoria del sitio (el <h3>
+    "Iniciadores", "Pre engorde", "Engorde", "Salud"): es de merchandising y no
+    dice la etapa real del producto (ver _infer_etapa_from_description)."""
     m = re.search(r'id="descripcion">.*?<div class="inner">(.*?)</div>\s*</div>\s*</div>', html, re.S)
     if not m:
         return None
-    text = re.sub(r"<[^>]+>", " ", m.group(1))
+    inner = m.group(1)
+    if sin_categoria:
+        inner = re.sub(r'<h3 class="title-blue[^"]*">.*?</h3>', " ", inner, count=1, flags=re.S)
+    text = re.sub(r"<[^>]+>", " ", inner)
     text = re.sub(r"\s+", " ", text).strip()
     return text or None
 
@@ -232,6 +238,13 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     # ficha.
     etapa_text = f"{descripcion_pdf} {descripcion_html}"
     record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(etapa_text)
+
+    # R4.2: las etapa_* marcan todas las etapas que nombra la fuente: el slug
+    # mas la descripcion del PDF; la web solo si no hay PDF (decision del
+    # usuario 2026-10-29). Sin termino de etapa, quedan vacias.
+    descripcion_etapas = descripcion_pdf or _extract_descripcion_html(html, sin_categoria=True) or ""
+    record.update(schema.columnas_etapa(schema.detectar_etapas(f"{slug.replace('-', ' ')} {descripcion_etapas}")))
+    record["_etapas_detectadas"] = True
 
     etapa = schema.normalize_etapa(slug.replace("-", " "))
     if etapa is None:

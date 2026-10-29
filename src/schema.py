@@ -153,11 +153,14 @@ _CICLO = ETAPAS[1:]
 _DETECTAR_RULES: list[tuple[re.Pattern, str]] = [
     (re.compile(r"reproductor|broodstock|maduraci[oó]n"), "reproductores"),
     (re.compile(r"(?<!post)(?<!post )(?<!post-)(?<!post_)larv\w*|hatchery|mysis|zoea|nauplio"), "larva"),
-    (re.compile(r"post[\s\-_]?larva|\bpl\b"), "post_larva"),
+    (re.compile(r"post[\s\-_]?larva|\bpl\b|\bpl\s?\d+\b"), "post_larva"),
     (re.compile(r"precr[ií]a|nursery|starter|iniciador"), "precria"),
-    (re.compile(r"post[\s\-_]?transfer|transferencia|transici[oó]n|alevinaje"), "post_transferencia"),
+    # "transferencia" suelta es el traslado al final de la precria ("en
+    # sistemas de transferencia"), no la etapa que le sigue (R4.2).
+    (re.compile(r"post[\s\-_]?transfer|transici[oó]n|alevinaje"), "post_transferencia"),
     (re.compile(r"engorde|grow[\s\-_]?out|finalizador|finish|(?:tama[nñ]o|talla) de mercado"
-                r"|talla comercial|(?<=\ba )mercado|(?<=hasta )mercado|(?<=hasta el )mercado"), "engorde"),
+                r"|talla comercial|(?<=\ba )mercado|(?<=hasta )mercado|(?<=hasta el )mercado"
+                r"|(?:tama[nñ]o|talla|peso) de cosecha|(?<=hasta )cosecha|(?<=hasta la )cosecha"), "engorde"),
 ]
 # Conector de rango entre dos etapas: "X hasta Y", "X hacia Y", "X a Y".
 _RANGO = re.compile(r"\b(?:hasta|hacia|a)\b")

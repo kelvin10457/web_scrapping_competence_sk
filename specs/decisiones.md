@@ -47,3 +47,6 @@
 - **2026-10-29:** se agrega el booleano `etapa_post_larva`, entre `etapa_larva` y `etapa_precria`: la post larva es una fase intermedia entre larva y precría. "post larva" / "PL" deja de marcarse como `larva`. En `etapa_skt` sin tamaño, `post_larva` → Nursery. Se implementa dentro de R4.1.
 - **2026-10-29:** en un rango de etapas ("post larva hasta tamaño de mercado"), se marcan los extremos y también las intermedias.
 - **2026-10-29:** las palabras genéricas ("crecimiento", "inicio") no marcan etapa en `detectar_etapas`.
+- **2026-10-29:** las `etapa_*` de Nicovita salen del slug más la descripción del PDF. La descripción de la web solo se usa si no hay PDF, y sin la etiqueta de categoría del sitio (R4.2).
+- **2026-10-29:** "tamaño/peso de cosecha" y "hasta la cosecha" cuentan como engorde en `detectar_etapas`.
+- **2026-10-29:** "transferencia" suelta ("en sistemas de transferencia") no marca post transferencia: nombra el traslado al final de la precría. Sí lo marcan "post transferencia" y "transición".
