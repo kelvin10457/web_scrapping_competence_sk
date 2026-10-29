@@ -34,7 +34,7 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R4.3** HAID
 - [x] **R4.4** Aquaxcel
 - [x] **R4.5** Agrizon (BioMar)
-- [ ] **R4.6** Agripac
+- [x] **R4.6** Agripac
 - [ ] **R4.7** Vimifos
 - [ ] **R4.8** Api-Aba
 - [ ] **R4.9** Nutrimar

@@ -54,3 +54,4 @@
 - **2026-10-29:** "tamaño/peso de cosecha" y "hasta la cosecha" cuentan como engorde en `detectar_etapas`.
 - **2026-10-29:** "transferencia" suelta ("en sistemas de transferencia") no marca post transferencia: nombra el traslado al final de la precría. Sí lo marcan "post transferencia" y "transición".
 - **2026-10-29:** Classic Orgánico Engorde (Honduras) usa la ficha de Classic Orgánico, porque el sitio enlaza por error la de Origin Orgánico. La corrección solo se aplica mientras el sitio siga enlazando esa ficha exacta (R4.2b).
+- **2026-10-29:** en Agripac se aplican las mismas reglas que en Agrizon (R4.5): se marcan todas las etapas que nombra la ficha ("larvas y post-larvas" → las dos) y, sin término, la banda de tamaño de pellet. MeM y Mpex ("postlarvas", "PL1 a PL6") pasan de larva a solo post_larva (R4.6).
