@@ -359,3 +359,36 @@ def test_normalize_presentacion_alias_de_agripac():
     # REQ-3: grafias reales de la pestana "Tipo" de Agripac
     assert schema.normalize_presentacion("Micro particulado") == "Microparticulado"
     assert schema.normalize_presentacion("Líquidos") == "Líquido"
+
+
+def _master_r34():
+    # Filas reales del master (2026-10-29): Agrizon Microgranulado y Honduras sin regenerar.
+    import pandas as pd
+    return pd.DataFrame([
+        {"pais": "ecuador", "empresa": "BioMar", "nombre_producto": "Exia Prime",
+         "tipo_presentacion": "Microgranulado",
+         "fuente_url": "https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg"},
+        {"pais": "ecuador", "empresa": "Nicovita", "nombre_producto": "Nicovita Classic AD",
+         "tipo_presentacion": "Pellet",
+         "fuente_url": "https://nicovita.com/productos/nicovita-classic-ad-ecuador/"},
+        {"pais": "ecuador", "empresa": "Agripac", "nombre_producto": "Royal Pepper Protein",
+         "tipo_presentacion": "Líquido",
+         "fuente_url": "https://agripac.com.ec/productos/royal-pepper-protein/"},
+        {"pais": "honduras", "empresa": "Nicovita", "nombre_producto": "Nicovita Classic Engorde",
+         "tipo_presentacion": "Pelletizado",
+         "fuente_url": "https://nicovita.com/productos/nicovita-classic-engorde-honduras/"},
+        {"pais": "mexico", "empresa": "Vimifos", "nombre_producto": "Sin tipo",
+         "tipo_presentacion": None, "fuente_url": "https://example.invalid/"},
+    ])
+
+
+def test_presentaciones_nuevas_solo_valores_fuera_de_la_lista_oficial():
+    nuevas = schema.presentaciones_nuevas(_master_r34())
+    assert list(nuevas.columns) == ["pais", "empresa", "producto", "valor", "url"]
+    assert nuevas.to_dict("records") == [
+        {"pais": "ecuador", "empresa": "BioMar", "producto": "Exia Prime", "valor": "Microgranulado",
+         "url": "https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg"},
+        {"pais": "honduras", "empresa": "Nicovita", "producto": "Nicovita Classic Engorde",
+         "valor": "Pelletizado",
+         "url": "https://nicovita.com/productos/nicovita-classic-engorde-honduras/"},
+    ]

@@ -28,6 +28,7 @@ else:
 PROCESSED_DIR = ROOT / "data" / "processed"
 MASTER_PATH = ROOT / "data" / "master.csv"
 CONFLICTOS_PATH = ROOT / "data" / "conflictos.csv"
+PRESENTACIONES_NUEVAS_PATH = ROOT / "data" / "presentaciones_nuevas.csv"
 
 import fuentes  # noqa: E402
 import netutil  # noqa: E402
@@ -174,6 +175,28 @@ def build_master() -> None:
         pais_path = PROCESSED_DIR / pais / f"master_{pais}.csv"
         df_pais.to_csv(pais_path, index=False, encoding="utf-8-sig")
         write_xlsx(df_pais, pais_path.with_suffix(".xlsx"))
+    write_presentaciones_nuevas(master, PRESENTACIONES_NUEVAS_PATH)
+
+
+def write_presentaciones_nuevas(master: pd.DataFrame, path: Path) -> None:
+    """data/presentaciones_nuevas.csv: tipo_presentacion fuera de la lista
+    oficial en todo el master (snapshot, como conflictos.csv). Sin valores
+    nuevos queda solo el encabezado."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    schema.presentaciones_nuevas(master).to_csv(path, index=False, encoding="utf-8-sig")
+
+
+def reportar_presentaciones_nuevas(path: Path) -> None:
+    """Resumen al final del CLI: cuantas filas tiene cada valor nuevo."""
+    if not path.exists():
+        return
+    nuevas = pd.read_csv(path, dtype=str, keep_default_na=False, na_values=[""])
+    if nuevas.empty:
+        return
+    print("\n=== PRESENTACIONES FUERA DE LA LISTA OFICIAL ===")
+    for valor, n in nuevas["valor"].value_counts().items():
+        print(f"  - {valor}: {n}")
+    print(f"  Detalle (pais, empresa, producto, url): {path}\n")
 
 
 def reportar_bloqueos(bloqueadas) -> None:
@@ -246,6 +269,7 @@ def main(pares: list[tuple[str, str]], registros: bool = False, max_dias: int | 
         print(actualizar_registros(registros_oficiales.MAX_DIAS_CACHE if max_dias is None else max_dias))
     build_master()
     print(f"--- master.csv regenerado en {MASTER_PATH} ---")
+    reportar_presentaciones_nuevas(PRESENTACIONES_NUEVAS_PATH)
     return errores
 
 

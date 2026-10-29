@@ -168,6 +168,20 @@ def normalize_presentacion(text: str | None) -> str | None:
     return _PRESENTACION_POR_CLAVE.get(_clave_presentacion(text), text.strip())
 
 
+PRESENTACION_NUEVA_COLUMNS = ["pais", "empresa", "producto", "valor", "url"]
+
+
+def presentaciones_nuevas(master: "pd.DataFrame") -> "pd.DataFrame":
+    """Filas del master cuyo tipo_presentacion no esta en la lista oficial
+    (R3.4). No son error: se avisan para que el usuario decida si el valor
+    entra a la lista. Los vacios no se avisan."""
+    tipo = master["tipo_presentacion"]
+    nuevas = master[tipo.notna() & (tipo.astype(str).str.strip() != "")
+                    & ~tipo.isin(TIPO_PRESENTACION_OFICIAL)]
+    return nuevas.rename(columns={"nombre_producto": "producto", "tipo_presentacion": "valor",
+                                  "fuente_url": "url"})[PRESENTACION_NUEVA_COLUMNS].reset_index(drop=True)
+
+
 def detect_tecnologia(text: str | None) -> str | None:
     """Detecta si el texto describe el producto como Extruido o Pelletizado.
     Usa la PRIMERA mencion en el texto: en las fichas HAID el encabezado

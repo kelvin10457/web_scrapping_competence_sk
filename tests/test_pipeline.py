@@ -156,6 +156,7 @@ def test_build_master_also_writes_one_master_per_pais(tmp_path, monkeypatch):
     monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
     # sin esto build_master pisaba el data/conflictos.csv real con uno vacio
     monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
+    monkeypatch.setattr(pipeline, "PRESENTACIONES_NUEVAS_PATH", tmp_path / "presentaciones_nuevas.csv")
     for pais in ("ecuador", "mexico"):
         rec = {c: None for c in schema.SCHEMA_COLUMNS}
         rec.update(pais=pais, empresa="Nicovita", nombre_producto=f"Nicovita {pais}")
@@ -234,6 +235,7 @@ def test_conflictos_por_pais_y_consolidado_sin_entrar_al_master(tmp_path, monkey
     monkeypatch.setattr(pipeline, "PROCESSED_DIR", tmp_path / "processed")
     monkeypatch.setattr(pipeline, "MASTER_PATH", tmp_path / "master.csv")
     monkeypatch.setattr(pipeline, "CONFLICTOS_PATH", tmp_path / "conflictos.csv")
+    monkeypatch.setattr(pipeline, "PRESENTACIONES_NUEVAS_PATH", tmp_path / "presentaciones_nuevas.csv")
     monkeypatch.setattr(pipeline.fuentes, "listar", lambda *a, **k: [("mexico", "apiaba")])
     record = schema.empty_record("Api-Aba")
     record.update(pais="mexico", nombre_producto="Dorado 35%", proteina_pct="35")
@@ -246,3 +248,39 @@ def test_conflictos_por_pais_y_consolidado_sin_entrar_al_master(tmp_path, monkey
     assert len(conf) == 1 and conf.loc[0, "regla"] == "nombre_comercial"
     master = pd.read_csv(tmp_path / "master.csv", dtype=str)
     assert len(master) == 1 and "regla" not in master.columns
+
+
+def test_write_presentaciones_nuevas_escribe_csv_del_master(tmp_path):
+    from test_schema import _master_r34
+    path = tmp_path / "presentaciones_nuevas.csv"
+    pipeline.write_presentaciones_nuevas(_master_r34(), path)
+    import pandas as pd
+    df = pd.read_csv(path, dtype=str, encoding="utf-8-sig")
+    assert df["valor"].tolist() == ["Microgranulado", "Pelletizado"]
+
+
+def test_write_presentaciones_nuevas_sin_valores_deja_solo_encabezado(tmp_path):
+    from test_schema import _master_r34
+    master = _master_r34()
+    master = master[master["tipo_presentacion"].isin(["Pellet", "Líquido"])]
+    path = tmp_path / "presentaciones_nuevas.csv"
+    pipeline.write_presentaciones_nuevas(master, path)
+    assert path.read_text(encoding="utf-8-sig").strip() == "pais,empresa,producto,valor,url"
+
+
+def test_reportar_presentaciones_nuevas_resume_por_valor(tmp_path, capsys):
+    from test_schema import _master_r34
+    path = tmp_path / "presentaciones_nuevas.csv"
+    pipeline.write_presentaciones_nuevas(_master_r34(), path)
+    pipeline.reportar_presentaciones_nuevas(path)
+    out = capsys.readouterr().out
+    assert "Microgranulado: 1" in out
+    assert "Pelletizado: 1" in out
+    assert str(path) in out
+
+
+def test_reportar_presentaciones_nuevas_calla_si_no_hay(tmp_path, capsys):
+    path = tmp_path / "presentaciones_nuevas.csv"
+    path.write_text("pais,empresa,producto,valor,url\n", encoding="utf-8-sig")
+    pipeline.reportar_presentaciones_nuevas(path)
+    assert capsys.readouterr().out == ""
