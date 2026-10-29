@@ -4,7 +4,7 @@ Fuentes (`__init__.FUENTES`): nicovita, haid, aquaxcel, biomar, agripac. Salida:
 
 | Empresa | Módulo | Fuente | Notas |
 |---|---|---|---|
-| Nicovita | `nicovita.py` → `_compartido` | nicovita.com `?pais=ecuador` + fichas PDF | 57 filas. **Pausada** (`fuentes.INACTIVAS`, decisión del usuario 2026-10-20): se conserva el CSV y se corre solo con `--empresa nicovita` |
+| Nicovita | `nicovita.py` → `_compartido` | nicovita.com `?pais=ecuador` + fichas PDF | 57 filas. Activa de nuevo desde 2026-10-29 (pausas aleatorias de `netutil`, ~3 min) |
 | HAID | `haid.py`, `haid_scraper/parser` | haid.com.ec + fichas PDF (3 son imagen → OCR con Tesseract) | Sitio rediseñado (Next.js): enlaces `/media/...` relativos; `og:title` trae sufijo " - Haid Ecuador" |
 | Aquaxcel (Cargill) | `aquaxcel.py` → `_compartido` | aquaxcel.com/productos/ecuador | 37 filas |
 | BioMar | `biomar.py`, `agrizon_scraper/parser` | Distribuidor Agrizon (Shopify `products.json`) | `biomar_scraper/parser.py` (biomar.com) quedan **sin usar** a propósito. Agrizon da 429: hay reintento con pausa |

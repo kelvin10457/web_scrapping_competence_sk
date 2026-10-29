@@ -31,11 +31,17 @@ def test_run_fuente_unknown_raises():
         fuentes.run_fuente("panama", "nicovita")
 
 
-def test_nicovita_pausada_no_corre_sin_argumentos_pero_sigue_registrada():
+def test_nicovita_activa_en_los_3_paises():
     for pais in ("ecuador", "honduras", "mexico"):
-        assert not fuentes.activa(pais, "nicovita")
-        assert (pais, "nicovita") in fuentes.listar()  # build_master sigue incluyendo su CSV
-    assert all(e != "nicovita" for _, e in fuentes.listar(solo_activas=True))
+        assert fuentes.activa(pais, "nicovita")
+        assert (pais, "nicovita") in fuentes.listar(solo_activas=True)
+
+
+def test_fuente_pausada_no_corre_sin_argumentos_pero_sigue_registrada(monkeypatch):
+    monkeypatch.setattr(fuentes, "INACTIVAS", {("mexico", "nicovita")})
+    assert not fuentes.activa("mexico", "nicovita")
+    assert ("mexico", "nicovita") in fuentes.listar()  # build_master sigue incluyendo su CSV
+    assert ("mexico", "nicovita") not in fuentes.listar(solo_activas=True)
     assert ("mexico", "vimifos") in fuentes.listar(solo_activas=True)
 
 

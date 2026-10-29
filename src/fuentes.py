@@ -17,8 +17,9 @@ EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac", "vimifos",
 
 # Pares (pais, empresa) pausados: siguen en el registro (master.csv incluye su CSV
 # ya generado) pero la corrida sin argumentos los salta. Se corren a mano con
-# `--empresa <empresa>`. Nicovita: pausada por decision del usuario (RONDA2 R2.0).
-INACTIVAS = {("ecuador", "nicovita"), ("honduras", "nicovita"), ("mexico", "nicovita")}
+# `--empresa <empresa>`. Hoy ninguno: Nicovita estuvo pausada (RONDA2 R2.0) y se
+# reactivo el 2026-10-29 tras correr sin captcha en los 3 paises.
+INACTIVAS: set[tuple[str, str]] = set()
 
 
 def activa(pais: str, empresa: str) -> bool:

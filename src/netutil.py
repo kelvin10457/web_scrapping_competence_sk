@@ -1,11 +1,13 @@
 """GET para los scrapers, en un solo lugar:
 
-- Ritmo cortes y irregular (solo para PACED_HOSTS: nicovita.com, que mostro captcha,
-  y agrizon.com, que respondio 429): pausa aleatoria de 1.5-4 s entre consultas y una pausa
-  larga aleatoria de 20-30 s cada 3-5 consultas nuevas (no cuentan las paginas
+- Ritmo cortes e irregular (solo para PACED_HOSTS: nicovita.com, que mostro captcha,
+  y agrizon.com, que respondio 429): pausa aleatoria de 1.5-7 s entre consultas
+  (sesgada a ~2.5 s, con colas largas) y una pausa larga aleatoria de 15-40 s cada
+  3-6 consultas nuevas (no cuentan las paginas
   que salen de la cache). Es para no cargar al sitio; NO desbloquea un bloqueo
   que ya existe ni resuelve captchas.
-- Reintentos con espera creciente en fallos transitorios (timeouts, 429, 5xx).
+- Reintentos con espera creciente y al azar en fallos transitorios (timeouts, 429,
+  5xx); con Retry-After se espera al menos eso.
 - Deteccion de bloqueo anti-bot (captcha): se detiene, guarda la pagina que vio el
   script en data/bloqueos/ y levanta BlockedError. No se intenta evadir.
 """
@@ -32,9 +34,9 @@ PACED_HOSTS = {"nicovita.com", "agrizon.com"}
 
 # Ritmo (se desactiva en tests con ENABLED = False o SCRAPER_NO_PAUSE=1).
 ENABLED = True
-SHORT_PAUSE = (1.5, 4.0)
-LONG_PAUSE = (20.0, 30.0)
-LONG_EVERY = (3, 5)
+SHORT_PAUSE = (1.5, 7.0, 2.5)  # min, max, moda (random.triangular)
+LONG_PAUSE = (15.0, 40.0)
+LONG_EVERY = (3, 6)
 
 if getattr(sys, "frozen", False):
     _ROOT = Path(sys.executable).resolve().parent
@@ -86,7 +88,7 @@ def pause(url: str | None = None) -> None:
         _state["n"] = 0
         _state["next_long"] = random.randint(*LONG_EVERY)
     else:
-        espera = random.uniform(*SHORT_PAUSE)
+        espera = random.triangular(*SHORT_PAUSE)
     time.sleep(espera)
 
 
@@ -101,6 +103,13 @@ def _save_block_page(url: str, response: requests.Response) -> Path | None:
         return None
 
 
+def _backoff(intento: int, minimo: int = 0) -> float:
+    """Espera antes de reintentar: crece con el intento (5, 10, 20... s, tope
+    90 s), con +0-50 % al azar, y nunca menos que el Retry-After del sitio."""
+    base = max(min(5 * 2**intento, 60), minimo)
+    return min(base * random.uniform(1.0, 1.5), max(90.0, minimo))
+
+
 def get(session, url: str, retries: int = 4, **kwargs) -> requests.Response:
     pause(url)
     for intento in range(retries + 1):
@@ -109,7 +118,7 @@ def get(session, url: str, retries: int = 4, **kwargs) -> requests.Response:
         except (requests.Timeout, requests.ConnectionError):
             if intento == retries:
                 raise
-            time.sleep(min(5 * 2**intento, 60))
+            time.sleep(_backoff(intento))
             continue
         if any(m in r.url.lower() for m in _BLOCK_MARKERS):
             saved = _save_block_page(url, r)
@@ -118,6 +127,5 @@ def get(session, url: str, retries: int = 4, **kwargs) -> requests.Response:
         if r.status_code not in RETRY_STATUS or intento == retries:
             return r
         retry_after = r.headers.get("Retry-After", "")
-        espera = int(retry_after) if retry_after.isdigit() else 5 * 2**intento
-        time.sleep(min(espera, 60))
+        time.sleep(_backoff(intento, int(retry_after) if retry_after.isdigit() else 0))
     return r

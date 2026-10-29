@@ -167,7 +167,7 @@ def test_build_master_also_writes_one_master_per_pais(tmp_path, monkeypatch):
         assert list(df["pais"]) == [pais]
 
 
-def test_netutil_pause_schedule_is_random_and_long_every_3_to_5(monkeypatch):
+def test_netutil_pause_schedule_is_random_and_long_every_3_to_6(monkeypatch):
     import netutil
 
     slept = []
@@ -177,9 +177,18 @@ def test_netutil_pause_schedule_is_random_and_long_every_3_to_5(monkeypatch):
     netutil._state.update(n=0, next_long=4)
     for _ in range(4):
         netutil.pause()
-    assert all(1.5 <= s <= 4.0 for s in slept[:3])
-    assert 20.0 <= slept[3] <= 30.0
-    assert 3 <= netutil._state["next_long"] <= 5
+    assert all(1.5 <= s <= 7.0 for s in slept[:3])
+    assert 15.0 <= slept[3] <= 40.0
+    assert 3 <= netutil._state["next_long"] <= 6
+
+
+def test_netutil_backoff_has_jitter_and_respects_retry_after():
+    import netutil
+
+    esperas = [netutil._backoff(0) for _ in range(50)]
+    assert all(5.0 <= e <= 7.5 for e in esperas)
+    assert len(set(esperas)) > 1
+    assert all(60.0 <= netutil._backoff(0, 60) <= 90.0 for _ in range(50))
 
 
 def test_netutil_blocked_response_raises_and_saves_page(tmp_path, monkeypatch):

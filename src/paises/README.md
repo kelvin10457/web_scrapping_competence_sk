@@ -7,6 +7,6 @@ Cada carpeta tiene su propio `README.md` con fuentes, estado y particularidades.
 |---|---|---|
 | ecuador | nicovita, haid, aquaxcel, biomar (vía Agrizon), agripac | País original del proyecto |
 | honduras | nicovita | Nicovita atiende también Nicaragua y Panamá desde aquí (no se duplican filas) |
-| mexico | nicovita, aquaxcel, vimifos, apiaba, nutrimar Nicovita pausada (`fuentes.INACTIVAS`) |
+| mexico | nicovita, aquaxcel, vimifos, apiaba, nutrimar |
 | nicaragua | — | Sin fuente pública; carga manual |
 | panama | — | Sin fuente pública; carga manual |
