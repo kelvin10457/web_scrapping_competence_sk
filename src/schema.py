@@ -434,6 +434,10 @@ def parse_particula_range(tamano_pellet_mm: str | None) -> tuple[float | None, f
     un valor que el dato no tiene."""
     if not tamano_pellet_mm:
         return None, None
+    # "<0.05" (Prilabsa, R7.7): solo hay maximo publicado; el minimo no se inventa.
+    m = re.fullmatch(r"\s*<\s*(\d+(?:\.\d+)?)\s*", tamano_pellet_mm)
+    if m:
+        return None, float(m.group(1))
     m = _TAMANO_RANGE_RE.search(tamano_pellet_mm)
     if m:
         return float(m.group(1)), float(m.group(2))

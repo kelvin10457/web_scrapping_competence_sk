@@ -6,7 +6,7 @@
 Dos agentes en paralelo; Codex en el worktree `../wt-codex` (rama `codex/<ID>`), Claude en `expansion-regional`. Fases que tocan `schema.py`, `pipeline.py` o `powerbi.py`: solo Claude.
 - **Plan inicial:** Codex R7.6 → R7.7; Claude R8.9 → R6.1–R6.4 → R7.1 → cierre.
 - **Cambio (2026-11-09):** el entorno de Codex monta `../wt-codex` como solo lectura y no tiene DNS (no resolvió `nutrimentos.com.mx`). No implementó nada. No se tocó su configuración. **Claude implementa todas las fases**; Codex queda como revisor de solo lectura de cada diff (ahí sí funciona). La rama `codex/R7.6` quedó vacía (igual a `47988e4`).
-- **Estado:** R8.9 ✅, R7.6 ✅ (Claude, revisadas por Codex) → R7.7 → R6.1–R6.4 → R7.1 → cierre.
+- **Estado:** R8.9 ✅, R7.6 ✅, R7.7 ✅ (Claude, revisadas por Codex) → R6.1–R6.4 → R7.1 → cierre.
 - Al retomar tras un corte: leer esta sección y `git log --all --oneline -10`; Codex retoma desde su rama y su último commit.
 
 ## Resumen final
