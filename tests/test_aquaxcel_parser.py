@@ -1,7 +1,8 @@
 from bs4 import BeautifulSoup
 
 from conftest import FIXTURES
-from parsers import aquaxcel as parser
+import schema
+from paises._compartido import aquaxcel_parser as parser
 
 
 def _load_html() -> str:
@@ -25,7 +26,7 @@ def test_active_sku_has_full_identification_and_nutricional_data():
     records = parser.parse_listing(_load_html())
     active = next(r for r in records if r["nombre_producto"] == "AQUAXCEL ACTIVE 35% 2.0")
     assert active["empresa"] == "Cargill"
-    assert active["etapa_competidor"] == "engorde"
+    assert active["etapa_engorde"] is True
     assert active["tamano_pellet_mm"] == "2"
     assert active["tipo_presentacion"] == "Extruido"
     assert active["empaque_kg"] == "25"
@@ -37,15 +38,16 @@ def test_portfolio_blocks_only_use_inicio_and_engorde():
     # (que tenia un grupo "TRANSICION"), los bloques "Portafolio" solo usan
     # INICIO/ENGORDE -- normalize_etapa los mapea a precria/engorde.
     records = parser.parse_listing(_load_html())
-    etapas = {r["etapa_competidor"] for r in records}
-    assert etapas <= {"precria", "engorde", None}
+    for r in records:
+        assert not any(r[c] is True for c in
+                       ["etapa_reproductores", "etapa_larva", "etapa_post_larva", "etapa_post_transferencia"])
 
 
 def test_parse_listing_empty_html_returns_no_records():
     assert parser.parse_listing("<html><body>nada aqui</body></html>") == []
 
 
-def test_adapt_shock_line_flagged_producto_salud_true():
+def test_adapt_shock_line_flagged_es_producto_de_salud_true():
     # Caso real que motivo el fix (usuario 2026-09-02): a diferencia de
     # Nicovita/HAID, Aquaxcel no tiene descripcion de producto por SKU --
     # el reclamo de salud vive en texto de marketing aparte de las tablas
@@ -55,20 +57,20 @@ def test_adapt_shock_line_flagged_producto_salud_true():
     records = parser.parse_listing(_load_html())
     adapt_shock = [r for r in records if "ADAPT SH" in r["nombre_producto"]]
     assert len(adapt_shock) == 5
-    assert all(r["producto_salud"] is True for r in adapt_shock)
+    assert all(r["es_producto_de_salud"] is True for r in adapt_shock)
 
 
 def test_other_lines_confirmed_false_not_none():
     # Las otras 5 lineas (Maxima/Rapid/Advance/Active/Adapt Osmo) SI tienen
     # texto de marketing propio, pero ninguna hace un reclamo especifico de
     # salud/tratamiento -- por eso deben quedar False (confirmado, no
-    # None). Ver test_detect_producto_salud_false... en test_schema.py:
+    # None). Ver test_detect_es_producto_de_salud_false... en test_schema.py:
     # mencionar "salud" de forma generica (ej. Maxima) no cuenta.
     records = parser.parse_listing(_load_html())
     active = next(r for r in records if r["nombre_producto"] == "AQUAXCEL ACTIVE 35% 2.0")
-    assert active["producto_salud"] is False
+    assert active["es_producto_de_salud"] is False
     adapt_osmo = [r for r in records if "ADAPT OSM" in r["nombre_producto"]]
-    assert adapt_osmo and all(r["producto_salud"] is False for r in adapt_osmo)
+    assert adapt_osmo and all(r["es_producto_de_salud"] is False for r in adapt_osmo)
 
 
 def test_line_descriptions_finds_adapt_shock_vibriosis_text():
@@ -78,8 +80,86 @@ def test_line_descriptions_finds_adapt_shock_vibriosis_text():
     assert "PORTAFOLIO" not in descriptions  # nunca captura los propios headings de tabla
 
 
-def test_parse_listing_all_records_have_producto_salud_resolved():
+def test_parse_listing_all_records_have_es_producto_de_salud_resolved():
     # Con el fix, ninguna de las 37 filas deberia quedar en None -- todas
     # las lineas tienen texto de marketing propio que se puede leer.
     records = parser.parse_listing(_load_html())
-    assert all(r["producto_salud"] is not None for r in records)
+    assert all(r["es_producto_de_salud"] is not None for r in records)
+
+
+def test_parse_listing_mexico_card_layout():
+    # Fixture real de https://aquaxcel.com/productos/mexico/ (2026-10-19): un
+    # <section id="container-..."> por producto, sin bloques "Portafolio".
+    html = (FIXTURES / "aquaxcel_mexico_listing.html").read_text(encoding="utf-8")
+    records = parser.parse_listing(html)
+    assert len(records) == 14
+    by_name = {r["nombre_producto"]: r for r in records}
+    nursery = by_name["Aquaxcel Nursery 45% SmartShield"]
+    assert nursery["proteina_pct"] == 45.0
+    assert nursery["tamano_pellet_mm"] == "0.6"
+    assert nursery["tipo_presentacion"] == "Extruido"
+    assert nursery["empaque_kg"] is None
+    assert nursery["fuente_url"] == "https://aquaxcel.com/productos/mexico/"
+    assert by_name["Aquaxcel Transition 38%"]["tamano_pellet_mm"] == "1.6"
+
+
+def test_parse_listing_mexico_headings_bajados_2026_10_20():
+    # El 2026-10-20 el sitio bajo un nivel los encabezados (etapa h1->h2, nombre
+    # h2->h3, marketing h2->h3) y el parser devolvia 0 filas. Debe dar lo mismo
+    # que el fixture del 2026-10-19.
+    def sin_fecha(records):
+        return [{k: v for k, v in r.items() if k != "fecha_extraccion"} for r in records]
+
+    viejo = parser.parse_listing((FIXTURES / "aquaxcel_mexico_listing.html").read_text(encoding="utf-8"))
+    nuevo = parser.parse_listing(
+        (FIXTURES / "aquaxcel_mexico_listing_2026-10-20.html").read_text(encoding="utf-8")
+    )
+    assert len(nuevo) == 14
+    assert sin_fecha(nuevo) == sin_fecha(viejo)
+    assert all(r["es_producto_de_salud"] is not None for r in nuevo)
+
+
+def test_tipo_presentacion_pelletizado_pasa_a_pellet():
+    # R3.3 REQ-5: la columna "Tecnologia" publica "Pelletizado" -> grafia oficial
+    records = parser.parse_listing(_load_html())
+    tipos = {r["tipo_presentacion"] for r in records}
+    assert "Pellet" in tipos
+    assert "Pelletizado" not in tipos
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def test_r44_req1_ecuador_etapa_de_uso_inicio_es_precria_engorde_es_engorde():
+    records = parser.parse_listing(_load_html())
+    by_name = {r["nombre_producto"]: r for r in records}
+    assert _etapas_true(by_name["AQUAXCEL ADVANCE 35% 0.8"]) == {"precria"}  # INICIO
+    assert _etapas_true(by_name["AQUAXCEL ADVANCE 35% 2.0"]) == {"engorde"}  # ENGORDE
+    assert by_name["AQUAXCEL ADVANCE 35% 0.8"]["etapa_engorde"] is False
+    assert all(_etapas_true(r) in ({"precria"}, {"engorde"}) for r in records)
+    assert all(r["_etapas_detectadas"] for r in records)
+
+
+def _mexico_records() -> dict[str, dict]:
+    html = (FIXTURES / "aquaxcel_mexico_listing_2026-10-20.html").read_text(encoding="utf-8")
+    return {r["nombre_producto"]: r for r in parser.parse_listing(html)}
+
+
+def test_r44_req2_mexico_linea_mas_descripcion():
+    by_name = _mexico_records()
+    # "etapa de transicion hacia la fase de engorde"
+    assert _etapas_true(by_name["Aquaxcel Transition 38%"]) == {"post_transferencia", "engorde"}
+    # "para la etapa de post-larva ... o precrias"
+    assert _etapas_true(by_name["Aquaxcel Nursery 45% SmartShield"]) == {"post_larva", "precria"}
+    # "desde los 12g hasta peso de cosecha"
+    assert _etapas_true(by_name["Aquaxcel Advance 35% AP"]) == {"engorde"}
+    assert _etapas_true(by_name["Aquaxcel Starter 40%"]) == {"precria"}
+    assert all(r["_etapas_detectadas"] for r in by_name.values())
+
+
+def test_r44_req3_mexico_adapt_sin_termino_de_etapa_queda_vacio():
+    by_name = _mexico_records()
+    adapt = [r for n, r in by_name.items() if "Adapt Shock" in n]
+    assert len(adapt) == 5
+    assert all(r[f"etapa_{e}"] is None for r in adapt for e in schema.ETAPAS)

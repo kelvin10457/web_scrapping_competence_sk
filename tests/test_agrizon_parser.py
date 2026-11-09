@@ -1,7 +1,8 @@
 import json
 
+import schema
 from conftest import FIXTURES
-from parsers import agrizon as parser
+from paises.ecuador import agrizon_parser as parser
 
 
 def _load_products() -> list[dict]:
@@ -37,7 +38,7 @@ def test_proteina_pct_reads_from_title_not_body_html():
     # como el dato correcto (2026-09-03).
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-precria-0-6-0-9-mm-25-kg"))
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
 
 
 def test_tamano_mm_preserves_range_as_text():
@@ -64,7 +65,7 @@ def test_tipo_presentacion_reads_english_title_when_tag_is_missing():
     # pero el titulo dice "Pelletized" (ingles) -- debe detectarse igual.
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-perform-35-2-0-mm-25-kg"))
-    assert record["tipo_presentacion"] == "Pelletizado"
+    assert record["tipo_presentacion"] == "Pellet"
 
 
 def test_tipo_presentacion_recognizes_extrusado_tag():
@@ -75,12 +76,19 @@ def test_tipo_presentacion_recognizes_extrusado_tag():
     assert record["tipo_presentacion"] == "Extruido"
 
 
-def test_tipo_presentacion_none_for_microgranulado_only():
-    # Microgranulado es una 3ra categoria fuera de la dicotomia Extruido/
-    # Pelletizado del schema -- no se fuerza a ninguna de las dos.
+def test_tipo_presentacion_microgranulado_se_conserva_si_es_la_unica_tecnologia():
+    # R3.3 REQ-4: Microgranulado no esta en la lista oficial ni se fuerza a
+    # Granulado (decision 2026-10-29) -- se guarda tal cual para que R3.4 lo avise.
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-precria-0-6-0-9-mm-25-kg"))
-    assert record["tipo_presentacion"] is None
+    assert record["tipo_presentacion"] == "Microgranulado"
+
+
+def test_tipo_presentacion_pelletizado_gana_sobre_microgranulado():
+    # Exia Prime Prebreeding trae ambos tags: la tecnologia reconocida gana.
+    products = _load_products()
+    record = parser.parse_product(_find(products, "exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado"))
+    assert record["tipo_presentacion"] == "Pellet"
 
 
 def test_etapa_falls_back_to_tamano_when_tags_are_ambiguous():
@@ -88,7 +96,7 @@ def test_etapa_falls_back_to_tamano_when_tags_are_ambiguous():
     # set de tags -- ambiguo, se resuelve por tamano de pellet (< 1.6 -> precria).
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-1-2-mm-25-kg"))
-    assert record["etapa_competidor"] == "precria"
+    assert record["etapa_precria"] is True
 
 
 def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
@@ -96,16 +104,18 @@ def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
     # Larviva SOLO se puede resolver via tags ("larvas"/"Post-larva").
     products = _load_products()
     record = parser.parse_product(_find(products, "larviva-55-250-375-micras-1-kg"))
-    assert record["etapa_competidor"] == "larva"
+    assert record["etapa_larva"] is True
     assert record["etapa_skt"] is None  # se calcula despues, en pipeline.write_csv
 
 
-def test_etapa_1_6mm_boundary_stays_none():
-    # Limite documentado en schema.etapa_from_tamano: 1.6mm es ambiguo por
-    # diseno (techo de Nursery y tamano tipico de Pre Grower a la vez).
+def test_etapa_1_6mm_con_tags_que_nombran_dos_etapas_marca_ambas():
+    # R4.5/R4.10: los tags nombran "engorde" e "Iniciadores" (precria); se marcan
+    # las dos, sin desempatar por tamano. La banda de 1.6 mm solo entra si no
+    # hay termino de etapa, y aca lo hay.
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-1-6-mm-25-kg"))
-    assert record["etapa_competidor"] is None
+    assert record["etapa_precria"] is True
+    assert record["etapa_engorde"] is True
 
 
 def test_parse_listing_tags_all_records_as_biomar():
@@ -113,3 +123,33 @@ def test_parse_listing_tags_all_records_as_biomar():
     records = parser.parse_listing(products)
     assert len(records) == len(products)
     assert all(r["empresa"] == "BioMar" for r in records)
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def test_r45_req1_titulo_mas_tags_marca_todas_las_etapas():
+    by_handle = {p["handle"]: parser.parse_product(p) for p in _load_products()}
+    # tags "engorde" + "Iniciadores" -> las dos (decision 2026-10-29)
+    assert _etapas_true(by_handle["exia-prime-35-1-2-mm-25-kg"]) == {"precria", "engorde"}
+    assert _etapas_true(by_handle["exia-prime-35-1-6-mm-25-kg"]) == {"precria", "engorde"}
+    # tags "larvas" + "Post-larva"
+    assert _etapas_true(by_handle["larviva-55-250-375-micras-1-kg"]) == {"larva", "post_larva"}
+    assert _etapas_true(by_handle["exia-prime-35-precria-0-6-0-9-mm-25-kg"]) == {"precria"}
+    assert _etapas_true(by_handle["exia-perform-35-2-0-mm-25-kg"]) == {"engorde"}
+    assert by_handle["exia-perform-35-2-0-mm-25-kg"]["etapa_precria"] is False
+    assert all(r["_etapas_detectadas"] for r in by_handle.values())
+
+
+def test_r45_req2_sin_termino_de_etapa_usa_el_tamano_de_pellet():
+    # Exia Pro 2.0 mm Pelletized: tags sin etapa -> banda de tamano (>= 1.8 -> engorde)
+    record = parser.parse_product(_find(_load_products(), "exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento"))
+    assert _etapas_true(record) == {"engorde"}
+    assert record["_etapas_detectadas"] is True
+
+
+def test_r45_req3_el_slug_no_se_usa():
+    # el slug dice "dieta-para-larvas", los tags dicen "Precrias"
+    record = parser.parse_product(_find(_load_products(), "exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas"))
+    assert _etapas_true(record) == {"precria"}

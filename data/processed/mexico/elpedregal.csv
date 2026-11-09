@@ -1,0 +1,37 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.1,0.1,0.1,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.2,0.2,0.2,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.3,0.3,0.3,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.5,0.5,0.5,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.2,0.2,0.2,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.3,0.3,0.3,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.5,0.5,0.5,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.6,0.6,0.6,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.8,0.8,0.8,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,1,1,1,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,1.4,1.4,1.4,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS RC (40-10),,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,,40,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS RC (40-10),,False,False,True,False,False,False,Nursery,1,1,1,Extruido,,40,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS RC (40-10),,False,False,True,False,False,False,Nursery,1.4,1.4,1.4,Extruido,,40,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS PLUS ULTRA (35-9),,False,False,True,False,False,False,Nursery,1,1,1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS PLUS ULTRA (35-9),,False,False,True,False,False,False,Nursery,1.4,1.4,1.4,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS AR (40-10),,False,False,False,False,True,False,Pre Grower,1.6,1.6,1.6,,,40,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS AR (40-10),,False,False,False,False,True,False,Grower,1.8,1.8,1.8,,,40,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS PLUS ULTRA (35-9),,False,False,False,False,True,True,Pre Grower,1.6,1.6,1.6,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS PLUS ULTRA (35-9),,False,False,False,False,True,True,Grower,1.8,1.8,1.8,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS BD (35-7) CHP,,False,False,False,False,True,True,Pre Grower,1.6,1.6,1.6,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS BD (35-7) CHP,,False,False,False,False,True,True,Grower,1.8,1.8,1.8,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm PLUS ULTRA (35-9),,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-3.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm AD (35-7) CHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-3.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm AD (35-7) SHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-3.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm BD (30-6) CHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,30,https://el-pedregal.com/img/crustaceos-info-5.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm BD (28-8) SHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,28,https://el-pedregal.com/img/crustaceos-info-5.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm BD (25-8) SHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,25,https://el-pedregal.com/img/crustaceos-info-5.png,2026-11-09
+mexico,El Pedregal,Migajas # 1 Peletizado (45-9),,False,False,True,False,False,False,Nursery,0.6-0.85,0.6,0.85,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 1 Peletizado (40-8),,False,False,True,False,False,False,Nursery,0.6-0.85,0.6,0.85,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 2 Peletizado (45-9),,False,False,True,False,False,False,Nursery,0.85-1.18,0.85,1.18,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 2 Peletizado (40-8),,False,False,True,False,False,False,Nursery,0.85-1.18,0.85,1.18,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 3 Peletizado (45-9),,False,False,True,False,False,False,Nursery,1.18-2,1.18,2,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 3 Peletizado (40-8),,False,False,True,False,False,False,Nursery,1.18-2,1.18,2,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 4 Peletizado (45-9),,False,False,True,False,False,False,Grower,2-3,2,3,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 4 Peletizado (40-8),,False,False,True,False,False,False,Grower,2-3,2,3,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09

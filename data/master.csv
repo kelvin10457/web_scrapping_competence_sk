@@ -1,0 +1,399 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+ecuador,Nicovita,Nicovita Classic AD,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic AD,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic AD,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Nursery,0.5-1.0,0.5,1,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,25,https://nicovita.com/productos/nicovita-classic-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic Post Transferencia,False,False,False,False,False,True,False,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-post-transferencia-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic Precría,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,35,https://nicovita.com/productos/nicovita-classic-precria-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal AD,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,25,https://nicovita.com/productos/nicovita-katal-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal AD,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,30,https://nicovita.com/productos/nicovita-katal-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal AD,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal AD,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal AD,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ad-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Post Transferencia,False,False,False,False,False,True,False,Nursery,1.2,1.2,1.2,Pellet,25,38,https://nicovita.com/productos/nicovita-katal-post-transferencia-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Precría,False,False,False,True,True,False,False,Nursery,,,,,25,,https://nicovita.com/productos/nicovita-katal-precria-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Proterra,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-proterra-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Katal Proterra,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-proterra-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Qualis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-qualis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Qualis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-qualis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Qualis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,28,https://nicovita.com/productos/nicovita-qualis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Qualis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-qualis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Qualis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,22,https://nicovita.com/productos/nicovita-qualis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Qualis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,22,https://nicovita.com/productos/nicovita-qualis-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap E+,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,40,https://nicovita.com/productos/nicovita-terap-e-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap E+,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-e-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap E+,True,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-e-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap E+,True,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-e-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap E+,True,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-e-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,40,https://nicovita.com/productos/nicovita-terap-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-ecuador/,2026-11-09
+ecuador,Nicovita,Nicovita Classic Proterra,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-proterra/,2026-11-09
+ecuador,Nicovita,Nicovita Finalis Proterra,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-proterra/,2026-11-09
+ecuador,HAID,HAID Fitness,True,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://www.haid.com.ec/fitness/,2026-11-09
+ecuador,HAID,HAID Fitness,True,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://www.haid.com.ec/fitness/,2026-11-09
+ecuador,HAID,HAID Fitness,True,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://www.haid.com.ec/fitness/,2026-11-09
+ecuador,HAID,HAID Happiness,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://www.haid.com.ec/happiness/,2026-11-09
+ecuador,HAID,HAID Happiness,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://www.haid.com.ec/happiness/,2026-11-09
+ecuador,HAID,HAID Happiness,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://www.haid.com.ec/happiness/,2026-11-09
+ecuador,HAID,HAID Happiness Plus,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://www.haid.com.ec/happiness-plus/,2026-11-09
+ecuador,HAID,HAID Happiness Plus,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://www.haid.com.ec/happiness-plus/,2026-11-09
+ecuador,HAID,HAID Happiness Plus,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://www.haid.com.ec/happiness-plus/,2026-11-09
+ecuador,HAID,HAID Speed,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,37,https://www.haid.com.ec/speed/,2026-11-09
+ecuador,HAID,HAID Speed,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,37,https://www.haid.com.ec/speed/,2026-11-09
+ecuador,HAID,HAID Speed,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,37,https://www.haid.com.ec/speed/,2026-11-09
+ecuador,HAID,HAID Starter,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,42,https://www.haid.com.ec/starter/,2026-11-09
+ecuador,HAID,HAID Starter Pro,False,False,False,True,True,False,False,Nursery,0.3,0.3,0.3,Extruido,10,45,https://www.haid.com.ec/starter-pro/,2026-11-09
+ecuador,HAID,HAID Starter Pro,False,False,False,True,True,False,False,Nursery,0.5,0.5,0.5,Extruido,10,45,https://www.haid.com.ec/starter-pro/,2026-11-09
+ecuador,HAID,HAID Starter Pro,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://www.haid.com.ec/starter-pro/,2026-11-09
+ecuador,Cargill,AQUAXCEL ACTIVE 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ACTIVE 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ACTIVE 35%LS 2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM 35% AD AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35 AD 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35 AD EEAP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35 RD2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35% RD 1.6,False,False,False,False,True,False,False,Pre Grower,1.6,1.6,1.6,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35% RD 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM38% RD1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,38,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM40% RD0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,40,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM42% RD 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,42,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM45% RD 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH35% NTMX1.2,True,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH35% RD 1.2,True,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH35% RD 2.0,True,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH45% NTMX0.6,True,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH45% NTMX0.8,True,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35 AE2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35 EE2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 1.6,False,False,False,False,True,False,False,Pre Grower,1.6,1.6,1.6,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% AE 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% NT 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% NT 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 45% NT 0.6,False,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 45% NT 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 35% SLD 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 42% SLD 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,42,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 45% SLD 0.6,False,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-2-0mm-25-kg-alimento-pelletizado,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-2-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-6-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-perform-35-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-prime-32-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,,10,38,https://agrizon.com/en/products/exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas,2026-11-09
+ecuador,BioMar,Exia Pro,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,Microgranulado,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-perform-32-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-prime-28-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-perform-28-2-0-mm-25-kg-alimento-para-camaron,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Extruido,1,55,https://agrizon.com/en/products/larviva-55-150-250-micras-1-kg,2026-11-09
+ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,,10,38,https://agrizon.com/en/products/exia-start-38-0-6-0-9-mm-10-kg,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.375-0.5,0.375,0.5,Extruido,1,55,https://agrizon.com/en/products/larviva-55-375-500-micras-1-kg,2026-11-09
+ecuador,Agripac,35% Premium Micropellet Agua Dulce 1.2mm,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Polvo,25,35,https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-2mm/,2026-11-09
+ecuador,Agripac,35% Premium Micropellet Agua Dulce 1.5mm,False,False,False,False,True,False,False,Nursery,1.5,1.5,1.5,Polvo,25,35,https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-5mm/,2026-11-09
+ecuador,Agripac,Feedpac 22% Premium,False,,,,,,,,,,,Pellet,25,22,https://agripac.com.ec/productos/feedpac-22-premium/,2026-11-09
+ecuador,Agripac,Feedpac 27% Premium,False,,,,,,,,,,,Pellet,25,27,https://agripac.com.ec/productos/feedpac-27-premium/,2026-11-09
+ecuador,Agripac,Feedpac 27% ultra agua dulce,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Pellet,25,27,https://agripac.com.ec/productos/feedpac-27-ultra-agua-dulce/,2026-11-09
+ecuador,Agripac,Feedpac 27% Ultra Plus,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Pellet,25,27,https://agripac.com.ec/productos/feedpac-27-ultra-plus/,2026-11-09
+ecuador,Agripac,Feedpac 27% Ultrapro,True,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,27,https://agripac.com.ec/productos/feedpac-27-ultrapro/,2026-11-09
+ecuador,Agripac,Feedpac 28% Premium,False,,,,,,,,,,,Pellet,25,28,https://agripac.com.ec/productos/feedpac-28-premium/,2026-11-09
+ecuador,Agripac,Feedpac 35% Premium Profilactico,True,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-premium-profilactico/,2026-11-09
+ecuador,Agripac,Feedpac 35% Premium,False,,,,,,,,,,,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-premium/,2026-11-09
+ecuador,Agripac,"Feedpac 35% Ultra Gregarinas 1,8 Mm",True,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-ultra-gregarinas-18-mm/,2026-11-09
+ecuador,Agripac,Feedpac 35% Ultra Gregarinas Micropellet 1500 um,True,False,False,False,True,False,False,Nursery,1.5,1.5,1.5,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-ultra-gregarinas-micropellet-1500-um/,2026-11-09
+ecuador,Agripac,Feedpac 35% Ultra Micropellet 1.2mm,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-ultra-micropellet-1-2mm/,2026-11-09
+ecuador,Agripac,Feedpac 35% Ultra Micropellet 1.5mm,False,False,False,False,True,False,False,Nursery,1.5,1.5,1.5,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-ultra-micropellet-1-5mm/,2026-11-09
+ecuador,Agripac,Feedpac 35% Ultrapro Micropellet 1.2 mm,True,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-ultrapro-micropellet-1-2-mm/,2026-11-09
+ecuador,Agripac,Feedpac 35% Ultrapro Micropellet 1.5 Mm,True,False,False,False,True,False,False,Nursery,1.5,1.5,1.5,Pellet,25,35,https://agripac.com.ec/productos/feedpac-35-ultrapro-micropellet-1-5-mm/,2026-11-09
+ecuador,Agripac,Feedpac Growth 22%,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,40,22,https://agripac.com.ec/productos/feedpac-growth-22/,2026-11-09
+ecuador,Agripac,Feedpac Growth 28%,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,40,28,https://agripac.com.ec/productos/feedpac-growth-28/,2026-11-09
+ecuador,Agripac,"Feedpac Santa Mónica 35% 1,8 mm",False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Pellet,25,35,https://agripac.com.ec/productos/feedpac-santa-monica-35-18-mm/,2026-11-09
+ecuador,Agripac,Premium Agua Dulce,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://agripac.com.ec/productos/premium-agua-dulce/,2026-11-09
+ecuador,Agripac,Larfeed,False,False,True,True,False,False,False,Hatchery,,,,,5,,https://agripac.com.ec/productos/larfeed/,2026-11-09
+ecuador,Agripac,MeM 300 – 500,False,False,False,True,False,False,False,Hatchery,,,,Microextruido,20,,https://agripac.com.ec/productos/mem-300-500/,2026-11-09
+ecuador,Agripac,MeM 200 – 300,False,False,False,True,False,False,False,Hatchery,,,,Microextruido,20,,https://agripac.com.ec/productos/mem/,2026-11-09
+ecuador,Agripac,Mpex 100-200,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,5,,https://agripac.com.ec/productos/mpex-100-200/,2026-11-09
+ecuador,Agripac,Mpex 200-300,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,5,,https://agripac.com.ec/productos/mpex-200-300/,2026-11-09
+ecuador,Agripac,Mpex 300-500,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,20,,https://agripac.com.ec/productos/mpex-300-500/,2026-11-09
+ecuador,Agripac,Mpex 500-800,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,20,,https://agripac.com.ec/productos/mpex-500-800/,2026-11-09
+ecuador,Agripac,New Royal Oyster,False,True,False,False,False,False,False,Hatchery,,,,,5,,https://agripac.com.ec/productos/new-royal-oyster/,2026-11-09
+ecuador,Agripac,Royal Caviar 5-50,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/royal-caviar-5-50/,2026-11-09
+ecuador,Agripac,Royal Caviar 50-100,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/royal-caviar-50-100/,2026-11-09
+ecuador,Agripac,Royal Seafood 100-200,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,8,,https://agripac.com.ec/productos/royal-seafood-100-200/,2026-11-09
+ecuador,Agripac,Royal Seafood 5-50,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,1.5,,https://agripac.com.ec/productos/royal-seafood-5-50/,2026-11-09
+ecuador,Agripac,Royal Seafood 50-100,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,1.5,,https://agripac.com.ec/productos/royal-seafood-50-100/,2026-11-09
+ecuador,Agripac,Vitellus Estandar,False,False,True,True,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/vitellus-estandar/,2026-11-09
+ecuador,Agripac,Vitellus Large,False,False,True,True,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/vitellus-large/,2026-11-09
+ecuador,Agripac,Vitellus Small,False,False,True,True,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/vitellus-small/,2026-11-09
+ecuador,Agripac,Artemia Cysts,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/artemia-cysts/,2026-11-09
+ecuador,Agripac,Royal Pepper Protein,False,,,,,,,Hatchery,,,,Líquido,1,,https://agripac.com.ec/productos/royal-pepper-protein/,2026-11-09
+ecuador,Zeigler,LARVA Z - PLUS <50 micras,,False,True,True,False,False,False,Hatchery,<0.05,,0.05,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA Z - PLUS <100 micras,,False,True,True,False,False,False,Hatchery,<0.1,,0.1,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA Z - PLUS 100-150 micras,,False,True,True,False,False,False,Hatchery,0.1-0.15,0.1,0.15,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA Z - PLUS 150-250 micras,,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA AP 100 <50 micras,,False,True,True,False,False,False,Hatchery,<0.05,,0.05,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA AP 100 <100 micras,,False,True,True,False,False,False,Hatchery,<0.1,,0.1,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA AP 100 100-150 micras,,False,True,True,False,False,False,Hatchery,0.1-0.15,0.1,0.15,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,LARVA AP 100 150-250 micras,,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,Z PRO 150 micras,,False,True,True,False,False,False,Hatchery,0.15,0.15,0.15,Microparticulado,0.5,44,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,Z PRO 250 micras,,False,True,True,False,False,False,Hatchery,0.25,0.25,0.25,Microparticulado,4,44,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,Z PRO 350 micras,,False,True,True,False,False,False,Hatchery,0.35,0.35,0.35,Microparticulado,4,44,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ ARTEMIA 50 - 200 micras,,False,True,True,False,False,False,Hatchery,0.05-0.2,0.05,0.2,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ ARTEMIA 300 - 500 micras,,False,True,True,False,False,False,Hatchery,0.3-0.5,0.3,0.5,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ ARTEMIA ULTRA 50 - 200 micras,,False,True,True,False,False,False,Hatchery,0.05-0.2,0.05,0.2,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ ARTEMIA ULTRA 300 - 500 micras,,False,True,True,False,False,False,Hatchery,0.3-0.5,0.3,0.5,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ LARVA 10 - 50 micras,,False,True,True,False,False,False,Hatchery,0.01-0.05,0.01,0.05,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ LARVA 10 - 100 micras,,False,True,True,False,False,False,Hatchery,0.01-0.1,0.01,0.1,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ LARVA 100 - 250 micras,,False,True,True,False,False,False,Hatchery,0.1-0.25,0.1,0.25,Microencapsulado,2,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,BRINE SHRIMP FLAKE,,False,True,True,False,False,False,Hatchery,,,,,10,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,SHRIMP MEAL <400 micras,,False,False,True,True,False,False,Nursery,<0.4,,0.4,,"16.3,20",55,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,SHRIMP MEAL <600 micras,,False,False,True,True,False,False,Nursery,<0.6,,0.6,,"16.3,20",55,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,SHRIMP MEAL 600-850 micras,,False,False,True,True,False,False,Nursery,0.6-0.85,0.6,0.85,,"16.3,20",55,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,SHRIMP MEAL 850-1200 micras,,False,False,True,True,False,False,Nursery,0.85-1.2,0.85,1.2,,"16.3,20",55,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,PRE- MIX PL 400-600 micras,,False,False,True,False,False,False,Nursery,0.4-0.6,0.4,0.6,,20,40,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,PRE- MIX PL 600-850 micras,,False,False,True,False,False,False,Nursery,0.6-0.85,0.6,0.85,,20,40,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,PRE- MIX PL 850-1200 micras,,False,False,True,False,False,False,Nursery,0.85-1.2,0.85,1.2,,20,40,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,EZ MATE,,True,False,False,False,False,False,,,,,,0.5,55,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Zeigler,REDI-MATE,,True,False,False,False,False,False,,,,,,"15,5",40,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,CISTOS DE ARTEMIA,,False,True,False,False,False,False,Hatchery,,,,Quistes de artemia,"0.454,7",54,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,MPs <70 micras,,False,True,False,False,False,False,Hatchery,<0.07,,0.07,Microparticulado,"0.5,4",50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,MPs <100 micras,,False,True,False,False,False,False,Hatchery,<0.1,,0.1,Microparticulado,"0.5,4",50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,MPs 100-150 micras,,False,True,False,False,False,False,Hatchery,0.1-0.15,0.1,0.15,Microparticulado,"0.5,4",50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,MPs 150-250 micras,,False,True,False,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Microparticulado,"0.5,4",50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,ADVANCE FEED <150 micras,,False,True,True,False,False,False,Hatchery,<0.15,,0.15,,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,ADVANCE FEED <250 micras,,False,True,True,False,False,False,Hatchery,<0.25,,0.25,,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,ADVANCE FEED <350 micras,,False,True,True,False,False,False,Hatchery,<0.35,,0.35,,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,ADVANCE FEED <450 micras,,False,True,True,False,False,False,Hatchery,<0.45,,0.45,,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,GOLD FEED <150 micras,,False,True,True,False,False,False,Hatchery,<0.15,,0.15,Microparticulado,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,GOLD FEED <250 micras,,False,True,True,False,False,False,Hatchery,<0.25,,0.25,Microparticulado,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,GOLD FEED <350 micras,,False,True,True,False,False,False,Hatchery,<0.35,,0.35,Microparticulado,3,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,FLAKE NEGRO DE ARTEMIA,,False,True,True,False,False,False,Hatchery,,,,,5,45,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,ESPIRULINA 8-10 micras,,False,True,False,False,False,False,Hatchery,0.008-0.01,0.008,0.01,,"0.5,1",,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Mackay Marine,ESPIRULINA 20 micras,,False,True,False,False,False,False,Hatchery,0.02,0.02,0.02,,"0.5,1",,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Higashimaru,P. VANNAMEI #0 30-50 micras,,False,True,True,False,False,False,Hatchery,0.03-0.05,0.03,0.05,Microparticulado,1,52,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Higashimaru,P. VANNAMEI #1 80-130 micras,,False,True,True,False,False,False,Hatchery,0.08-0.13,0.08,0.13,Microparticulado,1,52,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Higashimaru,P. VANNAMEI #2 200-300 micras,,False,True,True,False,False,False,Hatchery,0.2-0.3,0.2,0.3,Microparticulado,1,52,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Higashimaru,ZM FEED #0 30-50 micras,,False,True,False,False,False,False,Hatchery,0.03-0.05,0.03,0.05,Microparticulado,1,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Higashimaru,ZM FEED #1 80-130 micras,,False,True,False,False,False,False,Hatchery,0.08-0.13,0.08,0.13,Microparticulado,1,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Nursery,0.5-1.0,0.5,1,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,25,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Organic,False,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-organic-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Organic,False,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-organic-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Organic,False,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-organic-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Precria,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,40,https://nicovita.com/productos/nicovita-origin-precria-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,40,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Nursery,0.5-1.0,0.5,1,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Classic,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,25,https://nicovita.com/productos/nicovita-classic-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Katal,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Origin Precria,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,40,https://nicovita.com/productos/nicovita-origin-precria-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,40,https://nicovita.com/productos/nicovita-terap-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-mexico/,2026-11-09
+mexico,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-mexico/,2026-11-09
+mexico,Cargill,AQUAXCEL PRE STARTER 42% SMARTSHIELD,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,,42,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Adapt Shock 35% 1.8mm,False,,,,,,,Grower,1.8,1.8,1.8,Extruido,,35,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Adapt Shock 38% 1.6mm,False,,,,,,,Pre Grower,1.6,1.6,1.6,Extruido,,38,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Adapt Shock 40% 1.2mm,False,,,,,,,Nursery,1.2,1.2,1.2,Extruido,,40,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Adapt Shock 42% 0.8mm,False,,,,,,,Nursery,0.8,0.8,0.8,Extruido,,42,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Adapt Shock 45%,False,,,,,,,Nursery,0.6,0.6,0.6,Extruido,,45,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Advance 35%,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,,35,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Advance 35%,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,,35,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Advance 35% AP,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,,35,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Nursery 45% SmartShield,False,False,False,True,True,False,False,Nursery,0.6,0.6,0.6,Extruido,,45,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Pre-Starter 40%,False,False,False,True,True,False,False,Nursery,1.2,1.2,1.2,Extruido,,40,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Starter 40%,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,,40,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Starter 40% Smartshield,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,,40,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Cargill,Aquaxcel Transition 38%,False,False,False,False,False,True,True,Pre Grower,1.6,1.6,1.6,Extruido,,38,https://aquaxcel.com/productos/mexico/,2026-11-09
+mexico,Vimifos,Bumper Crop,,,,,,,,Nursery,0.6-1.8,0.6,1.8,,25,40,https://vimifos.com/producto/bumper-crop,2026-11-09
+mexico,Vimifos,Bumper Crop,,,,,,,,Grower,1.8-3,1.8,3,,25,40,https://vimifos.com/producto/bumper-crop,2026-11-09
+mexico,Vimifos,Bumper Crop 30%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,30,https://vimifos.com/producto/bumper-crop,2026-11-09
+mexico,Vimifos,Bumper Crop 35%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,35,https://vimifos.com/producto/bumper-crop,2026-11-09
+mexico,Vimifos,Bumper Crop 40%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,40,https://vimifos.com/producto/bumper-crop,2026-11-09
+mexico,Vimifos,Natural Force,,,,,,,,Nursery,0.6-2,0.6,2,,25,35,https://vimifos.com/producto/natural-force,2026-11-09
+mexico,Vimifos,Natural Force 25%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,25,https://vimifos.com/producto/natural-force,2026-11-09
+mexico,Vimifos,Natural Force 30%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,30,https://vimifos.com/producto/natural-force,2026-11-09
+mexico,Vimifos,Natural Force 35%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,35,https://vimifos.com/producto/natural-force,2026-11-09
+mexico,Vimifos,Special Race Way,,,,,,,,Nursery,0.4-0.6,0.4,0.6,,25,40,https://vimifos.com/producto/race-way,2026-11-09
+mexico,Vimifos,Special Race Way,,,,,,,,Nursery,0.6-1.2,0.6,1.2,,25,40,https://vimifos.com/producto/race-way,2026-11-09
+mexico,Vimifos,Special Race Way,,,,,,,,Nursery,1,1,1,Extruido,25,40,https://vimifos.com/producto/race-way,2026-11-09
+mexico,Vimifos,Strong Breed,,True,False,False,False,False,False,Grower,2.4,2.4,2.4,,25,40,https://vimifos.com/producto/strong-breed,2026-11-09
+mexico,Vimifos,Total Range,,,,,,,,Nursery,0.6-1.8,0.6,1.8,,25,35,https://vimifos.com/producto/total-range,2026-11-09
+mexico,Vimifos,Total Range 25%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,25,https://vimifos.com/producto/total-range,2026-11-09
+mexico,Vimifos,Total Range 30%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,30,https://vimifos.com/producto/total-range,2026-11-09
+mexico,Vimifos,Total Range 35%,,False,False,False,False,False,True,Grower,2-6,2,6,,25,35,https://vimifos.com/producto/total-range,2026-11-09
+mexico,Vimifos,Xtrudix 00,,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,25,40,https://vimifos.com/producto/xtrudix,2026-11-09
+mexico,Vimifos,Xtrudix 0,,,,,,,,Nursery,1.2,1.2,1.2,Extruido,25,40,https://vimifos.com/producto/xtrudix,2026-11-09
+mexico,Vimifos,Xtrudix 1,,,,,,,,Pre Grower,1.6,1.6,1.6,Extruido,25,40,https://vimifos.com/producto/xtrudix,2026-11-09
+mexico,Vimifos,Xtrudix 2,,,,,,,,Grower,1.8,1.8,1.8,Extruido,25,38,https://vimifos.com/producto/xtrudix,2026-11-09
+mexico,Api-Aba,APICAMARÓN Dorado 35% 20Kg,,False,False,False,False,False,True,Grower,1.8-2.32,1.8,2.32,,20,35,https://www.acuacultura.com.mx/productos/raceways-20-kg-2-2/,2026-11-09
+mexico,Api-Aba,APICAMARÓN Dorado 40% 20Kg,,False,False,True,False,False,False,Nursery,,,,,20,40,https://www.acuacultura.com.mx/productos/raceways-20-kg-2/,2026-11-09
+mexico,Api-Aba,Raceways 20 Kg,,,,,,,,Nursery,0.8-1.1,0.8,1.1,,20,45,https://www.acuacultura.com.mx/productos/raceways-20-kg/,2026-11-09
+mexico,Zeigler,Brine Shrimp Flake,,False,True,True,False,False,False,Hatchery,,,,,25,50,https://www.nutrimar.mx/birne-shrimp-flake,2026-11-09
+mexico,Zeigler,Broodstock,,True,False,False,False,False,False,Grower,2.4,2.4,2.4,,25,40,https://www.nutrimar.mx/broodstock,2026-11-09
+mexico,Nutrimar,Extensivo,,,,,,,,,,,,,,35,https://www.nutrimar.mx/extensivo,2026-11-09
+mexico,Zeigler,EZ Artemia,,False,True,True,False,False,False,Hatchery,0.05-0.5,0.05,0.5,,1,14,https://www.nutrimar.mx/ez-artemia,2026-11-09
+mexico,Zeigler,EZ Artemia Ultra,,False,True,True,False,False,False,Hatchery,0.05-0.5,0.05,0.5,,2,12,https://www.nutrimar.mx/ez-artemia-ultra,2026-11-09
+mexico,Zeigler,EZ Larva,,False,True,True,False,False,False,Hatchery,0.01-0.6,0.01,0.6,,1,11,https://www.nutrimar.mx/ez-larva,2026-11-09
+mexico,Zeigler,Ez-mate,,True,False,False,False,False,False,Grower,2.4-5,2.4,5,,15,40,https://www.nutrimar.mx/ez-mate,2026-11-09
+mexico,Nutrimar,Intensivo,,,,,,,,,,,,,,,https://www.nutrimar.mx/intensivo,2026-11-09
+mexico,Zeigler,Larva Shrimp Flake,,False,True,True,False,False,False,Hatchery,,,,,10,48,https://www.nutrimar.mx/larva-shrimp-flake,2026-11-09
+mexico,Zeigler,Larva Z plus,,False,True,True,False,False,False,Hatchery,,,,,,50,https://www.nutrimar.mx/larva-z-plus,2026-11-09
+mexico,Zeigler,maturation,,True,False,False,False,False,True,Grower,2.4,2.4,2.4,,9.1,40,https://www.nutrimar.mx/maturation,2026-11-09
+mexico,Zeigler,PL Raceway 40-9,,False,False,True,True,True,True,Nursery,0.4-1.2,0.4,1.2,,20,40,https://www.nutrimar.mx/pl-raceway-40-9,2026-11-09
+mexico,Zeigler,PL Raceway plus,,False,False,True,True,True,True,Nursery,0.4-1.2,0.4,1.2,,20,40,https://www.nutrimar.mx/pl-raceway-plus,2026-11-09
+mexico,Zeigler,Redi-mate,,True,False,False,False,False,False,Grower,2.4,2.4,2.4,,15,40,https://www.nutrimar.mx/redi-mate,2026-11-09
+mexico,Nutrimar,Semi-intensivo 35%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,35,https://www.nutrimar.mx/semi-intensivo,2026-11-09
+mexico,Nutrimar,Semi-intensivo 30%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,30,https://www.nutrimar.mx/semi-intensivo,2026-11-09
+mexico,Nutrimar,Super growth 35%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,35,https://www.nutrimar.mx/super-growth,2026-11-09
+mexico,Nutrimar,Super growth 30%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,30,https://www.nutrimar.mx/super-growth,2026-11-09
+mexico,Zeigler,Z pro,,False,True,True,False,False,False,Hatchery,,,,,4,44,https://www.nutrimar.mx/z-pro,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.1,0.1,0.1,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.2,0.2,0.2,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.3,0.3,0.3,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS PLUS (45-11),,False,True,True,False,False,False,Hatchery,0.5,0.5,0.5,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-1.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.2,0.2,0.2,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.3,0.3,0.3,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.5,0.5,0.5,Microparticulado,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.6,0.6,0.6,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,0.8,0.8,0.8,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,1,1,1,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTÁCEOS BD (45-11),,False,True,True,False,False,False,Hatchery,1.4,1.4,1.4,Extruido,,45,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS RC (40-10),,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,,40,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS RC (40-10),,False,False,True,False,False,False,Nursery,1,1,1,Extruido,,40,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS RC (40-10),,False,False,True,False,False,False,Nursery,1.4,1.4,1.4,Extruido,,40,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS PLUS ULTRA (35-9),,False,False,True,False,False,False,Nursery,1,1,1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MICROTEK CRUSTACEOS PLUS ULTRA (35-9),,False,False,True,False,False,False,Nursery,1.4,1.4,1.4,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-2.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS AR (40-10),,False,False,False,False,True,False,Pre Grower,1.6,1.6,1.6,,,40,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS AR (40-10),,False,False,False,False,True,False,Grower,1.8,1.8,1.8,,,40,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS PLUS ULTRA (35-9),,False,False,False,False,True,True,Pre Grower,1.6,1.6,1.6,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS PLUS ULTRA (35-9),,False,False,False,False,True,True,Grower,1.8,1.8,1.8,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS BD (35-7) CHP,,False,False,False,False,True,True,Pre Grower,1.6,1.6,1.6,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,MINIPELET CRUSTÁCEOS BD (35-7) CHP,,False,False,False,False,True,True,Grower,1.8,1.8,1.8,,,35,https://el-pedregal.com/img/crustaceos-info-4.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm PLUS ULTRA (35-9),,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-3.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm AD (35-7) CHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-3.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm AD (35-7) SHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,35,https://el-pedregal.com/img/crustaceos-info-3.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm BD (30-6) CHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,30,https://el-pedregal.com/img/crustaceos-info-5.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm BD (28-8) SHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,28,https://el-pedregal.com/img/crustaceos-info-5.png,2026-11-09
+mexico,El Pedregal,ENGORDA EXTRUIDO 2.1 mm BD (25-8) SHP,,False,False,False,False,False,True,Grower,2.1,2.1,2.1,Extruido,,25,https://el-pedregal.com/img/crustaceos-info-5.png,2026-11-09
+mexico,El Pedregal,Migajas # 1 Peletizado (45-9),,False,False,True,False,False,False,Nursery,0.6-0.85,0.6,0.85,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 1 Peletizado (40-8),,False,False,True,False,False,False,Nursery,0.6-0.85,0.6,0.85,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 2 Peletizado (45-9),,False,False,True,False,False,False,Nursery,0.85-1.18,0.85,1.18,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 2 Peletizado (40-8),,False,False,True,False,False,False,Nursery,0.85-1.18,0.85,1.18,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 3 Peletizado (45-9),,False,False,True,False,False,False,Nursery,1.18-2,1.18,2,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 3 Peletizado (40-8),,False,False,True,False,False,False,Nursery,1.18-2,1.18,2,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 4 Peletizado (45-9),,False,False,True,False,False,False,Grower,2-3,2,3,Pellet,,45,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,El Pedregal,Migajas # 4 Peletizado (40-8),,False,False,True,False,False,False,Grower,2-3,2,3,Pellet,,40,https://el-pedregal.com/alimento/crustaceos?t=mp,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - MIGAJA (Línea Performance),,,,,,,,,,,,,25,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - PELLET 1.8 mm (Línea Performance),,,,,,,,Grower,1.8,1.8,1.8,Pellet,,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 35% - PELLET 2.0 mm (Línea Performance),,,,,,,,Grower,2,2,2,Pellet,,35,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 45% - MIGAJA (Línea HD),,,,,,,,,,,,,25,45,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 45% - MIGAJA 0.3 mm (Línea HD),,,,,,,,Nursery,0.3,0.3,0.3,,,45,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - PELLET 1.8 mm (Línea HD),,,,,,,,Grower,1.8,1.8,1.8,Pellet,,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 35% - PELLET 2.0 mm (Línea HD),,,,,,,,Grower,2,2,2,Pellet,,35,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 45% - MIGAJA 0.6 mm (Línea HD),,,,,,,,Nursery,0.6,0.6,0.6,,,45,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 35% - PELLET 2.0 mm (Línea Estándar),,,,,,,,Grower,2,2,2,Pellet,,35,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 25% - PELLET 2.0 mm (Línea Estándar),,,,,,,,Grower,2,2,2,Pellet,,25,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - MIGAJA (Línea Estándar),,,,,,,,,,,,,25,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,Skilla,SKILLA 4008,,,,,,,,Nursery,1,1,1,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Skilla,SKILLA 4008,,False,False,False,False,True,False,Nursery,1.5,1.5,1.5,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Skilla,SKILLA 3505,,False,False,False,False,True,False,Nursery,1.5,1.5,1.5,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Skilla,SKILLA 3505,,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Biogrow,Biogrow Formula 1 (00-50 Micras Zoea),,False,True,False,False,False,False,Hatchery,0-0.05,0,0.05,Microencapsulado,0.45,60.4,https://proaqua.mx/biogrow-formula-1-00-50-micras-zoea-lata-1-lilbra/,2026-11-09
+mexico,Biogrow,Biogrow Formula 2 (040-150 Micras Mysis),,False,True,True,False,False,False,Hatchery,0.04-0.15,0.04,0.15,Microencapsulado,0.45,59,https://proaqua.mx/biogrow-formula-2-040-150-micras-mysis-lata-1-libra/,2026-11-09
+mexico,Biogrow,Biogrow Formula 3 (100-300 Micras Mysis-PL),,False,True,True,False,False,False,Hatchery,0.1-0.3,0.1,0.3,Microencapsulado,5,45,https://proaqua.mx/biogrow-formula-3-100-300-micras-mysis-pl-cubeta-5-kilos/,2026-11-09
+mexico,Biogrow,Biogrow Formula 4 (300-500 Micras PL),,False,True,True,False,False,False,Hatchery,0.3-0.5,0.3,0.5,Extruido,25,45,https://proaqua.mx/biogrow-formula-4-300-500-micras-pl-saco-25-kilos/,2026-11-09
+mexico,Biogrow,Biogrow XT ultra,,,,,,,,Nursery,0.3,0.3,0.3,,,45,https://proaqua.mx/alimento-para-camaron-biogrow-xt-ultra-adicionado-con-qrill-orego-stim-optimax-a-y-glucan-mos/,2026-11-09
+mexico,Biogrow,Biogrow XT ultra,,,,,,,,Nursery,0.6,0.6,0.6,,,45,https://proaqua.mx/alimento-para-camaron-biogrow-xt-ultra-adicionado-con-qrill-orego-stim-optimax-a-y-glucan-mos/,2026-11-09
+mexico,Biogrow,Biogrow XT ultra,,,,,,,,Nursery,0.8,0.8,0.8,,,45,https://proaqua.mx/alimento-para-camaron-biogrow-xt-ultra-adicionado-con-qrill-orego-stim-optimax-a-y-glucan-mos/,2026-11-09
+mexico,Epicore,Epifeed MBF,,True,False,False,False,False,False,,,,,,,43,https://proaqua.mx/epifeed-mbf-cu-ete-epicore/,2026-11-09
+mexico,Epicore,Epifeed LHF1,,False,True,False,False,False,False,Hatchery,0.03,0.03,0.03,Líquido,,15,https://proaqua.mx/epifeed-lhf-bote-1-litro-epicore/,2026-11-09
+mexico,Epicore,Epifeed LHF2,,False,True,False,False,False,False,Hatchery,0.085,0.085,0.085,Líquido,,15,https://proaqua.mx/epifeed-lhf-bote-1-litro-epicore/,2026-11-09
+mexico,Epicore,Epibal-500,,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Granulado,20,49,https://proaqua.mx/epibal-500-cu-ete-20-kilos-epicore/,2026-11-09
+mexico,Epicore,Epibal-300,,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Granulado,20,49,https://proaqua.mx/epibal-300-cu-ete-20-kilos-epicore/,2026-11-09
+panama,NasaFeed,AQUANASA 25,,False,False,True,True,True,True,Nursery,,,,Pellet,45.36,25,https://web.archive.org/web/20240830070946id_/https://nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf,2026-11-09
+panama,NasaFeed,AQUANASA 30,,False,False,True,True,True,True,Nursery,,,,Pellet,45.36,30,https://web.archive.org/web/20240830070946id_/https://nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf,2026-11-09
+panama,NasaFeed,AQUANASA 35,,False,False,True,True,True,True,Nursery,,,,Pellet,45.36,35,https://web.archive.org/web/20240830070946id_/https://nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf,2026-11-09
+panama,Italcol,AQUACAMARON 35,,False,False,False,False,False,True,Grower,,,,,,35,https://italcol.com/producto/camaron-levante/,2026-11-09

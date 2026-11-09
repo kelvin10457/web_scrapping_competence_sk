@@ -1,0 +1,2 @@
+﻿pais,empresa,nombre_producto,campo,valor_elegido,regla,candidatos,fuente_url,fecha_extraccion
+mexico,Api-Aba,APICAMARÓN Dorado 35% 20Kg,proteina_pct,35,coincidencia,35 (titulo) | 40 (analisis) | 35 (texto) | 35 (texto),https://www.acuacultura.com.mx/productos/raceways-20-kg-2-2/,2026-11-09

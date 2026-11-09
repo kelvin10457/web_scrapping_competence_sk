@@ -2,9 +2,9 @@ import pytest
 
 import schema
 from conftest import ROOT
-from parsers import haid as parser
+from paises.ecuador import haid_parser as parser
 
-# Texto real (recortado) de la ficha "Speed Pellet" -- ver MEMORY.md: el
+# Texto real (recortado) de la ficha "Speed Pellet" -- ver docs/historico/MEMORY.md: el
 # encabezado dice PELLETIZADO (coincide con el nombre del producto) pero la
 # descripcion dice, por error propio de la ficha, "elaborado por proceso de
 # extruido".
@@ -36,11 +36,11 @@ proporciona los nutrientes esenciales para el camarón.
 
 
 def test_speed_pellet_contradiction_resolves_to_pelletizado():
-    assert schema.detect_tecnologia(SPEED_TEXT) == "Pelletizado"
+    assert schema.detect_tecnologia(SPEED_TEXT) == "Pellet"
 
 
 def test_shrimpy_template_reads_tecnologia_from_description():
-    assert schema.detect_tecnologia(SHRIMPY_TEXT) == "Pelletizado"
+    assert schema.detect_tecnologia(SHRIMPY_TEXT) == "Pellet"
 
 
 def test_line_number_extracts_first_number_on_matching_line():
@@ -75,7 +75,7 @@ def test_infer_etapa_pl10_is_precria():
 
 
 def test_infer_etapa_disease_marker_no_longer_returns_salud():
-    # "salud" ya no es un valor de etapa (ver producto_salud abajo) -- sin
+    # "salud" ya no es un valor de etapa (ver es_producto_de_salud abajo) -- sin
     # otro marcador de rango, el texto de enfermedad solo no resuelve etapa.
     assert parser._infer_etapa("x", "previene enfermedades en el intestino del camaron por Vibrio") is None
 
@@ -88,12 +88,12 @@ def test_infer_etapa_keeps_stage_info_alongside_disease_marker():
     assert parser._infer_etapa("x", text) == "engorde"
 
 
-# La deteccion de producto_salud es compartida (schema.detect_producto_salud,
+# La deteccion de es_producto_de_salud es compartida (schema.detect_es_producto_de_salud,
 # probada en test_schema.py) -- ya no vive como funcion local de este parser.
 
 
 def test_infer_etapa_starter_slug_fallback():
-    # Unico caso sin marcador textual (MEMORY.md): la ficha de "Starter"
+    # Unico caso sin marcador textual (docs/historico/MEMORY.md): la ficha de "Starter"
     # describe el rango en gramos (1 a 3 g) sin mencionar PL ni tamano de
     # mercado -- se resuelve a mano a precria por el propio agrupamiento
     # del sitio (tab "Iniciadores" junto a Starter Pro).
@@ -105,7 +105,7 @@ def test_infer_etapa_late_marker_without_pl10_is_engorde():
 
 
 def test_parse_product_explodes_one_row_per_tamano_repeating_shared_fields():
-    # Caso real Speed/Happiness/Fitness (MEMORY.md): un solo % de proteina
+    # Caso real Speed/Happiness/Fitness (docs/historico/MEMORY.md): un solo % de proteina
     # para los 3 calibres, asi que el fan-out debe repetir ese valor tal
     # cual en cada fila, no inventar una variacion que la ficha no publica.
     html = (
@@ -135,7 +135,7 @@ def test_parse_product_no_tamano_returns_single_null_row():
 # Texto real extraido (incluye ruido de OCR: "#0"/"#1"/"#2" salen como
 # "++0"/"+1"/"+2") de la ficha Starter Pro -- caso real que motivo el fix:
 # 10kg para los calibres chicos, 25kg para el grande, dentro del MISMO
-# producto. Ver MEMORY.md.
+# producto. Ver docs/historico/MEMORY.md.
 STARTER_PRO_EMPAQUE_TEXT = (
     "Empaque\n\nY” Sacos de polipropileno laminado en presentación de\n"
     "10kg para los diámetros ++0 - 0.3mm, +1 - 0.5 mm.\n\n"
@@ -197,5 +197,45 @@ def test_parse_product_fitness_keeps_stage_info_and_flags_salud():
         html="",
         pdf_bytes=pdf_path.read_bytes(),
     )
-    assert all(r["producto_salud"] is True for r in records)
-    assert all(r["etapa_competidor"] == "engorde" for r in records)
+    assert all(r["es_producto_de_salud"] is True for r in records)
+    assert all(r["etapa_engorde"] is True for r in records)
+
+
+def _real_records(pdf_name: str, slug: str) -> list[dict]:
+    pdf_path = ROOT / "data" / "raw" / "haid" / pdf_name
+    if not pdf_path.exists():
+        pytest.skip("PDF real no presente en este entorno (data/raw no poblado)")
+    return parser.parse_product(f"https://www.haid.com.ec/{slug}/", html="", pdf_bytes=pdf_path.read_bytes())
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def test_r43_req1_starter_pro_slug_y_pl10_en_todas_las_filas():
+    # "starter" (slug) + "a partir de PL 10 hasta 0.25 gramos" (recomendaciones)
+    records = _real_records("Ficha-tecnica-Starter-pro-45_-Ext.pdf", "starter-pro")
+    assert len(records) == 3
+    assert all(_etapas_true(r) == {"post_larva", "precria"} for r in records)
+    assert all(r["etapa_engorde"] is False and r["_etapas_detectadas"] for r in records)
+
+
+def test_r43_req1_hasta_la_cosecha_en_recomendaciones_es_engorde():
+    # La descripcion de Speed no nombra etapa; las recomendaciones dicen "hasta la cosecha".
+    records = _real_records("ficha-tecnica-Speed-pellet.pdf", "speed")
+    assert all(_etapas_true(r) == {"engorde"} for r in records)
+
+
+def test_r43_req1_shrimpy_juveniles_y_engorde():
+    records = _real_records("Ficha-tecnica-Shrimpy-fitness-35-pellet.pdf", "fitness")
+    assert all(_etapas_true(r) == {"engorde"} for r in records)
+
+
+def test_r43_req2_gramos_sin_termino_de_etapa_quedan_vacias():
+    # Starter dice "de 1 gramo hasta 3 gramos": con un slug sin termino de etapa, nada.
+    records = _real_records("Ficha-tecnica-Starter-42_-0.8-Ext.pdf", "producto-x")
+    assert all(r[f"etapa_{e}"] is None for r in records for e in schema.ETAPAS)
+    assert all(r["_etapas_detectadas"] for r in records)
+    # Con su slug real, "starter" marca precria.
+    records = _real_records("Ficha-tecnica-Starter-42_-0.8-Ext.pdf", "starter")
+    assert all(_etapas_true(r) == {"precria"} for r in records)

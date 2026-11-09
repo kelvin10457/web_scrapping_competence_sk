@@ -1,5 +1,6 @@
+import schema
 from conftest import FIXTURES
-from parsers import agripac as parser
+from paises.ecuador import agripac_parser as parser
 
 
 def _html(filename: str) -> str:
@@ -13,9 +14,9 @@ def test_feedpac_35_premium_has_no_subtipo_tab_so_tamano_stays_none():
     record = parser.parse_product("https://agripac.com.ec/productos/feedpac-35-premium/", html)
     assert record["nombre_producto"] == "Feedpac 35% Premium"
     assert record["empresa"] == "Agripac"
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
     assert record["tamano_pellet_mm"] is None
-    assert record["tipo_presentacion"] == "Pelletizado"
+    assert record["tipo_presentacion"] == "Pellet"
     assert record["empaque_kg"] == "25"
 
 
@@ -25,8 +26,8 @@ def test_tamano_pellet_mm_reads_from_subtipo_tab():
         "https://agripac.com.ec/productos/feedpac-35-ultra-micropellet-1-2mm/", html
     )
     assert record["tamano_pellet_mm"] == "1.2"
-    assert record["proteina_pct"] == "35"
-    assert record["tipo_presentacion"] == "Pelletizado"
+    assert record["proteina_pct"] == 35.0
+    assert record["tipo_presentacion"] == "Pellet"
 
 
 def test_tamano_pellet_mm_falls_back_to_title_when_subtipo_tab_is_missing():
@@ -84,7 +85,7 @@ def test_proteina_pct_falls_back_to_ingredientes_nucleo_when_title_has_no_percen
     html = _html("agripac_premium_agua_dulce.html")
     record = parser.parse_product("https://agripac.com.ec/productos/premium-agua-dulce/", html)
     assert record["nombre_producto"] == "Premium Agua Dulce"
-    assert record["proteina_pct"] == "35"
+    assert record["proteina_pct"] == 35.0
 
 
 def test_tamano_pellet_mm_handles_comma_decimal_separator():
@@ -105,7 +106,7 @@ def test_etapa_falls_back_to_tamano_when_text_is_generic_for_all_products():
     record = parser.parse_product(
         "https://agripac.com.ec/productos/feedpac-35-ultra-gregarinas-18-mm/", html
     )
-    assert record["etapa_competidor"] == "engorde"
+    assert record["etapa_engorde"] is True
 
 
 def test_parse_listing_tags_all_records_as_agripac():
@@ -115,3 +116,53 @@ def test_parse_listing_tags_all_records_as_agripac():
     )
     assert len(records) == 1
     assert records[0]["empresa"] == "Agripac"
+
+
+def test_tipo_presentacion_microextruido_desde_la_pestana_tipo():
+    # R3.3 REQ-3: MeM dice "Microextruido" (valor oficial); antes se colapsaba a Extruido.
+    html = _html("agripac_mem_300_500.html")
+    record = parser.parse_product("https://agripac.com.ec/productos/mem-300-500/", html, es_larvicultura=True)
+    assert record["tipo_presentacion"] == "Microextruido"
+
+
+def _etapas_true(record: dict) -> set[str]:
+    return {e for e in schema.ETAPAS if record[f"etapa_{e}"] is True}
+
+
+def _parse(slug: str, filename: str, es_larvicultura: bool = False) -> dict:
+    return parser.parse_product(
+        f"https://agripac.com.ec/productos/{slug}/", _html(filename), es_larvicultura
+    )
+
+
+def test_r46_req1_descripcion_marca_todas_las_etapas():
+    # "larvas y post-larvas de camaron"
+    larfeed = _parse("larfeed", "agripac_larfeed.html", True)
+    assert _etapas_true(larfeed) == {"larva", "post_larva"}
+    # "ideal para zoea 3 - mysis 3" + "larvas y post larvas"
+    vitellus = _parse("vitellus-small", "agripac_vitellus_small.html", True)
+    assert _etapas_true(vitellus) == {"larva", "post_larva"}
+    # "postlarvas", "PL1 a PL6"
+    mpex = _parse("mpex-100-200", "agripac_mpex_100_200.html", True)
+    assert _etapas_true(mpex) == {"post_larva"}
+    assert mpex["etapa_larva"] is False
+    oyster = _parse("new-royal-oyster", "agripac_new_royal_oyster.html", True)
+    assert _etapas_true(oyster) == {"reproductores"}
+    assert all(r["_etapas_detectadas"] for r in (larfeed, vitellus, mpex, oyster))
+
+
+def test_r46_req2_sin_termino_de_etapa_usa_el_tamano_de_pellet():
+    micro = _parse("feedpac-35-ultra-micropellet-1-2mm", "agripac_feedpac_35_ultra_micropellet_1_2mm.html")
+    assert _etapas_true(micro) == {"precria"}
+    gregarinas = _parse("feedpac-35-ultra-gregarinas-18-mm", "agripac_feedpac_35_ultra_gregarinas_18mm.html")
+    assert _etapas_true(gregarinas) == {"engorde"}
+    # sin tamano en la ficha: vacio
+    premium = _parse("feedpac-35-premium", "agripac_feedpac_35_premium.html")
+    assert all(premium[f"etapa_{e}"] is None for e in schema.ETAPAS)
+    assert premium["_etapas_detectadas"] is True
+
+
+def test_r46_req3_royal_pepper_protein_queda_vacio():
+    record = _parse("royal-pepper-protein", "agripac_royal_pepper_protein.html", True)
+    assert all(record[f"etapa_{e}"] is None for e in schema.ETAPAS)
+    assert record["_etapas_detectadas"] is True

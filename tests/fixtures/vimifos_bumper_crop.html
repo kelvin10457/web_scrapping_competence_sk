@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>VIMIFOS |   
+</title>
+  <link rel="shortcut icon" href="https://vimifos.com/assets/imgs/favicon.png" />
+  <link rel="apple-touch-icon" href="https://vimifos.com/assets/imgs/favicon.png" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="author" content="VIMIFOS | Nutrición">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="  
+">
+  <meta property="og:description" content="">
+  <meta property="og:image" content="">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="vimifos.com">
+  <meta property="twitter:url" content="">
+  <meta name="twitter:title" content="  
+">
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="">
+  <link href="https://vimifos.com/assets/css/fontawesome/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/milligram.min.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/colors.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/fonts.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/icons.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/nav.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/vimifos.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/aos.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/featherlight.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://vimifos.com/assets2/css/custom.css?v=123456789"/>
+  <!-- Custom styles for this template 1 -->
+
+    <link href="https://vimifos.com/assets/css/swiper-bundle.min.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/tabs.css" rel="stylesheet" type="text/css">
+  <link href="https://vimifos.com/assets/css/list.css" rel="stylesheet" type="text/css">
+  <style>
+    table {
+      border: #ccc solid 3px !important;
+    }
+    section div::-webkit-scrollbar {
+      height: 3px !important;
+    }
+    section div::-webkit-scrollbar-track {
+      border-radius: 10px !important !important;
+      webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+    section div::-webkit-scrollbar-thumb {
+      background-color: #d71921 !important;
+      webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+    }
+    .swiper-wrapper {
+      height: auto;
+    }
+    .swiper-slide {
+      text-align: center;
+    }
+    .swiper-slide a img {
+      max-width: 200px;
+    }
+    .swiper-button-prev,
+    .swiper-button-next {
+      color: blue;
+    }
+    .categoria-select {
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgb(14 48 129 / 58%) 0px -3px 0px inset;
+    }
+    .container-svg {
+      display: none;
+    }
+    .banner {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .banner h1 {
+      font-size: 5rem;
+      font-weight: 300;
+      text-transform: uppercase;
+    }
+    @keyframes  fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn ease-in 1;
+      animation-fill-mode: forwards;
+      animation-duration: 7s;
+    }
+
+    @media (min-width: 1024px) {
+      .container-svg {
+        opacity: 0;
+        display: block;
+        position: absolute;
+      }
+
+      .hexagon {
+        position: relative;
+        height: 300px;
+        width: 300px;
+        background: black;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        padding: 1.5rem;
+        text-align: center;
+        top: -34rem;
+        left: 12rem;
+        flex-flow: column;
+      }
+
+      .hexagon:before,
+      .double:after {
+        position: absolute;
+        content: '';
+      }
+
+      .hexagon,
+      .hexagon:before,
+      .double:after {
+        -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      }
+
+      .hexagon:before {
+        top: 4px;
+        left: 4px;
+        height: calc(100% - 8px);
+        width: calc(100% - 8px);
+      }
+
+      .h1-hex {
+        font-size: 2.3rem;
+        margin: 0;
+        margin-bottom: .5rem;
+        color: #fff;
+        text-align: left;
+      }
+
+      .p-hex {
+        color: #fff;
+        text-align: center;
+        font-size: 15px;
+      }
+    }
+
+    @media (min-width: 1060px) {
+      .hexagon {
+        left: 16rem;
+      }
+    }
+
+
+    @media (min-width: 1200px) {
+      .hexagon {
+        height: 350px;
+        width: 350px;
+        top: -40rem;
+        left: 15rem;
+      }
+
+      .h1-hex {
+        font-size: 3.4rem;
+      }
+
+      .p-hex {
+        font-size: 16px;
+      }
+    }
+
+    @media (min-width: 1260px) {
+      .hexagon {
+        left: 16rem;
+      }
+    }
+
+    @media (min-width: 1310px) {
+      .hexagon {
+        left: 17rem;
+      }
+    }
+
+    @media (min-width: 1350px) {
+      .hexagon {
+        top: -40rem;
+        left: 18rem;
+      }
+    }
+
+    @media (min-width: 1410px) {
+      .hexagon {
+        top: -40rem;
+        left: 20rem;
+      }
+    }
+
+    @media (min-width: 1500px) {
+      .hexagon {
+        width: 400px;
+        height: 400px;
+        top: -40rem;
+        left: 21rem;
+      }
+    }
+
+    @media (min-width: 1550px) {
+      .hexagon {
+        top: -42rem;
+        left: 25rem;
+      }
+    }
+
+    @media (min-width: 1600px) {
+      .hexagon {
+        top: -41rem;
+        left: 26rem;
+      }
+    }
+
+    @media (min-width: 1650px) {
+      .hexagon {
+        top: -43rem;
+        left: 30rem
+      }
+    }
+
+    @media (min-width: 1700px) {
+      .hexagon {
+        top: -45rem;
+        left: 34rem;
+      }
+    }
+    .container-tables > div{
+      overflow-x: auto;
+    }
+    .swiper-button-disabled{
+      display: none !important;
+    }
+    @media  only screen and (max-width: 500px) {
+    .featherlight .featherlight-content {
+      max-height: 100%;
+      height: 612px;
+      padding-bottom: 0;
+    }
+  }
+  .featherlight .featherlight-close-icon {
+    top: 3px;
+    right: 3px;
+    color: #fff;
+  }
+  .swiper-slide a img{
+    object-fit: contain;
+    border-radius: 18px;
+  }
+  .swiper-slide a{
+    color: inherit;
+  }
+  .swiper-slide .brand .titulo{
+    line-height: 1.2;
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    max-width: 144px;
+  }
+  .swiper-button-next:after,
+  .swiper-button-prev:after{
+    font-size: 30px;
+  }
+  .box-brand-producto{
+    border-radius: 40px;
+    padding: 8px 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+    margin: 15px 5px;
+  }
+  .box-brand-producto.categoria-select{
+    border-radius: 40px;
+  }
+  </style>
+  <!-- Meta Pixel Code -->
+  <script>
+    ! function(f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function() {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '952391602598304');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=952391602598304&ev=PageView&noscript=1" /></noscript>
+  <!-- End Meta Pixel Code -->
+</head>
+
+<body>
+
+  <div id="preloader">
+    <lottie-player src="https://vimifos.com/assets/vimifos-preloader.json" background="transparent" speed="1"
+      style="width: 100px; height: 100px; z-index: 10000;" loop autoplay></lottie-player>
+  </div>
+
+
+  <style media="screen">
+  #header-nav-2{
+    transition: all 0.3s;
+  }
+  .header-bg{
+    background: rgba(2, 44, 135, 0.933);
+  }
+  :root{
+    --color-azul:#013096;
+  }
+  @media (max-width: 1023px){
+    #header-nav-2 .mobile{
+      display: inline-block !important;
+    }
+    #header-nav-2 .desktop,
+    #header-nav-2 #menu{
+      display: none !important;
+    }
+  }
+  .btn-effect{
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    background: transparent !important;
+  }
+  .btn-effect::before{
+    content:'';
+    display: block;
+    position: absolute;
+    left: -101%;
+    top:0;
+    background: var(--color-azul);
+    transition: all 0.3s;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+  .btn-effect:hover::before{
+    left:0;
+  }
+  .btn-effect:hover{
+    border-color:var(--color-azul) !important;
+    transition-delay: 0.2s;
+  }
+  #header-nav-2.header-bg .btn-effect::before{
+    background: #fff;
+  }
+  #header-nav-2.header-bg .btn-effect:hover{
+    color: var(--color-azul);
+    border-color:#fff;
+  }
+
+
+  #menu-mobile lottie-player{
+    width: 140px !important;
+    height: 140px !important;
+  }
+  @media (max-width: 550px){
+    #menu-mobile lottie-player{
+      width: 105px !important;
+      height: 105px !important;
+    }
+  }
+  </style>
+
+
+  <header style="padding: 10px; position: fixed; width: 100%; height: 110px; z-index: 3;" id="header-nav-2">
+    <div id="nav" class="container">
+      <div class="row">
+        <div class="column" style="text-align: left; min-width: 110px;">
+          <div id="logo-anim" style="width: 100; z-index: 10000; position: absolute;">
+            <a href="/">
+              <lottie-player src="https://vimifos.com/assets/imgs/logo-vimifos.json" background="transparent" speed="1"
+                style="width: 100px; height: 100px; z-index: 10000;" loop autoplay></lottie-player>
+            </a>
+          </div>
+        </div>
+        <div class="column" style="height: 100; max-width: 600px;">
+          <div class="mobile">
+            <div class="menu" style="position: absolute; margin-top: 12px; right: 20px;">
+              <label for="responsive-menu" id="img-hamburguesa">
+                <img alt="" src="https://vimifos.com/assets/imgs/icon/menu.svg" width="40" />
+              </label>
+            </div>
+          </div>
+          <div class="desktop">
+            <div class="row" style="width: 600px; float: right; margin: 4px 0 12px 0; text-align: left;">
+              <div class="column nav-contact"
+                style="display: flex; align-items: center; justify-content: space-between;">
+                <a href="#contacto"> CONTACTO <img alt=""
+                    src="https://vimifos.com/assets/imgs/icon/btn-email.svg" style="width: 25;" width="25"></a>
+                <a href="tel:+528008464367"> 800 846-4367 <img alt=""
+                    src="https://vimifos.com/assets/imgs/icon/phone_icon.svg" style="width: 25;" width="25"></a>
+                <a href="https://app.vimifos.com/login"> CLIENTES <img alt=""
+                    src="https://vimifos.com/assets/imgs/icon/btn-users.svg" style="width: 25;" width="25"></a>
+              </div>
+              <div class="nav-social" style="text-align: right; width: 250px; position: relative; top: 4px;">
+                <a href="https://facebook.com/Vimifos" target="_blank">
+                  <img alt="" src="https://vimifos.com/assets/imgs/icon/fb_icon.svg" style="width: 25;"
+                    width="25">
+                </a>
+                <a href="https://youtube.com/user/VIMIFOSMx/videos" target="_blank">
+                  <img alt="" src="https://vimifos.com/assets/imgs/icon/youtube_icon.svg" style="width: 25;"
+                    width="25">
+                </a>
+                <a href="https://instagram.com/Vimifos" target="_blank">
+                  <img alt="" src="https://vimifos.com/assets/imgs/icon/instagram_icon.svg" style="width: 25;"
+                    width="25">
+                </a>
+                <a href="https://www.linkedin.com/company/14036024/" target="_blank">
+                  <img alt="" src="https://vimifos.com/assets/imgs/icon/in_icon.svg" style="width: 25;"
+                    width="25">
+                </a>
+                <a href="https://open.spotify.com/show/1WlpwFtJBWc7alYlS5oMC1?si=tsQmSzvkSfSR3sAOJzhRag"
+                  target="_blank">
+                  <img alt="" src="https://vimifos.com/assets/imgs/icon/spotify_icon.svg" style="width: 25;"
+                    width="25">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="row" id="menu">
+            <a class="btn-effect" href="https://vimifos.com">INICIO</a>
+            <a class="btn-effect" href="https://vimifos.com/#especies-pc">ESPECIES</a>
+            <a class="btn-effect" href="https://vimifos.com/#cercadeti">CERCA DE TI</a>
+            <a class="btn-effect" href="http://sofom.vimifos.com/" target="_blank">VIMIFOS CAPITAL</a>
+            <a class="btn-effect" href="http://vimifospetcare.com/" target="_blank">PETCARE</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+
+    <div class="menu-mobile-close" id="menu-mobile">
+      <div class="container-menu-mobile">
+        <div class="div-icono-cerrar">
+          <div class="conten-nav-mobile">
+            <lottie-player src="https://vimifos.com/assets2/images/logo-mobile.json" background="transparent" speed="1" loop
+              autoplay class="img-fluid" style="width: 20%;" />
+          </div>
+          <div>
+            <img class="cerrar-mobile" src="https://vimifos.com/assets2/images/cerrar.svg" id="close-menu" alt="cerrar" />
+          </div>
+        </div>
+
+
+        <div class="caja caja-1">
+          <ul id="social-media">
+            <li class="li-icono-rs">
+              </i><a href="https://vimifos.com/contacto"><i class="fab-icono fas fa-envelope"></i></a>
+            </li>
+            <li class="li-icono-rs">
+              </i><a href="tel:+528008464367"><i class="fab-icono fas fa-phone"></i></a>
+            </li>
+            <li class="li-icono-rs">
+              </i><a href="https://app.vimifos.com/login"><i class="fab-icono fas fa-users"></i></a>
+            </li>
+          </ul>
+        </div>
+        <div class="caja caja-2 container-list">
+          <ul class="ul-container-list">
+            <li class="url-mobile">
+              <a href="https://vimifos.com" class="link-mobile li-mobile-close w-100 text-center">INICIO</a>
+            </li>
+            <li class="url-mobile">
+              <a href="https://vimifos.com/#especies-pc" class="link-mobile li-mobile-close w-100 text-center">ESPECIES</a>
+            </li>
+            <li class="url-mobile">
+              <a href="https://vimifos.com/#cercadeti" class="link-mobile li-mobile-close w-100 text-center">CERCA DE TI</a>
+            </li>
+            <li class="url-mobile">
+              <a href="http://sofom.vimifos.com/" class="link-mobile li-mobile-close w-100 text-center" target="_blank">VIMIFOS CAPITAL</a>
+            </li>
+            <li class="url-mobile">
+              <a href="http://vimifospetcare.com/" class="link-mobile li-mobile-close w-100 text-center" target="_blank">PETCARE</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="caja caja-3">
+          <ul id="social-media">
+            <li class="li-icono-rs">
+              <a class="link-icono-rs" href="https://facebook.com/Vimifos" target="_blank"><i
+                  class="fab-icono fab fa-facebook-f"></i></a>
+            </li>
+            <li class="li-icono-rs">
+              <a class="link-icono-rs" href="https://youtube.com/user/VIMIFOSMx/videos" target="_blank"><i
+                  class="fab-icono fab fa-youtube"></i></a>
+            </li>
+            <li class="li-icono-rs">
+              <a class="link-icono-rs" href="https://instagram.com/Vimifos" target="_blank"><i
+                  class="fab-icono fab fa-instagram"></i></a>
+            </li>
+            <li class="li-icono-rs">
+              <a class="link-icono-rs" href="https://www.linkedin.com/company/14036024/" target="_blank"><i
+                  class="fab-icono fab fa-linkedin"></i></a>
+            </li>
+            <li class="li-icono-rs">
+              <a class="link-icono-rs"
+                href="https://open.spotify.com/show/1WlpwFtJBWc7alYlS5oMC1?si=tsQmSzvkSfSR3sAOJzhRag" target="_blank"><i
+                  class="fab-icono fab fa-spotify"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  <div id="content">
+      <div style="width: 100%;">
+        <video id="vid" class="desktop" style="height: auto;" poster="poster.jpg" autoplay="autoplay" muted=""
+      width="100%" height="150">
+      <source src="/assets/video/acuicultura.mp4" type="video/mp4" />
+    </video>
+    <video id="vid" class="mobile" style="height: auto;" poster="poster.jpg" autoplay="autoplay" muted=""
+      width="100%" height="150">
+      <source src="/assets/video/acuicultura-m.mp4" type="video/mp4" />
+    </video>
+
+    <div class="container-svg fade-in">
+      <div class="hexagon" style="background: transparent;">
+        <div>
+          <img style="width: 100%;" src="/assets/imgs/icon/acuicultura.svg" width="100" height="100" />
+        </div>
+        <h1 class="h1-hex">
+          ACUICULTURA
+        </h1>
+        <p class="p-hex">
+          Mayor sobrevivencia y crecimiento en tus cultivos con excelente conversión alimenticia.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile">
+    <div class="container padding" style="background-color: #14a3da; ">
+      <h3 class="white-text">ACUICULTURA</h3>
+      <small class="white-text">
+        Mayor sobrevivencia y crecimiento en tus cultivos con excelente conversión alimenticia.
+      </small>
+    </div>
+  </div>
+
+  <div style="width: 100%; padding: 10px; color: #fff; background-color: #14a3da;" class="fade_1">
+    <p class="container">ESPECIES</p>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 fade_1" style="width: 100%;">
+        <div class="swiper-container mySwiperCategoria" style="padding: 5px 1rem;">
+          <div class="swiper-wrapper">
+                                      <div class="swiper-slide">
+                <a href="/categoria/camaron">
+                                                    <div style="border-radius: 40px; padding: 1rem;display: flex;justify-content: center;align-items: center;flex-flow: column; margin: 1rem;" class="brand categoria-select">
+                                  <h6 class="titulo" style="margin: 0;" style="color: #14a3da;">CAMARON</h6>
+
+                  <img src="/storage/cats/2023-03-28_03-39-09_acuicultura-camaron 1.png" style="width: 100%;" width="60" height="60" />
+
+              </div>
+              </a>
+          </div>
+                        <div class="swiper-slide">
+                <a href="/categoria/tilapia">
+                                  <div style="border-radius: 40px; padding: 1rem;display: flex;justify-content: center;align-items: center;flex-flow: column; margin: 1rem;" class="brand">
+                                <h6 class="titulo" style="margin: 0;" style="color: #14a3da;">TILAPIA</h6>
+
+                  <img src="/storage/cats/2023-03-28_03-38-47_acuicultura-tilapia 1.png" style="width: 100%;" width="60" height="60" />
+
+              </div>
+              </a>
+          </div>
+                  </div>
+        <div class="swiper-button-prev swiper-prev-Category"></div>
+        <div class="swiper-button-next swiper-next-Category"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div style="width: 100%; padding: 10px; color: #fff; background-color: #14a3da;" class="fade_1">
+    <p class="container">LÍNEAS DE PRODUCTOS</p>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 fade_1" style="width: 100%;">
+        <div class="swiper-container mySwiperProducto">
+          <div class="swiper-wrapper">
+                                      <div class="swiper-slide">
+                                  <div class="box-brand-producto">
+                                <a href="/producto/xtrudix" style="display: flex;justify-content: center;align-items: center;">
+                  <img src="/assets/imgs/brands/xtrudix.svg" width="140" height="140" />
+                </a>
+              </div>
+          </div>
+                        <div class="swiper-slide">
+                                                    <div class="box-brand-producto brand categoria-select">
+                                  <a href="/producto/bumper-crop" style="display: flex;justify-content: center;align-items: center;">
+                  <img src="/assets/imgs/brands/bumper-crop.svg" width="140" height="140" />
+                </a>
+              </div>
+          </div>
+                        <div class="swiper-slide">
+                                  <div class="box-brand-producto">
+                                <a href="/producto/total-range" style="display: flex;justify-content: center;align-items: center;">
+                  <img src="/assets/imgs/brands/total-range-logo.svg" width="140" height="140" />
+                </a>
+              </div>
+          </div>
+                        <div class="swiper-slide">
+                                  <div class="box-brand-producto">
+                                <a href="/producto/natural-force" style="display: flex;justify-content: center;align-items: center;">
+                  <img src="/assets/imgs/brands/nature-force.svg" width="140" height="140" />
+                </a>
+              </div>
+          </div>
+                        <div class="swiper-slide">
+                                  <div class="box-brand-producto">
+                                <a href="/producto/race-way" style="display: flex;justify-content: center;align-items: center;">
+                  <img src="/assets/imgs/brands/raceway.svg" width="140" height="140" />
+                </a>
+              </div>
+          </div>
+                        <div class="swiper-slide">
+                                  <div class="box-brand-producto">
+                                <a href="/producto/strong-breed" style="display: flex;justify-content: center;align-items: center;">
+                  <img src="/assets/imgs/brands/strong-breed.svg" width="140" height="140" />
+                </a>
+              </div>
+          </div>
+                  </div>
+        <div class="swiper-button-prev swiper-prev-Product"></div>
+        <div class="swiper-button-next swiper-next-Product"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+      <div class="container ">
+              <div class="row">
+          <div class="fade_1" style="text-align: center; display: flex; align-items: center; justify-content: center;">
+            <img style="max-width: 200px;" src="/assets/imgs/brands/bumper-crop.svg" width="200">
+          </div>
+          <div class="column padding fade_1"
+            style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start;">
+            <h4 style="color: #14a3da; "><strong>Bumper Crop</strong>.</h4>
+            <p>
+              para una cosecha record limentos para camaron incluye productos para ser empleados en sistemas intensivos, donde el aporte nutritivo de la productividad natural es mínima.
+            </p>
+          </div>
+          <div class="column fade_1" style="text-align: center;" style="width: 100%">
+            <img style="object-fit: contain; width: 100%;" src="/storage/blocks/2023-03-29_03-20-54_BUMPER (1).png" width="400"
+              height="200">
+          </div>
+        </div>
+          </div>
+    <br>
+  
+      <div class="container container-tables fade_x" style="padding-bottom:40px;">
+      <div>
+<table>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong class="orange-text">BUMPER CROP</strong></td>
+<td><strong class="blue-text">INICIACION</strong></td>
+<td><strong class="yellow-text">INICIACION</strong></td>
+<td><strong class="green-text">FINALIZACION</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>PRESENTACI&Oacute;N&nbsp;</strong></td>
+<td>MIGAJA / 25KG</td>
+<td>STARTER / 25KG</td>
+<td>MICROPELET / 25KG</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>% PROTE&Iacute;NA</strong></td>
+<td>40%</td>
+<td>40%</td>
+<td>30%, 35%, 40%</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>TAMA&Ntilde;O PART&Iacute;CULA</strong></td>
+<td>0.6MM - 1.8MM</td>
+<td>1.8MM - 3MM</td>
+<td>2.0MM - 6MM</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>PERO DEL CAMAR&Oacute;N</strong></td>
+<td>06 A 1G</td>
+<td>1G A 3G</td>
+<td>3G A COSECHA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<table>
+<tbody>
+<tr>
+<td><small> PARA LAS RECOMENDACIONES DE SU USO CONSULTE A NUESTRO DEPARTAMENTO DE NUTRICI&Oacute;N Y SERVICIOS T&Eacute;CNICOS Y / O A SU M&Eacute;DICO VETERINARIO O NUTRI&Oacute;LOGO. </small></td>
+</tr>
+</tbody>
+</table>
+    </div>
+    </div>
+
+  <div class="anchor fade_1">
+    <div id="contacto" style="position:relative; top:-125px;"></div>
+    <h2 class="big-title exo2-black padding br-m-500"> <b>Contáctanos <br> 800 846 4367</b> </h2>
+  </div>
+
+  <section style="clear:both; min-height: 650px; z-index:10;">
+    <div class="container fade_1">
+      <iframe id="iframe-contacto" src="https://arbolserver.com/cuentas/vimifos/formulario/" width="100%" height="1100" frameborder="0" style="margin-top: 20px"></iframe>
+    </div>
+  </section>
+
+  <footer>
+    <div class="shadow-h pad" style="background: #1498c9; box-shadow: inset 0 1 10 10 000;">
+      <div class="container">
+        <h5 style="text-align:center;">
+          <a class="link-footer-page white-text" href="/privacidad" target="_self"> <span>AVISO DE PRIVACIDAD</span> </a> <span style="margin:0 15px;">|</span>
+          <a class="link-footer-page white-text" href="/politica-integral" target="_self"> <span>POLÍTICA INTEGRAL</span> </a> <span style="margin:0 15px;">|</span>
+          <a class="link-footer-page white-text" href="/Abastecimiento_Responsable" target="_self"> <span>ABASTECIMIENTO RESPONSABLE</span> </a> <span style="margin:0 15px;">|</span>
+          <a class="link-footer-page white-text" href="/elssa" target="_self"> <span>ELSSA</span> </a>
+        </h5>
+      </div>
+    </div>
+    <div class="container padding">
+      <div class="row">
+        <div class="column">
+          <h4 class="title-section1 mb-20" style="color: #fff; margin-bottom: 20px;">Cont&aacute;ctanos</h4>
+          <h5> <i class="fas fa-phone-alt" style="color: #fff;"></i> <a href="tel:+528008464367">&nbsp;800
+              846-4367</a> </h5>
+          <br>
+          <h5> <i class="fa fa-envelope mr-15" style="color: #fff;"></i> <a
+              href="mailto: comunicacion@vimifos.com">&nbsp;comunicacion@vimifos.com</a> </h5>
+          <br>
+          <div class="nav-social">
+            <a href="https://facebook.com/Vimifos" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/user/VIMIFOSMx/videos" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/Vimifos" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.linkedin.com/company/14036024/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://open.spotify.com/show/1WlpwFtJBWc7alYlS5oMC1?si=tsQmSzvkSfSR3sAOJzhRag"
+              target="_blank"><i class="fab fa-spotify"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-logo">
+          <img alt="" src="https://vimifos.com/assets/imgs/logo.svg" width="100">
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://vimifos.com/assets/js/lottie-player.js"></script>
+  <script async src="https://vimifos.com/assets/js/aos.js"></script>
+  <!-- <script async src="https://vimifos.com/assets/js/nav-bar.js"></script> -->
+  <script async src="https://vimifos.com/assets/js/inicio.js"></script>
+  <script async src="https://vimifos.com/assets/js/featherlight.js"></script>
+
+  <script type="text/javascript" async src="https://d335luupugsy2.cloudfront.net/js/loader-scripts/52a6ff72-479d-46fc-b4d7-467db0ac0563-loader.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-191485496-1"></script>
+  <script async>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-191485496-1');
+  </script>
+
+  <script type="text/javascript">
+  var $height = $(window).scrollTop();
+  if($height > 50) {
+    $('#header-nav-2').addClass('header-bg');
+  } else {
+    $('#header-nav-2').removeClass('header-bg');
+  }
+  $(window).scroll(function() {
+    var $height = $(window).scrollTop();
+    if($height > 50) {
+      $('#header-nav-2').addClass('header-bg');
+    } else {
+      $('#header-nav-2').removeClass('header-bg');
+    }
+  });
+    $('a[href^="#"]').on('click', function(event) {
+      var target = $(this.getAttribute('href'));
+      if( target.length ) {
+          event.preventDefault();
+          $('html, body').stop().animate({
+              scrollTop: target.offset().top
+          }, 300);
+      }
+    });
+
+  $('#img-hamburguesa, .cerrar-mobile').click(function (e) {
+    e.preventDefault();
+    $('#menu-mobile').toggleClass('menu-mobile-open');
+  });
+  </script>
+
+
+  <script src="https://vimifos.com/assets2/js/scrollreveal.min.js"></script>
+  <script type="text/javascript">
+  $(window).on('load', function() {
+      var animacion_1 = {
+        distance: '120px',
+        delay: 260,
+        duration: 900,
+        origin: 'bottom',
+        scale: 1,
+        opacity: 0,
+        easing: 'ease-in-out',
+        mobile: true,
+        interval: 100
+      };
+      ScrollReveal().reveal('.fade_1, .fade_x > *, #content #one h1, #inocuidad + .container *, #inocuidad h1, #privacidad h1, #privacidad + .container *', animacion_1);
+  });
+
+  document.addEventListener('DOMContentLoaded', function() { // redireccion URL Gracias - Contacto
+    const iframe = document.getElementById('iframe-contacto');
+    let lastIframeUrl = iframe.src;
+
+    iframe.addEventListener('load', function() {
+      setInterval(function() {
+        let currentIframeUrl;
+        try {
+          currentIframeUrl = iframe.contentWindow.location.href;
+        } catch (error) {
+          currentIframeUrl = iframe.src;
+        }
+        if (currentIframeUrl !== lastIframeUrl) {
+          lastIframeUrl = currentIframeUrl;
+          console.log('URL del iframe ha cambiado');
+          window.location.href = 'https://vimifos.com/gracias';
+        }
+      }, 1000);
+    });
+  });
+  </script>
+
+    <script src="https://vimifos.com/assets/js/swiper-bundle.min.js"></script>
+  <script>
+    var swiper = new Swiper(".mySwiperProducto", {
+      slidesPerView: 5,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: '.swiper-next-Product',
+        prevEl: '.swiper-prev-Product',
+      },
+      initialSlide: 1,
+      breakpoints: {
+        320: {
+          slidesPerView: 2,
+        },
+        850: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 4,
+        },
+        1200: {
+          slidesPerView: 5,
+        },
+      }
+    });
+
+    var producto = new Swiper(".mySwiperCategoria", {
+      slidesPerView: 5,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: ".swiper-next-Category",
+        prevEl: ".swiper-prev-Category",
+      },
+      initialSlide: 0,
+      breakpoints: {
+        320: {
+          slidesPerView: 2,
+        },
+        850: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 4,
+        },
+        1200: {
+          slidesPerView: 5,
+        },
+      }
+    });
+
+
+    $('.container-tables table').each(function() { // el contenido que tenga tabla se le agregada un <div></div>
+      $(this).wrap('<div></div>');
+    });
+  </script>
+
+</body>
+
+</html>

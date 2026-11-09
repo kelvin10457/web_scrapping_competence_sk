@@ -1,6 +1,6 @@
 """Esquema unificado de datos para el pipeline de scraping de competencia.
 
-Ver PLAN.md § 3 para el diseño completo. Este modulo define:
+Ver docs/historico/PLAN.md § 3 para el diseño completo. Este modulo define:
 - La lista de columnas del esquema unificado (mismo orden para los 4 CSV + master.csv).
 - `normalize_etapa`: mapea el texto de etapa de cada empresa a los valores
   categoricos normalizados usados para poder filtrar entre empresas.
@@ -10,14 +10,25 @@ Ver PLAN.md § 3 para el diseño completo. Este modulo define:
 from __future__ import annotations
 
 import re
+import unicodedata
 
 # Orden exacto de columnas para todos los CSV (por empresa y master.csv).
+# Paises validos para la columna "pais" (docs/historico/PLAN_REGIONAL.md 2.1): pais donde se
+# vende/publica el producto, no donde se fabrica.
+PAIS_VALUES = ("ecuador", "honduras", "nicaragua", "panama", "mexico")
+
 SCHEMA_COLUMNS = [
     # Identificacion
+    "pais",
     "empresa",
     "nombre_producto",
-    "etapa_competidor",
-    "producto_salud",
+    "es_producto_de_salud",
+    "etapa_reproductores",
+    "etapa_larva",
+    "etapa_post_larva",
+    "etapa_precria",
+    "etapa_post_transferencia",
+    "etapa_engorde",
     "etapa_skt",
     "tamano_pellet_mm",
     "particula_min_mm",
@@ -44,7 +55,25 @@ SCHEMA_COLUMNS = [
 # interpretado como separador de miles, hallazgo del usuario 2026-09-03).
 NUMERIC_COLUMNS = ["particula_min_mm", "particula_max_mm", "empaque_kg", "proteina_pct"]
 
-# Valores normalizados validos para la columna "etapa_competidor" (PLAN.md § 3).
+_PROTEINA_NUM_RE = re.compile(r"\d+(?:[.,]\d+)?")
+
+
+def normalize_proteina(valor) -> float | None:
+    """proteina_pct como porcentaje decimal (37.5, no 0.375 ni "37,5").
+    Vacio si no hay un unico numero o si queda fuera de (1, 100]: un 0.375
+    no se convierte a 37.5 (no se infiere que era una fraccion). R3.7."""
+    if valor is None or isinstance(valor, bool):
+        return None
+    if isinstance(valor, (int, float)):
+        num = float(valor)
+    else:
+        nums = _PROTEINA_NUM_RE.findall(str(valor))
+        if len(nums) != 1:
+            return None
+        num = float(nums[0].replace(",", "."))
+    return num if 1 < num <= 100 else None
+
+# Valores normalizados validos para la columna "etapa_competidor" (docs/historico/PLAN.md § 3).
 # "salud" YA NO es uno de ellos (ver nota abajo, 2026-09-02) -- se dejo aca
 # comentado por si algun caller viejo lo referencia, pero normalize_etapa()
 # no lo devuelve mas.
@@ -58,11 +87,11 @@ ETAPA_VALUES = {
 
 # Reglas de normalizacion: (regex sobre texto en minusculas -> etapa normalizada).
 # Se evalua en orden; la primera regla que matchea gana. Ya NO incluye una
-# regla "salud" (ver "producto_salud" en SCHEMA_COLUMNS, 2026-09-02): un
+# regla "salud" (ver "es_producto_de_salud" en SCHEMA_COLUMNS, 2026-09-02): un
 # producto con funcion terapeutica (ej. tratamiento anti-Vibrio) no tiene
 # una etapa de ciclo de vida propia, puede cubrir cualquier rango de tamano
 # -- forzarlo a "salud" en esta columna descartaba la etapa real que el
-# texto tambien pudiera describir (hallazgo del usuario, ver MEMORY.md).
+# texto tambien pudiera describir (hallazgo del usuario, ver docs/historico/MEMORY.md).
 _ETAPA_RULES: list[tuple[re.Pattern, str]] = [
     (re.compile(r"post[\s\-_]?transfer|transferencia|transici[oó]n|alevinaje"), "post_transferencia"),
     (re.compile(r"larva|hatchery|mysis|\bpl\b|post[\s\-_]?larval"), "larva"),
@@ -83,6 +112,84 @@ def normalize_etapa(raw_text: str | None) -> str | None:
         if pattern.search(text):
             return etapa
     return None
+
+
+# Booleanos de etapa para Power BI (tech-stack.md). R3.5 es un paso puente:
+# se derivan de etapa_competidor (una sola etapa por fila); R4 hace que cada
+# parser marque todas las que declara la fuente (detectar_etapas).
+ETAPA_COLUMNS = [
+    "etapa_reproductores",
+    "etapa_larva",
+    "etapa_post_larva",
+    "etapa_precria",
+    "etapa_post_transferencia",
+    "etapa_engorde",
+]
+
+
+def columnas_etapa(etapas: set[str]) -> dict[str, bool | None]:
+    """Las etapas del set en True y las demas en False. Set vacio: todas
+    vacias (la fuente no dijo nada, no se infiere)."""
+    if not etapas:
+        return {col: None for col in ETAPA_COLUMNS}
+    return {col: col.removeprefix("etapa_") in etapas for col in ETAPA_COLUMNS}
+
+
+def etapas_desde_competidor(etapa: str | None) -> dict[str, bool | None]:
+    """La etapa conocida en True y las otras en False (decision del usuario
+    2026-10-29). Sin etapa (o una que no esta en ETAPA_VALUES), todas vacias."""
+    return columnas_etapa({etapa} if etapa in ETAPA_VALUES else set())
+
+
+# R4.1: etapas que marca detectar_etapas, en el orden del ciclo de cultivo.
+# post_larva es la fase intermedia entre larva y precria (decision del
+# usuario 2026-10-29); reproductores queda fuera del ciclo.
+ETAPAS = ("reproductores", "larva", "post_larva", "precria", "post_transferencia", "engorde")
+_CICLO = ETAPAS[1:]
+
+# Solo terminos de etapa explicitos: "crecimiento" e "inicio" se usan como
+# palabras genericas en las fichas ("favorece el crecimiento") y no cuentan.
+_DETECTAR_RULES: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"reproductor|broodstock|maduraci[oó]n"), "reproductores"),
+    (re.compile(r"(?<!post)(?<!post )(?<!post-)(?<!post_)larv\w*|hatchery|mysis|zoea|nauplio"), "larva"),
+    (re.compile(r"post[\s\-_]?larva|\bpl\b|\bpl\s?\d+\b"), "post_larva"),
+    (re.compile(r"precr[ií]a|nursery|starter|iniciador"), "precria"),
+    # "transferencia" suelta es el traslado al final de la precria ("en
+    # sistemas de transferencia"), no la etapa que le sigue (R4.2).
+    # "Preengorda" (Mexico, El Pedregal): fase entre precria y engorda = Pre Grower
+    # (decision del usuario 2026-11-09, R7.5).
+    (re.compile(r"post[\s\-_]?transfer|transici[oó]n|alevinaje|pre[\s\-]?engorda"), "post_transferencia"),
+    (re.compile(r"(?<!pre)(?<!pre-)(?<!pre )engorda|engorde|grow[\s\-_]?out|finalizador|finish|(?:tama[nñ]o|talla) de mercado"
+                r"|talla comercial|(?<=\ba )mercado|(?<=hasta )mercado|(?<=hasta el )mercado"
+                r"|(?:tama[nñ]o|talla|peso) de cosecha|(?<=hasta )cosecha|(?<=hasta la )cosecha"), "engorde"),
+]
+# Conector de rango entre dos etapas: "X hasta Y", "X hacia Y", "X a Y".
+_RANGO = re.compile(r"\b(?:hasta|hacia|a)\b")
+
+
+def detectar_etapas(texto: str | None) -> set[str]:
+    """Todas las etapas explicitas del texto (valores de ETAPAS). Un rango
+    entre dos etapas del ciclo marca tambien las intermedias: "post larva
+    hasta tamano de mercado" (Nicovita Terap) -> post_larva, precria,
+    post_transferencia y engorde. Sin termino explicito, set vacio."""
+    if not texto:
+        return set()
+    text = texto.strip().lower()
+    hallazgos = sorted(
+        (m.start(), m.end(), etapa)
+        for pattern, etapa in _DETECTAR_RULES
+        for m in pattern.finditer(text)
+    )
+    # En una dieta de maduracion, "nauplios" es lo que producen los
+    # reproductores, no la etapa alimentada (Revision Opus, Ez-mate/Redi-mate).
+    if any(etapa == "reproductores" for _, _, etapa in hallazgos):
+        hallazgos = [h for h in hallazgos if not text.startswith("nauplio", h[0])]
+    etapas = {etapa for _, _, etapa in hallazgos}
+    for (_, fin, a), (inicio, _, b) in zip(hallazgos, hallazgos[1:]):
+        if a in _CICLO and b in _CICLO and _RANGO.search(text[fin:inicio]):
+            i, j = sorted((_CICLO.index(a), _CICLO.index(b)))
+            etapas.update(_CICLO[i:j + 1])
+    return etapas
 
 
 def etapa_matches(raw_text: str | None) -> set[str]:
@@ -118,6 +225,66 @@ def etapa_matches(raw_text: str | None) -> set[str]:
 # en None y ahora muestran "Polvo".
 _TECNOLOGIA_RE = re.compile(r"extrui|extrus|extrud|pel{1,2}etiz|\bpolvo\b|particulad|l[ií]quid", re.I)
 
+# Valores validos que puede devolver detect_tecnologia() (o vacio). No existia
+# como constante propia antes de merge_human.py (2026-09-15) -- cada valor
+# vivia solo implicito en el codigo de detect_tecnologia() -- se centraliza
+# aca para que un validador externo (ej. de un archivo llenado a mano) pueda
+# chequear contra la misma lista sin duplicarla.
+TIPO_PRESENTACION_VALUES = {"Extruido", "Pelletizado", "Polvo", "Microparticulado", "Líquido"}
+
+# Lista oficial del Excel de Power BI (specs/tech-stack.md, decision
+# 2026-10-28). Los parsers la usan desde R3.3; TIPO_PRESENTACION_VALUES queda
+# solo para merge_human/GUI (el usuario planea reemplazar merge_human).
+TIPO_PRESENTACION_OFICIAL = {
+    "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
+    "Microgranulado", "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
+    "Quistes de artemia", "Suspensión",
+}
+
+
+def _clave_presentacion(text: str) -> str:
+    sin_tildes = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
+    return " ".join(sin_tildes.lower().split())
+
+
+_PRESENTACION_POR_CLAVE = {_clave_presentacion(v): v for v in TIPO_PRESENTACION_OFICIAL}
+_PRESENTACION_POR_CLAVE.update({
+    "pelletizado": "Pellet",
+    "pelletizada": "Pellet",
+    "peletizado": "Pellet",
+    "peletizada": "Pellet",
+    # Grafias reales de la pestana "Tipo" de Agripac (R3.3)
+    "micro particulado": "Microparticulado",
+    "liquidos": "Líquido",
+    # Fila "Forma" de las tablas de Epicore en ProAqua (R7.9)
+    "liquida": "Líquido",
+    "granular": "Granulado",
+})
+
+
+def normalize_presentacion(text: str | None) -> str | None:
+    """Lleva un tipo_presentacion a la grafia oficial (TIPO_PRESENTACION_OFICIAL),
+    sin importar mayusculas, tildes ni espacios; "Pelletizado" -> "Pellet".
+    Un valor desconocido NO es error: se devuelve tal cual (sin espacios en
+    los extremos) para que R3.4 lo avise, en vez de forzarlo a "Otro"."""
+    if not text or not text.strip():
+        return None
+    return _PRESENTACION_POR_CLAVE.get(_clave_presentacion(text), text.strip())
+
+
+PRESENTACION_NUEVA_COLUMNS = ["pais", "empresa", "producto", "valor", "url"]
+
+
+def presentaciones_nuevas(master: "pd.DataFrame") -> "pd.DataFrame":
+    """Filas del master cuyo tipo_presentacion no esta en la lista oficial
+    (R3.4). No son error: se avisan para que el usuario decida si el valor
+    entra a la lista. Los vacios no se avisan."""
+    tipo = master["tipo_presentacion"]
+    nuevas = master[tipo.notna() & (tipo.astype(str).str.strip() != "")
+                    & ~tipo.isin(TIPO_PRESENTACION_OFICIAL)]
+    return nuevas.rename(columns={"nombre_producto": "producto", "tipo_presentacion": "valor",
+                                  "fuente_url": "url"})[PRESENTACION_NUEVA_COLUMNS].reset_index(drop=True)
+
 
 def detect_tecnologia(text: str | None) -> str | None:
     """Detecta si el texto describe el producto como Extruido o Pelletizado.
@@ -125,7 +292,7 @@ def detect_tecnologia(text: str | None) -> str | None:
     (ej. "ALIMENTO BALANCEADO PELLETIZADO PARA CAMARON") precede a la
     descripcion, lo que resuelve el caso "Speed Pellet" -- su encabezado
     dice pelletizado pero el parrafo de descripcion dice, por error de la
-    propia ficha, "elaborado por proceso de extruido" (MEMORY.md). Devuelve
+    propia ficha, "elaborado por proceso de extruido" (docs/historico/MEMORY.md). Devuelve
     None si no se menciona ninguna de las dos -- no se asume una por
     defecto ni se infiere de otros campos.
 
@@ -149,12 +316,18 @@ def detect_tecnologia(text: str | None) -> str | None:
     if token.startswith(("extrui", "extrus", "extrud")):
         return "Extruido"
     if token.startswith("pel"):
-        return "Pelletizado"
+        return "Pellet"
     if token == "polvo":
         return "Polvo"
     if token.startswith("particulad"):
         return "Microparticulado"
     return "Líquido"
+
+
+def _es_pellet(tipo_presentacion: str | None) -> bool:
+    """Umbral de Grower de pellet: acepta la grafia oficial ("Pellet") y la
+    vieja ("Pelletizado", todavia posible en el archivo humano)."""
+    return normalize_presentacion(tipo_presentacion) == "Pellet"
 
 
 _TAMANO_NUM_RE = re.compile(r"\d+(?:\.\d+)?")
@@ -187,7 +360,7 @@ def etapa_from_tamano(tamano_pellet_mm: str | None, tipo_presentacion: str | Non
         return "precria"
     if size == 1.6:
         return None
-    if tipo_presentacion == "Pelletizado" and size >= 1.8:
+    if _es_pellet(tipo_presentacion) and size >= 1.8:
         return "engorde"
     if tipo_presentacion == "Extruido" and size >= 1.9:
         return "engorde"
@@ -200,72 +373,52 @@ def etapa_from_tamano(tamano_pellet_mm: str | None, tipo_presentacion: str | Non
 ETAPA_SKT_VALUES = {"Hatchery", "Nursery", "Pre Grower", "Grower"}
 
 
+# Respaldo de etapa_skt cuando no hay tamano (decision del usuario
+# 2026-10-29). "reproductores" no entra en las 4 casillas: queda vacio.
+_ETAPA_SKT_RESPALDO = {
+    "larva": "Hatchery",
+    "post_larva": "Nursery",
+    "precria": "Nursery",
+    "post_transferencia": "Pre Grower",
+    "engorde": "Grower",
+}
+
+
 def etapa_skt_from_row(
-    etapa_competidor: str | None,
+    etapas: set[str] | None,
     tamano_pellet_mm: str | None,
-    tipo_presentacion: str | None,
     es_larvicultura: bool = False,
 ) -> str | None:
-    """Clasifica el producto en las 4 etapas que definio la jefa del usuario
-    para el reporte de competencia -- Hatchery/Nursery/Pre Grower/Grower --
-    columna aparte de `etapa_competidor` porque no comparten vocabulario (ver
-    arriba). Nombrada `etapa_skt` (antes `etapa_camaron`, luego
-    `clasificacion_camaron` -- renombrada de nuevo 2026-09-15 a pedido del
-    usuario) para no confundirla con `etapa_competidor`: esta no es "una
-    etapa mas" del mismo vocabulario, sino la clasificacion fija de 4
-    casillas que pide el reporte, derivada sobre todo de tamano de pellet en
-    vez del texto/categoria de la fuente.
+    """Clasifica el producto en las 4 etapas de Skretting (Hatchery/Nursery/
+    Pre Grower/Grower), columna aparte de las `etapa_*` porque no comparten
+    vocabulario. Regla en tech-stack.md (R3.6, R4.10):
 
-    Hatchery se decide por el propio valor de `etapa_competidor`
-    (`"larva"`), no por tamano: la jefa la define por tipo de producto ("de
-    laboratorios larvarios"), no por una banda de mm, y el unico producto
-    `larva` de los datos actuales (Nicovita Origin, 0.3-0.8mm) es justamente
-    un caso donde clasificar solo por tamano lo hubiera puesto en Nursery
-    por error.
-
-    `es_larvicultura` (agregado 2026-09-07, division Larvicultura de
-    Agripac) es la MISMA idea aplicada por division en vez de por
-    `etapa_competidor`: a pedido del usuario, CUALQUIER producto de esa
-    division (Larfeed, MeM, Mpex, Artemia Cysts...) es Hatchery sin mirar
-    tamano, aunque su `etapa_competidor` no resuelva a "larva" (ej. Mpex, en
-    estadio "PL1 a PL6", no matchea la regla `larva` de `_ETAPA_RULES` con
-    la misma fuerza que un "larva"/"hatchery" explicito) y aunque su tamano
-    en micras (100-800um) hubiera caido en Nursery por banda. Se revisa
-    ANTES que `etapa_competidor=="larva"` porque es la senal mas fuerte
-    (division completa, no texto ambiguo por producto), pero en la practica
-    nunca compiten: ningun producto fuera de Larvicultura tiene este flag en
-    True.
-
-    El resto se deriva de tamano_pellet_mm (y tipo_presentacion para el
-    umbral de Grower, que la jefa dio distinto por Pellet/Extruido: 1.8mm
-    vs 1.9mm). A diferencia de `etapa_from_tamano` (que deja 1.6mm sin
-    resolver porque esa funcion reusa los 6 valores viejos de ETAPA_VALUES,
-    donde 1.6mm queda ambiguo entre 2 de ellos), aca 1.6mm SI se resuelve a
-    "Pre Grower": al ser una columna dedicada a los 4 terminos de la jefa,
-    y ella asocio ese tamano especificamente a Pre Grower ("#4, normalmente
-    1.6mm"), no hay conflicto con otro valor que tambien lo reclame.
-    Devuelve None para tamano_pellet_mm vacio/sin numero reconocible, el
-    hueco entre 1.6 y el arranque de Grower, y Grower si no se conoce
-    tipo_presentacion -- no se fuerza un valor sin evidencia."""
-    if es_larvicultura:
+    - Si la etapa mas temprana del ciclo que marca el producto es `larva`,
+      o si es de la division Larvicultura de Agripac (`es_larvicultura`), es
+      Hatchery aunque tenga tamano: la jefa la define por tipo de producto,
+      no por banda de mm. Un rango que empieza en larva cuenta como larva,
+      igual que "en un rango manda el minimo" (R4.10, pendiente de confirmar).
+    - Por tamano (en un rango manda el minimo): < 1.6mm Nursery, 1.6mm Pre
+      Grower, > 1.6mm Grower, sin distinguir pellet de extruido.
+    - Sin tamano reconocible: respaldo por la etapa mas temprana del ciclo
+      que marque el producto (`_ETAPA_SKT_RESPALDO`); si tampoco hay, vacio.
+      (Antes era la etapa_competidor; sin ella, R4.10.)"""
+    etapas = set(etapas or ())
+    primera = next((e for e in _CICLO if e in etapas), None)
+    if es_larvicultura or primera == "larva":
         return "Hatchery"
-    if etapa_competidor == "larva":
-        return "Hatchery"
-    if not tamano_pellet_mm:
+    pmin, pmax = parse_particula_range(tamano_pellet_mm)
+    if pmin is None:
+        for etapa in _CICLO:
+            if etapa in etapas and etapa in _ETAPA_SKT_RESPALDO:
+                return _ETAPA_SKT_RESPALDO[etapa]
         return None
-    m = _TAMANO_NUM_RE.search(tamano_pellet_mm)
-    if not m:
-        return None
-    size = float(m.group(0))
+    size = min(pmin, pmax)
     if size < 1.6:
         return "Nursery"
     if size == 1.6:
         return "Pre Grower"
-    if tipo_presentacion == "Pelletizado" and size >= 1.8:
-        return "Grower"
-    if tipo_presentacion == "Extruido" and size >= 1.9:
-        return "Grower"
-    return None
+    return "Grower"
 
 
 _TAMANO_RANGE_RE = re.compile(r"(\d+(?:\.\d+)?)\s*-\s*(\d+(?:\.\d+)?)")
@@ -284,6 +437,10 @@ def parse_particula_range(tamano_pellet_mm: str | None) -> tuple[float | None, f
     un valor que el dato no tiene."""
     if not tamano_pellet_mm:
         return None, None
+    # "<0.05" (Prilabsa, R7.7): solo hay maximo publicado; el minimo no se inventa.
+    m = re.fullmatch(r"\s*<\s*(\d+(?:\.\d+)?)\s*", tamano_pellet_mm)
+    if m:
+        return None, float(m.group(1))
     m = _TAMANO_RANGE_RE.search(tamano_pellet_mm)
     if m:
         return float(m.group(1)), float(m.group(2))
@@ -301,7 +458,7 @@ def parse_particula_range(tamano_pellet_mm: str | None) -> tuple[float | None, f
 # "Linea Profilactica" (Ultra, Ultrapro, Premium Profilactico) describe
 # resistencia especifica a "bacterias, virus y parasitos" -- un reclamo
 # concreto de prevencion de enfermedad, no marketing generico de "salud"
-# (ver test_detect_producto_salud_false_when_text_present_without_marker,
+# (ver test_detect_es_producto_de_salud_false_when_text_present_without_marker,
 # que a proposito deja en False una mencion suelta de "salud del camaron"
 # sin ese reclamo especifico). Confirmado que ningun PDF real de Nicovita/
 # HAID ya scrapeado usa esta palabra, asi que el agregado no cambia ninguna
@@ -311,7 +468,7 @@ _DISEASE_MARKER = re.compile(
 )
 
 
-def detect_producto_salud(text: str | None) -> bool | None:
+def detect_es_producto_de_salud(text: str | None) -> bool | None:
     """Detecta si un texto describe funcion terapeutica/de salud (ej.
     tratamiento anti-Vibrio) -- propiedad del producto independiente de la
     etapa del ciclo de vida: un producto de salud puede cubrir cualquier
@@ -333,3 +490,114 @@ def empty_record(empresa: str) -> dict:
     record = {col: None for col in SCHEMA_COLUMNS}
     record["empresa"] = empresa
     return record
+
+
+# --- Conflictos (RONDA2 R2.1) -------------------------------------------------
+# Cuando una fuente da mas de un valor para un mismo campo no se deja la celda
+# vacia: se elige con una regla fija (resolver_campo) y se deja constancia en
+# data/processed/{pais}/_conflictos.csv (lo escribe pipeline.py). El esquema
+# principal no cambia: los conflictos viajan en record["_conflictos"].
+CONFLICTO_COLUMNS = ["pais", "empresa", "nombre_producto", "campo", "valor_elegido", "regla",
+                     "candidatos", "fuente_url", "fecha_extraccion"]
+
+
+def _mismo_valor(a, b) -> bool:
+    try:
+        return float(str(a).replace(",", ".")) == float(str(b).replace(",", "."))
+    except (TypeError, ValueError):
+        return str(a).strip().lower() == str(b).strip().lower()
+
+
+def regla_coincidencia(candidatos):
+    """Si dos o mas origenes dan el mismo valor, gana ese (el mas repetido)."""
+    for valor, _ in candidatos:
+        if sum(_mismo_valor(valor, otro) for otro, _ in candidatos) >= 2:
+            return valor, "coincidencia"
+    return None
+
+
+def regla_preferir(origen: str, nombre: str | None = None):
+    """Regla que toma el primer candidato cuyo origen es `origen`."""
+    def regla(candidatos):
+        for valor, org in candidatos:
+            if org == origen:
+                return valor, nombre or origen
+        return None
+    return regla
+
+
+def resolver_campo(candidatos, reglas):
+    """Elige un valor entre `candidatos` ([(valor, origen), ...]) aplicando
+    `reglas` en orden; gana la primera que decide. Cada regla es una funcion
+    pura `candidatos -> (valor, nombre_regla) | None`. Sin candidatos devuelve
+    (None, None); si hay uno solo (o todos iguales) devuelve ese con regla
+    "unico". Si ninguna regla decide: (None, "sin_regla")."""
+    candidatos = [(v, o) for v, o in candidatos if v is not None and v != ""]
+    if not candidatos:
+        return None, None
+    if all(_mismo_valor(v, candidatos[0][0]) for v, _ in candidatos):
+        return candidatos[0][0], "unico"
+    for regla in reglas:
+        decision = regla(candidatos)
+        if decision is not None:
+            return decision
+    return None, "sin_regla"
+
+
+def registrar_conflicto(record: dict, campo: str, valor, regla: str, candidatos) -> None:
+    """Anota en el record un conflicto resuelto; pipeline.py lo vuelca a
+    _conflictos.csv agregando pais/empresa/nombre/fuente/fecha del record."""
+    def fmt(v):
+        return f"{v:g}" if isinstance(v, float) else v
+    texto = " | ".join(f"{fmt(v)} ({o})" for v, o in candidatos) if not isinstance(candidatos, str) else candidatos
+    record.setdefault("_conflictos", []).append(
+        {"campo": campo, "valor_elegido": fmt(valor), "regla": regla, "candidatos": texto})
+
+
+def conflictos_de(records: list[dict]) -> list[dict]:
+    """Filas de _conflictos.csv (CONFLICTO_COLUMNS) a partir de los records."""
+    filas = []
+    for record in records:
+        for c in record.get("_conflictos", []):
+            filas.append({
+                "pais": record.get("pais"), "empresa": record.get("empresa"),
+                "nombre_producto": record.get("nombre_producto"), **c,
+                "fuente_url": record.get("fuente_url"),
+                "fecha_extraccion": record.get("fecha_extraccion"),
+            })
+    return filas
+
+
+def regla_analisis_copiado(analisis: str | None, otros, origen_analisis: str = "analisis",
+                           origen_titulo: str = "titulo"):
+    """Regla "copia detectada": si el bloque de analisis (normalizado) de este
+    producto es igual al de otro producto del mismo sitio y el titulo de ese
+    otro tiene el valor del analisis, el analisis esta copiado: gana el titulo.
+    `otros`: [(nombre, analisis_normalizado, valor_titulo), ...]."""
+    def regla(candidatos):
+        val_an = next((v for v, o in candidatos if o == origen_analisis), None)
+        val_tit = next((v for v, o in candidatos if o == origen_titulo), None)
+        if not analisis or val_an is None or val_tit is None:
+            return None
+        for nombre, an_otro, tit_otro in otros:
+            if an_otro == analisis and tit_otro is not None and _mismo_valor(tit_otro, val_an):
+                return val_tit, f"analisis_copiado_de:{nombre}"
+        return None
+    return regla
+
+
+def reglas_titulo_vs_analisis(analisis: str | None = None, otros=()) -> list:
+    """Jerarquia de RONDA2 R2.3 para cualquier empresa cuyo titulo y tabla de
+    analisis se contradigan: coincidencia > analisis copiado > nombre comercial."""
+    return [regla_coincidencia, regla_analisis_copiado(analisis, otros),
+            regla_preferir("titulo", "nombre_comercial")]
+
+
+def resolver_y_registrar(record: dict, campo: str, candidatos, reglas):
+    """resolver_campo + escribe record[campo] y, si los candidatos no
+    coincidian (regla != "unico"), deja el conflicto en record["_conflictos"]."""
+    valor, regla = resolver_campo(candidatos, reglas)
+    record[campo] = valor
+    if regla not in (None, "unico"):
+        registrar_conflicto(record, campo, valor, regla, candidatos)
+    return valor, regla

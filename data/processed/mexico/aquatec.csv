@@ -1,0 +1,12 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+mexico,AQUATEC,AQUATEC 40% - MIGAJA (Línea Performance),,,,,,,,,,,,,25,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - PELLET 1.8 mm (Línea Performance),,,,,,,,Grower,1.8,1.8,1.8,Pellet,,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 35% - PELLET 2.0 mm (Línea Performance),,,,,,,,Grower,2,2,2,Pellet,,35,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 45% - MIGAJA (Línea HD),,,,,,,,,,,,,25,45,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 45% - MIGAJA 0.3 mm (Línea HD),,,,,,,,Nursery,0.3,0.3,0.3,,,45,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - PELLET 1.8 mm (Línea HD),,,,,,,,Grower,1.8,1.8,1.8,Pellet,,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 35% - PELLET 2.0 mm (Línea HD),,,,,,,,Grower,2,2,2,Pellet,,35,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 45% - MIGAJA 0.6 mm (Línea HD),,,,,,,,Nursery,0.6,0.6,0.6,,,45,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 35% - PELLET 2.0 mm (Línea Estándar),,,,,,,,Grower,2,2,2,Pellet,,35,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 25% - PELLET 2.0 mm (Línea Estándar),,,,,,,,Grower,2,2,2,Pellet,,25,https://nutrimentos.com.mx/acuicultura_1,2026-11-09
+mexico,AQUATEC,AQUATEC 40% - MIGAJA (Línea Estándar),,,,,,,,,,,,,25,40,https://nutrimentos.com.mx/acuicultura_1,2026-11-09

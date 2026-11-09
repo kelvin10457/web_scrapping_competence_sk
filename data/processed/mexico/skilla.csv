@@ -1,0 +1,5 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+mexico,Skilla,SKILLA 4008,,,,,,,,Nursery,1,1,1,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Skilla,SKILLA 4008,,False,False,False,False,True,False,Nursery,1.5,1.5,1.5,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Skilla,SKILLA 3505,,False,False,False,False,True,False,Nursery,1.5,1.5,1.5,Extruido,,,https://bioblue.com/skilla/,2026-11-09
+mexico,Skilla,SKILLA 3505,,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Extruido,,,https://bioblue.com/skilla/,2026-11-09

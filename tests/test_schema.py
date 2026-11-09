@@ -18,7 +18,7 @@ def test_normalize_etapa_no_match_returns_none():
 def test_normalize_etapa_no_longer_maps_salud_related_terms():
     # "salud" se saco de ETAPA_VALUES/_ETAPA_RULES 2026-09-02 -- un producto
     # con funcion terapeutica no tiene una etapa de ciclo de vida propia
-    # (ver producto_salud en cada parser). Sin otro marcador de etapa real,
+    # (ver es_producto_de_salud en cada parser). Sin otro marcador de etapa real,
     # estos terminos ya no deben resolver a nada.
     assert schema.normalize_etapa("Fitness") is None
     assert schema.normalize_etapa("Tratamiento") is None
@@ -30,18 +30,18 @@ def test_detect_tecnologia_prefers_first_mention_in_text():
     # "PELLETIZADO" (coincide con el nombre del producto) pero el parrafo
     # de descripcion dice, por error de la propia ficha, "elaborado por
     # proceso de extruido". La primera mencion en el texto (el encabezado)
-    # debe ganar. Ver MEMORY.md.
+    # debe ganar. Ver docs/historico/MEMORY.md.
     text = (
         "SPEED PELLET\nALIMENTO BALANCEADO PELLETIZADO PARA CAMARON\n"
         "Descripcion del producto\nAlimento balanceado... elaborado por "
         "proceso de extruido."
     )
-    assert schema.detect_tecnologia(text) == "Pelletizado"
+    assert schema.detect_tecnologia(text) == "Pellet"
 
 
 def test_detect_tecnologia_tolerates_single_l_spelling():
     # Nicovita a veces escribe "peletizada" con una sola L (no "pelletizada").
-    assert schema.detect_tecnologia("Dieta balanceada peletizada para camaron") == "Pelletizado"
+    assert schema.detect_tecnologia("Dieta balanceada peletizada para camaron") == "Pellet"
 
 
 def test_detect_tecnologia_extruido():
@@ -55,9 +55,9 @@ def test_detect_tecnologia_no_mention_returns_none():
 
 
 def test_detect_tecnologia_microextruido_resolves_to_extruido():
-    # Caso real: MeM (Agripac, division Larvicultura) usa "Microextruido" en
-    # su pestana "Tipo" -- ya contiene "extrui" como substring, asi que
-    # resuelve a "Extruido" sin necesitar una regla aparte.
+    # "Microextruido" contiene "extrui" y resuelve a "Extruido". Desde R3.3
+    # Agripac (MeM) ya no pasa por aca: usa normalize_presentacion y guarda
+    # "Microextruido", que es valor oficial.
     assert schema.detect_tecnologia("Tipo Microextruido") == "Extruido"
 
 
@@ -99,7 +99,7 @@ def test_etapa_from_tamano_handles_range_string():
 
 
 def test_etapa_from_tamano_exactly_1_6mm_stays_none():
-    # Limite real (MEMORY.md / conversacion con el usuario): la definicion
+    # Limite real (docs/historico/MEMORY.md / conversacion con el usuario): la definicion
     # de negocio da 1.6mm como techo de Nursery Y como tamano tipico de Pre
     # Grower a la vez -- no hay Pre Grower en el esquema actual, y elegir
     # Nursery o Grower para este caso puntual seria inventar dato sin que
@@ -130,68 +130,61 @@ def test_etapa_from_tamano_empty_input_stays_none():
 
 
 def test_etapa_skt_larva_overrides_to_hatchery_regardless_of_tamano():
-    # Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que por
-    # tamano solo hubieran caido en Nursery -- la jefa define Hatchery por
-    # tipo de producto (laboratorio larvario), no por banda de mm.
-    assert schema.etapa_skt_from_row("larva", "0.3", "Extruido") == "Hatchery"
-    assert schema.etapa_skt_from_row("larva", None, None) == "Hatchery"
+    # REQ-4. Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que
+    # por tamano hubieran caido en Nursery (decision del usuario 2026-10-29).
+    assert schema.etapa_skt_from_row({"larva"}, "0.3-0.8") == "Hatchery"
+    assert schema.etapa_skt_from_row({"larva"}, None) == "Hatchery"
 
 
 def test_etapa_skt_es_larvicultura_overrides_to_hatchery_regardless_of_tamano():
-    # Agregado 2026-09-07: a pedido del usuario, TODO producto de la
-    # division Larvicultura de Agripac es Hatchery, incluso si su etapa no
-    # resuelve a "larva" (ej. Mpex, "PL1 a PL6") y aunque su tamano en
-    # micras (100-800um = 0.1-0.8mm) hubiera caido en Nursery por banda.
-    assert schema.etapa_skt_from_row("precria", "0.3", "Extruido", es_larvicultura=True) == "Hatchery"
-    assert schema.etapa_skt_from_row(None, None, None, es_larvicultura=True) == "Hatchery"
-    assert schema.etapa_skt_from_row("engorde", "2.5", "Pelletizado", es_larvicultura=True) == "Hatchery"
+    # REQ-4. Toda la division Larvicultura de Agripac es Hatchery, aunque su
+    # etapa no sea "larva" (ej. Mpex, "PL1 a PL6") y su tamano sea Nursery.
+    assert schema.etapa_skt_from_row({"precria"}, "0.3", es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row(set(), None, es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row({"engorde"}, "2.5", es_larvicultura=True) == "Hatchery"
 
 
-def test_etapa_skt_below_1_6mm_is_nursery():
-    assert schema.etapa_skt_from_row("precria", "0.8", "Extruido") == "Nursery"
-    assert schema.etapa_skt_from_row(None, "1.2", "Pelletizado") == "Nursery"
+def test_etapa_skt_cortes_por_tamano_sin_importar_presentacion():
+    # REQ-1. El tamano manda sobre la etapa del competidor.
+    assert schema.etapa_skt_from_row({"engorde"}, "0.8") == "Nursery"
+    assert schema.etapa_skt_from_row(set(), "1.2") == "Nursery"
+    assert schema.etapa_skt_from_row({"engorde"}, "1.6") == "Pre Grower"
+    assert schema.etapa_skt_from_row({"precria"}, "1.7") == "Grower"
+    assert schema.etapa_skt_from_row(set(), "1.8") == "Grower"
+    assert schema.etapa_skt_from_row(set(), "2.5") == "Grower"
 
 
-def test_etapa_skt_handles_range_string():
-    assert schema.etapa_skt_from_row("precria", "0.5-1.0", "Pelletizado") == "Nursery"
+def test_etapa_skt_rango_usa_el_minimo():
+    # REQ-2
+    assert schema.etapa_skt_from_row({"engorde"}, "1.4-2.0") == "Nursery"
+    assert schema.etapa_skt_from_row({"engorde"}, "2.0-1.4") == "Nursery"
+    assert schema.etapa_skt_from_row(set(), "1.6 - 2.4") == "Pre Grower"
+    assert schema.etapa_skt_from_row(set(), "1.8-2.2") == "Grower"
 
 
-def test_etapa_skt_exactly_1_6mm_is_pre_grower():
-    # A diferencia de etapa_from_tamano (que deja este caso en None porque
-    # reusa las 6 categorias viejas), aca la columna es dedicada a los 4
-    # terminos de la jefa y ella asocio 1.6mm especificamente a Pre Grower.
-    assert schema.etapa_skt_from_row("engorde", "1.6", "Pelletizado") == "Pre Grower"
-    assert schema.etapa_skt_from_row(None, "1.6", "Extruido") == "Pre Grower"
+def test_etapa_skt_sin_tamano_usa_etapa_del_competidor():
+    # REQ-3 (decision del usuario 2026-10-29)
+    assert schema.etapa_skt_from_row({"precria"}, None) == "Nursery"
+    assert schema.etapa_skt_from_row({"post_transferencia"}, "") == "Pre Grower"
+    assert schema.etapa_skt_from_row({"engorde"}, None) == "Grower"
+    assert schema.etapa_skt_from_row({"engorde"}, "s/d") == "Grower"
 
 
-def test_etapa_skt_grower_threshold_depends_on_tipo_presentacion():
-    assert schema.etapa_skt_from_row("engorde", "1.8", "Pelletizado") == "Grower"
-    assert schema.etapa_skt_from_row("engorde", "1.8", "Extruido") is None
-    assert schema.etapa_skt_from_row("engorde", "1.9", "Extruido") == "Grower"
-    assert schema.etapa_skt_from_row("engorde", "2.5", "Pelletizado") == "Grower"
+def test_etapa_skt_sin_tamano_ni_etapa_conocida_queda_vacio():
+    # REQ-3
+    assert schema.etapa_skt_from_row({"reproductores"}, None) is None
+    assert schema.etapa_skt_from_row({"salud"}, "") is None
+    assert schema.etapa_skt_from_row(set(), None) is None
 
 
-def test_etapa_skt_gap_between_1_6_and_grower_threshold_stays_none():
-    assert schema.etapa_skt_from_row("engorde", "1.7", "Pelletizado") is None
-
-
-def test_etapa_skt_unknown_tipo_presentacion_at_grower_size_stays_none():
-    assert schema.etapa_skt_from_row("engorde", "2.5", None) is None
-
-
-def test_etapa_skt_empty_tamano_stays_none():
-    assert schema.etapa_skt_from_row("engorde", None, "Pelletizado") is None
-    assert schema.etapa_skt_from_row("salud", "", "Pelletizado") is None
-
-
-def test_detect_producto_salud_true_for_disease_marker():
-    assert schema.detect_producto_salud("tratamiento contra Vibrio spp") is True
+def test_detect_es_producto_de_salud_true_for_disease_marker():
+    assert schema.detect_es_producto_de_salud("tratamiento contra Vibrio spp") is True
     # Caso real Aquaxcel Adapt Shock (usuario 2026-09-02): "vibriosis" debe
     # matchear via la raiz "vibrio", igual que "Vibrio spp" en Nicovita/HAID.
-    assert schema.detect_producto_salud("combatir eventos bacterianos como la vibriosis") is True
+    assert schema.detect_es_producto_de_salud("combatir eventos bacterianos como la vibriosis") is True
 
 
-def test_detect_producto_salud_true_for_profilactic_marker():
+def test_detect_es_producto_de_salud_true_for_profilactic_marker():
     # Caso real Agripac (2026-09-03): la "Linea Profilactica" (Ultra,
     # Ultrapro, Premium Profilactico) no menciona vibrio/tratamiento/
     # antibacterian, pero si describe un reclamo especifico de prevencion
@@ -203,21 +196,21 @@ def test_detect_producto_salud_true_for_profilactic_marker():
         "inmune del camaron logrando una mejor resistencia a problemas de "
         "bacterias, virus y parasitos"
     )
-    assert schema.detect_producto_salud(text) is True
-    assert schema.detect_producto_salud("Feedpac 35% Premium Profilactico") is True
+    assert schema.detect_es_producto_de_salud(text) is True
+    assert schema.detect_es_producto_de_salud("Feedpac 35% Premium Profilactico") is True
 
 
-def test_detect_producto_salud_false_when_text_present_without_marker():
-    assert schema.detect_producto_salud("alimento para camaron desde post larva") is False
+def test_detect_es_producto_de_salud_false_when_text_present_without_marker():
+    assert schema.detect_es_producto_de_salud("alimento para camaron desde post larva") is False
     # Mencion generica de "salud" en marketing (ej. Aquaxcel Maxima: "promover
     # la salud del camaron") NO es lo mismo que un reclamo especifico de
     # tratamiento -- la palabra "salud" sola nunca estuvo en este regex.
-    assert schema.detect_producto_salud("ingredientes para promover la salud del camaron") is False
+    assert schema.detect_es_producto_de_salud("ingredientes para promover la salud del camaron") is False
 
 
-def test_detect_producto_salud_none_when_no_text():
-    assert schema.detect_producto_salud("") is None
-    assert schema.detect_producto_salud(None) is None
+def test_detect_es_producto_de_salud_none_when_no_text():
+    assert schema.detect_es_producto_de_salud("") is None
+    assert schema.detect_es_producto_de_salud(None) is None
 
 
 def test_parse_particula_range_single_value_sets_min_equal_to_max():
@@ -267,5 +260,283 @@ def test_schema_renames_etapa_and_clasificacion_camaron():
     # _skt) en vez de dos nombres sin relacion aparente entre si.
     assert "etapa" not in schema.SCHEMA_COLUMNS
     assert "clasificacion_camaron" not in schema.SCHEMA_COLUMNS
-    assert "etapa_competidor" in schema.SCHEMA_COLUMNS
+    assert "etapa_competidor" not in schema.SCHEMA_COLUMNS  # R4.10: quitada
     assert "etapa_skt" in schema.SCHEMA_COLUMNS
+
+
+def test_pais_is_first_column_and_values_are_defined():
+    assert schema.SCHEMA_COLUMNS[0] == "pais"
+    assert set(schema.PAIS_VALUES) == {"ecuador", "honduras", "nicaragua", "panama", "mexico"}
+
+
+def test_resolver_campo_aplica_reglas_en_orden():
+    reglas = [schema.regla_coincidencia, schema.regla_preferir("titulo", "nombre_comercial")]
+    assert schema.resolver_campo([], reglas) == (None, None)
+    assert schema.resolver_campo([("35", "titulo")], reglas) == ("35", "unico")
+    assert schema.resolver_campo([("35", "titulo"), ("35,0", "tabla")], reglas) == ("35", "unico")
+    assert schema.resolver_campo([("40", "analisis"), ("35", "titulo"), ("40", "tabla")], reglas) == ("40", "coincidencia")
+    assert schema.resolver_campo([("40", "analisis"), ("35", "titulo")], reglas) == ("35", "nombre_comercial")
+    assert schema.resolver_campo([("40", "analisis"), ("35", "otro")], reglas) == (None, "sin_regla")
+
+
+def test_conflictos_de_arma_filas_con_columnas_fijas():
+    record = schema.empty_record("Api-Aba")
+    record.update(pais="mexico", nombre_producto="Dorado 35%", fuente_url="u", fecha_extraccion="2026-10-19")
+    schema.registrar_conflicto(record, "proteina_pct", "35", "nombre_comercial", [("40", "analisis"), ("35", "titulo")])
+    (fila,) = schema.conflictos_de([record])
+    assert list(fila) == schema.CONFLICTO_COLUMNS
+    assert fila["candidatos"] == "40 (analisis) | 35 (titulo)" and fila["empresa"] == "Api-Aba"
+
+
+# --- R3.2: normalize_presentacion ---
+
+def test_tipo_presentacion_oficial_es_la_lista_de_tech_stack():
+    assert schema.TIPO_PRESENTACION_OFICIAL == {
+        "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
+        "Microgranulado", "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
+        "Quistes de artemia", "Suspensión",
+    }
+
+
+def test_normalize_presentacion_valor_oficial_con_grafia_oficial():
+    # Valores reales del master.csv actual
+    assert schema.normalize_presentacion("Extruido") == "Extruido"
+    assert schema.normalize_presentacion("Microparticulado") == "Microparticulado"
+    assert schema.normalize_presentacion("líquido ") == "Líquido"
+    assert schema.normalize_presentacion("LIQUIDO") == "Líquido"
+    assert schema.normalize_presentacion("quistes de ARTEMIA") == "Quistes de artemia"
+    assert schema.normalize_presentacion("Suspension") == "Suspensión"
+
+
+def test_normalize_presentacion_pelletizado_pasa_a_pellet():
+    assert schema.normalize_presentacion("Pelletizado") == "Pellet"
+    assert schema.normalize_presentacion("PELLETIZADA") == "Pellet"
+    assert schema.normalize_presentacion("Peletizado") == "Pellet"
+    assert schema.normalize_presentacion("pellet") == "Pellet"
+
+
+def test_normalize_presentacion_desconocido_se_conserva():
+    assert schema.normalize_presentacion("Microgranulado") == "Microgranulado"
+    assert schema.normalize_presentacion("  Crumble ") == "Crumble"
+
+
+def test_normalize_presentacion_vacio_es_none():
+    assert schema.normalize_presentacion(None) is None
+    assert schema.normalize_presentacion("") is None
+    assert schema.normalize_presentacion("   ") is None
+
+
+# --- R3.3: los parsers usan normalize_presentacion ---
+
+def test_detect_tecnologia_devuelve_la_lista_oficial():
+    # REQ-1: textos reales (HAID, Agrizon, Agripac) -> grafia oficial
+    assert schema.detect_tecnologia("ALIMENTO BALANCEADO PELLETIZADO PARA CAMARON") == "Pellet"
+    assert schema.detect_tecnologia("Exia Perform 35% Pelletized 2.0 mm") == "Pellet"
+    assert schema.detect_tecnologia("Larviva Extrusado") == "Extruido"
+    assert schema.detect_tecnologia("Tipo Polvo") == "Polvo"
+    assert schema.detect_tecnologia("Tipo Micro particulado") == "Microparticulado"
+    assert schema.detect_tecnologia("Tipo Líquidos") == "Líquido"
+    for valor in ("Pellet", "Extruido", "Polvo", "Microparticulado", "Líquido"):
+        assert valor in schema.TIPO_PRESENTACION_OFICIAL
+
+
+def test_umbral_grower_de_pellet_acepta_pellet_y_pelletizado():
+    # REQ-2: la grafia nueva no rompe el umbral de 1.8 mm (etapa_skt ya no
+    # depende de tipo_presentacion desde R3.6)
+    for tipo in ("Pellet", "Pelletizado"):
+        assert schema.etapa_from_tamano("1.8", tipo) == "engorde"
+
+
+def test_normalize_presentacion_alias_de_agripac():
+    # REQ-3: grafias reales de la pestana "Tipo" de Agripac
+    assert schema.normalize_presentacion("Micro particulado") == "Microparticulado"
+    assert schema.normalize_presentacion("Líquidos") == "Líquido"
+
+
+def _master_r34():
+    # Filas del master (2026-10-29). Exia Prime traia "Microgranulado", que entro a la
+    # lista oficial el 2026-11-09; aca lleva "Hojuela" como valor desconocido de prueba.
+    import pandas as pd
+    return pd.DataFrame([
+        {"pais": "ecuador", "empresa": "BioMar", "nombre_producto": "Exia Prime",
+         "tipo_presentacion": "Hojuela",
+         "fuente_url": "https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg"},
+        {"pais": "ecuador", "empresa": "Nicovita", "nombre_producto": "Nicovita Classic AD",
+         "tipo_presentacion": "Pellet",
+         "fuente_url": "https://nicovita.com/productos/nicovita-classic-ad-ecuador/"},
+        {"pais": "ecuador", "empresa": "Agripac", "nombre_producto": "Royal Pepper Protein",
+         "tipo_presentacion": "Líquido",
+         "fuente_url": "https://agripac.com.ec/productos/royal-pepper-protein/"},
+        {"pais": "honduras", "empresa": "Nicovita", "nombre_producto": "Nicovita Classic Engorde",
+         "tipo_presentacion": "Pelletizado",
+         "fuente_url": "https://nicovita.com/productos/nicovita-classic-engorde-honduras/"},
+        {"pais": "mexico", "empresa": "Vimifos", "nombre_producto": "Sin tipo",
+         "tipo_presentacion": None, "fuente_url": "https://example.invalid/"},
+    ])
+
+
+def test_presentaciones_nuevas_solo_valores_fuera_de_la_lista_oficial():
+    nuevas = schema.presentaciones_nuevas(_master_r34())
+    assert list(nuevas.columns) == ["pais", "empresa", "producto", "valor", "url"]
+    assert nuevas.to_dict("records") == [
+        {"pais": "ecuador", "empresa": "BioMar", "producto": "Exia Prime", "valor": "Hojuela",
+         "url": "https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg"},
+        {"pais": "honduras", "empresa": "Nicovita", "producto": "Nicovita Classic Engorde",
+         "valor": "Pelletizado",
+         "url": "https://nicovita.com/productos/nicovita-classic-engorde-honduras/"},
+    ]
+
+
+# --- R3.5: etapa_* booleanas desde etapa_competidor ------------------------
+
+
+def test_etapas_desde_competidor_marca_una_true_y_las_demas_false():
+    # Nicovita Classic Precria (master Ecuador): etapa_competidor = precria
+    etapas = schema.etapas_desde_competidor("precria")
+    assert etapas == {
+        "etapa_reproductores": False,
+        "etapa_larva": False,
+        "etapa_post_larva": False,
+        "etapa_precria": True,
+        "etapa_post_transferencia": False,
+        "etapa_engorde": False,
+    }
+    assert schema.etapas_desde_competidor("post_transferencia")["etapa_post_transferencia"] is True
+
+
+def test_etapas_desde_competidor_vacio_deja_las_cinco_vacias():
+    for etapa in (None, "", "salud"):
+        assert schema.etapas_desde_competidor(etapa) == {c: None for c in schema.ETAPA_COLUMNS}
+
+
+def test_schema_columns_incluye_etapas_despues_de_salud():
+    i = schema.SCHEMA_COLUMNS.index("es_producto_de_salud")
+    assert schema.SCHEMA_COLUMNS[i + 1:i + 1 + len(schema.ETAPA_COLUMNS)] == schema.ETAPA_COLUMNS
+    assert "etapa_competidor" not in schema.SCHEMA_COLUMNS  # R4.10
+
+
+# --- R4.1: detectar_etapas y etapa_post_larva -------------------------------
+# Frases reales de las fuentes (tests/fixtures/ y la ficha de Nicovita Terap).
+
+
+def test_req1_etapa_post_larva_entre_larva_y_precria():
+    cols = schema.ETAPA_COLUMNS
+    assert cols.index("etapa_post_larva") == cols.index("etapa_larva") + 1
+    assert cols.index("etapa_precria") == cols.index("etapa_post_larva") + 1
+    assert "etapa_post_larva" in schema.SCHEMA_COLUMNS
+    assert schema.etapas_desde_competidor("larva")["etapa_post_larva"] is False
+    assert schema.etapas_desde_competidor(None)["etapa_post_larva"] is None
+
+
+def test_req2_detectar_etapas_devuelve_todas_las_explicitas():
+    # Aquaxcel Mexico (listing): post-larva y precrias en la misma ficha
+    texto = ("Alimento completo con 45% de proteína para la etapa de post-larva en sistemas "
+             "semi-intensivos y en raceways o precrías hasta los 0.20g de peso vivo.")
+    assert schema.detectar_etapas(texto) == {"post_larva", "precria"}
+    assert schema.detectar_etapas("Reproductores / maduración") == {"reproductores"}
+    assert schema.detectar_etapas(None) == set()
+
+
+def test_nauplios_de_reproductores_no_marcan_larva():
+    # Revisión Opus: los nauplios son lo que produce una dieta de maduración.
+    assert schema.detectar_etapas("dieta de maduración: más producción de nauplios") == {"reproductores"}
+    assert schema.detectar_etapas("maduración y larvicultura, nauplios") == {"reproductores", "larva"}
+    assert schema.detectar_etapas("alimento para nauplios y zoea") == {"larva"}
+    assert schema.detectar_etapas("") == set()
+    assert set().union(*(schema.detectar_etapas(e) for e in ("larva", "engorde"))) <= set(schema.ETAPAS)
+
+
+def test_req3_post_larva_no_es_larva():
+    # Nutrimar: "para post larvas hasta 1.0g"; Api-Aba: "fase postlarval hasta 3-4 g"
+    assert schema.detectar_etapas(
+        "Alimento balanceado extruido de alta densidad nutricional para post larvas hasta 1.0g de peso vivo."
+    ) == {"post_larva"}
+    assert schema.detectar_etapas(
+        "diseñado para camarón en fase postlarval hasta 3–4 g de peso.") == {"post_larva"}
+    assert schema.detectar_etapas("Formulado para camarón en etapa de postlarva") == {"post_larva"}
+    assert schema.detectar_etapas("Nicovita Origin PL") == {"post_larva"}
+    assert schema.detectar_etapas("Alimento para larvas en hatchery, mysis y zoea") == {"larva"}
+
+
+def test_req4_palabras_genericas_no_marcan_etapa():
+    # Api-Aba: "Favorece el crecimiento rapido"
+    assert schema.detectar_etapas(
+        "Favorece el crecimiento rápido, la sobrevivencia y el desarrollo inmunológico") == set()
+    assert schema.detectar_etapas("Ideal para el inicio del ciclo") == set()
+
+
+def test_req5_rango_marca_extremos_e_intermedias():
+    # Nicovita Terap: "post larva hasta tamaño de mercado"
+    assert schema.detectar_etapas("Desde post larva hasta tamaño de mercado") == {
+        "post_larva", "precria", "post_transferencia", "engorde"}
+    # Nicovita Classic/Katal base: "post-larva a mercado"
+    assert schema.detectar_etapas("cubre post-larva a mercado") == {
+        "post_larva", "precria", "post_transferencia", "engorde"}
+    # Nutrimar: transicion hacia engorde
+    assert schema.detectar_etapas(
+        "durante la etapa de transición hacia la fase de engorde hasta los 12g de peso vivo."
+    ) == {"post_transferencia", "engorde"}
+    assert schema.detectar_etapas("desde precría hasta engorde") == {
+        "precria", "post_transferencia", "engorde"}
+    # Sin conector de rango, solo las mencionadas
+    assert schema.detectar_etapas("Larva y engorde") == {"larva", "engorde"}
+    # reproductores nunca se rellena
+    assert schema.detectar_etapas("reproductores hasta engorde") == {"reproductores", "engorde"}
+
+
+def test_req6_columnas_etapa():
+    cols = schema.columnas_etapa({"precria", "engorde"})
+    assert set(cols) == set(schema.ETAPA_COLUMNS)
+    assert cols["etapa_precria"] is True and cols["etapa_engorde"] is True
+    assert cols["etapa_larva"] is False and cols["etapa_post_larva"] is False
+    assert schema.columnas_etapa(set()) == {c: None for c in schema.ETAPA_COLUMNS}
+
+
+def test_req7_respaldo_skt_post_larva_es_nursery():
+    assert schema.etapa_skt_from_row({"post_larva"}, None) == "Nursery"
+
+
+# --- R4.2: reglas nuevas de detectar_etapas (fichas de Nicovita) -----------
+
+def test_r42_req3_cosecha_es_engorde():
+    # Nicovita Katal AD (PDF): "desde 1 gramo de peso vivo hasta tamaño de cosecha"
+    assert schema.detectar_etapas(
+        "desde 1 gramo de peso vivo hasta tamaño de cosecha.") == {"engorde"}
+    # Nicovita Finalis Honduras (web): "hasta peso de cosecha"
+    assert schema.detectar_etapas("desde los 3.0 gramos de peso hasta peso de cosecha") == {"engorde"}
+    # Nicovita Finalis Proterra (web): "desde los 3 gramos hasta la cosecha"
+    assert schema.detectar_etapas("desde los 3 gramos hasta la cosecha") == {"engorde"}
+
+
+def test_r42_req4_transferencia_suelta_no_es_post_transferencia():
+    # Nicovita Classic/Origin Precria (PDF)
+    assert schema.detectar_etapas(
+        "Dieta balanceada extruida para alimentar Post Larvas de Camarones de Mar o Langostinos "
+        "(Litopenaeus vannamei) en estadios de PL10 a 1 gramo de peso, en sistemas de transferencia."
+    ) == {"post_larva"}
+    assert schema.detectar_etapas("classic post transferencia") == {"post_transferencia"}
+    assert schema.detectar_etapas("post-transferencia") == {"post_transferencia"}
+    assert schema.detectar_etapas("etapa de transición") == {"post_transferencia"}
+
+
+def test_r42_req5_pl_con_numero_es_post_larva():
+    # Nicovita Katal Precria (web): "para precrías desde PL20 hasta 1 g"
+    assert schema.detectar_etapas("para precrías desde PL20 hasta 1 g") == {"precria", "post_larva"}
+    assert schema.detectar_etapas("en estadios de PL 4 a 1g") == {"post_larva"}
+    assert schema.detectar_etapas("explora y plantea") == set()
+
+
+# --- R3.7: normalize_proteina ---
+
+def test_normalize_proteina_acepta_numero_texto_y_coma_decimal():
+    assert schema.normalize_proteina(35) == 35.0
+    assert schema.normalize_proteina("35") == 35.0
+    assert schema.normalize_proteina("37.5") == 37.5
+    assert schema.normalize_proteina("37,5") == 37.5
+    assert schema.normalize_proteina(" 35 % ") == 35.0
+    assert type(schema.normalize_proteina("35")) is float
+
+
+def test_normalize_proteina_ambiguo_o_fuera_de_rango_queda_vacio():
+    for valor in (None, "", "s/d", "30%, 35%", 0.375, "0,375", 0, 120):
+        assert schema.normalize_proteina(valor) is None, valor
