@@ -42,7 +42,7 @@ def parse_pdf(url: str, pdf_bytes: bytes) -> list[dict]:
         if p is None:
             continue
         record = schema.empty_record(EMPRESA)
-        record["nombre_producto"] = f"Aquanasa Línea Premium {p:g}%"
+        record["nombre_producto"] = f"AQUANASA {p:g}"  # nombre del registro MIDA (cruce)
         record["proteina_pct"] = p
         record["empaque_kg"] = f"{float(mk.group(1).replace(',', '.')):g}" if mk else None
         record["tipo_presentacion"] = schema.normalize_presentacion("Pelletizado") if peletizado else None

@@ -16,7 +16,7 @@ def _recs():
 # REQ-1
 def test_tres_filas_por_proteina_sin_tamano():
     r = _recs()
-    assert sorted(r) == ["Aquanasa Línea Premium 25%", "Aquanasa Línea Premium 30%", "Aquanasa Línea Premium 35%"]
+    assert sorted(r) == ["AQUANASA 25", "AQUANASA 30", "AQUANASA 35"]
     assert [r[n]["proteina_pct"] for n in sorted(r)] == [25.0, 30.0, 35.0]
     assert all(x["empresa"] == "NasaFeed" and x["tamano_pellet_mm"] is None for x in r.values())
     assert all(x["fuente_url"] == scraper.WAYBACK_URL for x in r.values())

@@ -20,7 +20,7 @@ Pedido del usuario: scrapers para los candidatos de México y Panamá (Ecuador n
 | R8.11 Italcol (PA) | `170a852` | 1 | 2, aplicados |
 
 Sin implementar, porque no tienen sitio: Oromar (MX) y Avícola Grecia (PA), que siguen solo por registro oficial.
-**Para decidir (opcional):** los registros MIDA "AQUANASA 25/30/35" siguen `sin_match`, porque las filas se llaman "Aquanasa Línea Premium 25%" (la ficha no dice "AQUANASA 25"). Si se usa el nombre del registro, el cruce queda hecho.
+**Cerrado (2026-11-09):** NasaFeed usa el nombre del registro (`AQUANASA 25/30/35`) y el cruce con MIDA da `coincide`. Los puntos abiertos (AQUATEC, MIDA, Prilabsa) quedaron confirmados por el usuario (`decisiones.md`).
 
 ## Resumen para el usuario — sesión autónoma (2026-11-09)
 **Estado:** roadmap sin fases `[ ]` ni `[~]`. Solo quedan los `[?]` que decidís vos (R7.3 y "Después"). Suite: **331/331 en verde**. Pipeline completo: 14 fuentes OK en 325 s, sin bloqueos (BioMar/Agrizon ya no dio 429). Power BI regenerado: **17 Excel, 383 filas**, mismas 16 columnas.
@@ -41,7 +41,7 @@ Ecuador: Agripac 38 · BioMar 17 · Cargill 37 · HAID 17 · Nicovita 61 · **Ze
 
 **Fases que quedaron `[~]`:** ninguna.
 
-**Actualización 2026-11-09 (respuestas del usuario):** confirmados Nicovita Origin → Nursery, Prilabsa (puntos 1–2) y `<X` (punto 3). `Microgranulado` entra a la lista oficial. Cada corrida reemplaza a la anterior. Tesseract va dentro del `.exe` (R10.1, hecho). Los vacíos de proteína se llenan a mano. El reporte de Power BI lo hace el usuario. R7.3: por ahora no se agrega ningún competidor; quedan anotados abajo. Siguen abiertos solo los puntos 4–5 de la lista siguiente (AQUATEC y MIDA).
+**Actualización 2026-11-09 (respuestas del usuario):** confirmados Nicovita Origin → Nursery, Prilabsa (puntos 1–2) y `<X` (punto 3). `Microgranulado` entra a la lista oficial. Cada corrida reemplaza a la anterior. Tesseract va dentro del `.exe` (R10.1, hecho). Los vacíos de proteína se llenan a mano. El reporte de Power BI lo hace el usuario. R7.3: por ahora no se agrega ningún competidor; quedan anotados abajo. Los puntos 4–5 (AQUATEC y MIDA) también quedaron confirmados (ver la decisión del cierre en `decisiones.md`).
 
 **Competidores candidatos (R7.3, sin implementar; detalle en el README de cada país):**
 - México: Skilla (BioBlue / Grupo NU3, bioblue.com/skilla, sin verificar), Epicore EPIFEED-MBF (vía ProAqua, maduración, sin mm ni proteína), Oromar (sin sitio; 2 registros SENASICA). Malta Texo = Api-Aba (ya cubierto).

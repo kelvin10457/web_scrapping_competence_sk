@@ -13,9 +13,9 @@ Corrida real `pipeline.py --pais panama --empresa nasafeed` (2026-11-09): nasafe
 
 | Producto | Fuente dice | CSV dice |
 |---|---|---|
-| Aquanasa Línea Premium 25% | "Proteína Cruda (mínima) 25.00 …" · "100 lbs(45.36 Kg)" · "desde post larva hasta la cosecha" | 25 · 45.36 · Pellet · post_larva→engorde |
-| Aquanasa Línea Premium 30% | columna 2: 30.00 | 30 · 45.36 |
-| Aquanasa Línea Premium 35% | columna 3: 35.00 | 35 · 45.36 |
+| AQUANASA 25 | "Proteína Cruda (mínima) 25.00 …" · "100 lbs(45.36 Kg)" · "desde post larva hasta la cosecha" | 25 · 45.36 · Pellet · post_larva→engorde |
+| AQUANASA 30 | columna 2: 30.00 | 30 · 45.36 |
+| AQUANASA 35 | columna 3: 35.00 | 35 · 45.36 |
 
 ## Conteo antes → después
 Panamá: +3 filas (primera fuente automatizada; empresa `NasaFeed`). `etapa_skt` = Nursery por el respaldo sin tamaño (etapa más temprana del ciclo con respaldo: precria).
