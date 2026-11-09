@@ -1,6 +1,6 @@
 # Panamá
 
-**Sin fuente pública automatizable** (verificado 2026-10-19). No hay fabricante local identificado; los productos llegan importados (Nicovita desde Honduras, BioMar desde Costa Rica, marcas ecuatorianas) y ninguna de esas empresas publica catálogo para Panamá.
+**Fuentes automatizadas desde 2026-11-09:** NasaFeed (R8.10) e Italcol (R8.11). Antes: sin fuente pública automatizable (verificado 2026-10-19). No hay fabricante local identificado; los productos llegan importados (Nicovita desde Honduras, BioMar desde Costa Rica, marcas ecuatorianas) y ninguna de esas empresas publica catálogo para Panamá.
 
 Los productos se cargan a mano desde la GUI (campo `pais` = `panama`) o en `data/competencia_human.xlsx`. **No se duplican filas de otros países.**
 
@@ -23,5 +23,6 @@ Buscado: registro público de alimentos para animales (MIDA / APA) y catálogos 
 
 | Empresa | Marca | Fuente | Datos | Acceso | Utilidad |
 |---|---|---|---|---|---|
-| Nutrición Animal S.A. (NasaFeed) | Aquanasa Línea Premium | nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf | Según el índice de búsqueda: 1.4 y 2.4 mm, 25/30/35 %, postlarva a cosecha, 100 lb | **Timeout** con `requests` (2026-11-09). Reintentar otro día | Media, potencialmente alta |
+| Nutrición Animal S.A. (NasaFeed) | Aquanasa Línea Premium | **Implementado (R8.10)**: `nasafeed.py`. Ficha PDF; si nasafeed.com no responde, usa la copia de Wayback (2024-08-30) | 3 filas (25/30/35 %), 45.36 kg, Pellet, post larva a cosecha. Tamaño vacío: 1.4 y 2.4 mm sin asignar a cada proteína | El sitio da timeout (2026-11-09); Wayback responde | Alta |
 | Avícola Grecia | Excellent Camarón | Solo registro MIDA | — | Sin sitio | Baja |
+| Italcol (Colombia) | AQUACAMARON 35 | **Implementado (R8.11)**: `italcol.py`, italcol.com/producto/camaron-levante/ | 1 fila: 35 % de proteína, engorde ("hasta peso de cosecha") | 200 con UA de navegador | Media |
