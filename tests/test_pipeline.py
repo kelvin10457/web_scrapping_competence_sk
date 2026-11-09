@@ -256,7 +256,7 @@ def test_write_presentaciones_nuevas_escribe_csv_del_master(tmp_path):
     pipeline.write_presentaciones_nuevas(_master_r34(), path)
     import pandas as pd
     df = pd.read_csv(path, dtype=str, encoding="utf-8-sig")
-    assert df["valor"].tolist() == ["Microgranulado", "Pelletizado"]
+    assert df["valor"].tolist() == ["Hojuela", "Pelletizado"]
 
 
 def test_write_presentaciones_nuevas_sin_valores_deja_solo_encabezado(tmp_path):
@@ -274,7 +274,7 @@ def test_reportar_presentaciones_nuevas_resume_por_valor(tmp_path, capsys):
     pipeline.write_presentaciones_nuevas(_master_r34(), path)
     pipeline.reportar_presentaciones_nuevas(path)
     out = capsys.readouterr().out
-    assert "Microgranulado: 1" in out
+    assert "Hojuela: 1" in out
     assert "Pelletizado: 1" in out
     assert str(path) in out
 

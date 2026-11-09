@@ -293,7 +293,7 @@ def test_conflictos_de_arma_filas_con_columnas_fijas():
 def test_tipo_presentacion_oficial_es_la_lista_de_tech_stack():
     assert schema.TIPO_PRESENTACION_OFICIAL == {
         "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
-        "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
+        "Microgranulado", "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
         "Quistes de artemia", "Suspensión",
     }
 
@@ -354,11 +354,12 @@ def test_normalize_presentacion_alias_de_agripac():
 
 
 def _master_r34():
-    # Filas reales del master (2026-10-29): Agrizon Microgranulado y Honduras sin regenerar.
+    # Filas del master (2026-10-29). Exia Prime traia "Microgranulado", que entro a la
+    # lista oficial el 2026-11-09; aca lleva "Hojuela" como valor desconocido de prueba.
     import pandas as pd
     return pd.DataFrame([
         {"pais": "ecuador", "empresa": "BioMar", "nombre_producto": "Exia Prime",
-         "tipo_presentacion": "Microgranulado",
+         "tipo_presentacion": "Hojuela",
          "fuente_url": "https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg"},
         {"pais": "ecuador", "empresa": "Nicovita", "nombre_producto": "Nicovita Classic AD",
          "tipo_presentacion": "Pellet",
@@ -378,7 +379,7 @@ def test_presentaciones_nuevas_solo_valores_fuera_de_la_lista_oficial():
     nuevas = schema.presentaciones_nuevas(_master_r34())
     assert list(nuevas.columns) == ["pais", "empresa", "producto", "valor", "url"]
     assert nuevas.to_dict("records") == [
-        {"pais": "ecuador", "empresa": "BioMar", "producto": "Exia Prime", "valor": "Microgranulado",
+        {"pais": "ecuador", "empresa": "BioMar", "producto": "Exia Prime", "valor": "Hojuela",
          "url": "https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg"},
         {"pais": "honduras", "empresa": "Nicovita", "producto": "Nicovita Classic Engorde",
          "valor": "Pelletizado",

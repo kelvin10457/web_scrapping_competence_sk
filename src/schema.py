@@ -237,7 +237,7 @@ TIPO_PRESENTACION_VALUES = {"Extruido", "Pelletizado", "Polvo", "Microparticulad
 # solo para merge_human/GUI (el usuario planea reemplazar merge_human).
 TIPO_PRESENTACION_OFICIAL = {
     "Extruido", "Granulado", "Líquido", "Microencapsulado", "Microextruido",
-    "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
+    "Microgranulado", "Microparticulado", "Nauplios de artemia", "Otro", "Pellet", "Polvo",
     "Quistes de artemia", "Suspensión",
 }
 

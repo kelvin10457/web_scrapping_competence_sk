@@ -28,6 +28,14 @@ Ecuador: Agripac 38 · BioMar 17 · Cargill 37 · HAID 17 · Nicovita 61 · **Ze
 
 **Fases que quedaron `[~]`:** ninguna.
 
+**Actualización 2026-11-09 (respuestas del usuario):** confirmados Nicovita Origin → Nursery, Prilabsa (puntos 1–2) y `<X` (punto 3). `Microgranulado` entra a la lista oficial. Cada corrida reemplaza a la anterior. Tesseract va dentro del `.exe` (R10.1, hecho). Los vacíos de proteína se llenan a mano. El reporte de Power BI lo hace el usuario. R7.3: por ahora no se agrega ningún competidor; quedan anotados abajo. Siguen abiertos solo los puntos 4–5 de la lista siguiente (AQUATEC y MIDA).
+
+**Competidores candidatos (R7.3, sin implementar; detalle en el README de cada país):**
+- México: Skilla (BioBlue / Grupo NU3, bioblue.com/skilla, sin verificar), Epicore EPIFEED-MBF (vía ProAqua, maduración, sin mm ni proteína), Oromar (sin sitio; 2 registros SENASICA). Malta Texo = Api-Aba (ya cubierto).
+- Ecuador: Balnova (agroshow.info, verificado: granulado 2.0–1.7 mm, 22/28/35 %), Molinos Champion (Aquachampion), Naltech AQUATECH (Perú, imágenes), INVE (larvicultura, sin ficha cuantitativa).
+- Panamá: NasaFeed Aquanasa (ficha PDF; hoy solo por registro MIDA), Avícola Grecia Excellent Camarón (solo registro MIDA), Italcol AQUAMARÓN (Colombia).
+- Honduras y Nicaragua: sin competidores con catálogo propio encontrados (solo Nicovita/Cargill).
+
 **Decisiones "pendiente de confirmar" (nuevas, en `decisiones.md`):**
 1. **Prilabsa:** Zeigler se incluye en Ecuador (no estaba cubierto ahí) y `empresa` = fabricante, no "Prilabsa".
 2. **Prilabsa:** proteína vacía si la ficha publica dos valores (peso seco/líquido: EZ Artemia, EZ Artemia Ultra, EZ Larva; dos dietas: ZM Feed) o un rango (Espirulina 60–70 %). Son 10 filas. Alternativa: tomar el de peso seco.

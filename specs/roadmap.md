@@ -58,7 +58,7 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 
 - [x] **R7.1** Correr México completo con el esquema nuevo y revisar `presentaciones_nuevas.csv`.
 - [x] **R7.2** Revisar las 144 pistas de SENASICA y listar los competidores nuevos con datos útiles (Aquatec, El Pedregal, Oromar, Skilla, Winfish Zeigler).
-- [?] **R7.3** El usuario decide cuáles de esos competidores se agregan (por registro oficial o por carga manual).
+- [-] **R7.3** El usuario decide cuáles de esos competidores se agregan (por registro oficial o por carga manual). Decisión 2026-11-09: por ahora ninguno; los candidatos quedan anotados en `revision_pendiente.md`.
 - [x] **R7.4** Buscar más competidores con catálogo web público (fichas con tamaño, proteína o etapa) en los 5 países, además de los de SENASICA. Solo listar con evidencia en el README del país; implementar cada uno es una fase aparte (pedido del usuario 2026-11-09; research delegado a Codex).
 - [x] **R7.5** El Pedregal (México): scraper de la tabla HTML de crustáceos (`el-pedregal.com/alimento/crustaceos`, todas las categorías) + PDF de extruidos si aporta. Validar 3 productos.
 - [x] **R7.6** AQUATEC (México) vía nutrimentos.com.mx: scraper aceptando el certificado SSL inválido de ese dominio (decisión del usuario 2026-11-09). Sin heredar campos entre variantes. Validar 3 productos.
@@ -82,9 +82,13 @@ Cada país sigue dos pasos: primero **descubrir** (solo buscar y anotar en el RE
 
 - [x] **R9.1** `pipeline.py` completo: los 5 países, tiempo total, nulos por columna y presentaciones nuevas. Se entregan los Excel de `data/powerbi/`.
 
-## Después (a conversar)
+## R10 — Empaquetado
 
-- [?] Entregable / reporte de Power BI para gerencia.
-- [?] Histórico vs snapshot (¿se acumulan las corridas por fecha?).
-- [?] Tesseract dentro del `.exe` o como requisito de instalación.
-- [?] Agripac Ecuador: 18/38 filas sin proteína (artemia/larvicultura que la fuente no publica).
+- [x] **R10.1** Tesseract dentro del `.exe` (decisión 2026-11-09): `src/ocr.py` + `ScraperCompetencia.spec`.
+
+## Después (decidido 2026-11-09)
+
+- [-] Entregable / reporte de Power BI para gerencia: lo hace el usuario.
+- [x] Histórico vs snapshot: cada corrida **reemplaza** a la anterior (ya funcionaba así).
+- [x] Tesseract dentro del `.exe` → R10.1.
+- [x] Agripac Ecuador: 18/38 filas sin proteína quedan vacías; los vacíos se llenan a mano.

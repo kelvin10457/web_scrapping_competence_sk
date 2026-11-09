@@ -27,5 +27,5 @@ def _powerbi_fuera_del_repo(tmp_path, monkeypatch):
     monkeypatch.setattr(powerbi, "POWERBI_DIR", tmp_path / "_powerbi_test")
     monkeypatch.setattr(powerbi, "HUMAN_PATH", None)
     # Idem data/presentaciones_nuevas.csv: un test de registros oficiales lo
-    # pisaba con uno vacio y se perdia el aviso real (BioMar Microgranulado).
+    # pisaba con uno vacio y se perdia el aviso real (BioMar Exia Prime).
     monkeypatch.setattr(pipeline, "PRESENTACIONES_NUEVAS_PATH", tmp_path / "_presentaciones_nuevas.csv")
