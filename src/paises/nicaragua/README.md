@@ -21,3 +21,7 @@ Buscado: registro público de alimentos para animales (IPSA) y catálogos de com
 ## Competidores nuevos R7.4 (2026-11-09)
 
 Sin fuente técnica nueva (research con Codex).
+
+## Hatchery / competencia de Ignis e InVita, R11.1 (2026-11-09)
+
+No apareció ningún distribuidor de alimentos de hatchery con ficha pública. Detalle en `specs/features/R11.1-hatchery/hallazgos.md`.

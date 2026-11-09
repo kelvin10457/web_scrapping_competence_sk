@@ -26,3 +26,7 @@ Research con Codex; acceso comprobado con `requests` solo donde dice "verificado
 
 - **Nutrición Marina = Nutrimar** (grupoacuicolamexicano.com.mx/nutrimar). Ya cubierto.
 - **Malta Texo = Apicamarón/Api-Aba (ADM).** Ya cubierto; su sitio ADM da 403.
+
+## Hatchery / competencia de Ignis e InVita, R11.1 (2026-11-09)
+
+ProAqua `/reed-mariculture/` publica Reed Instant Algae (N-Rich PL Plus, etc.), que R7.9 dejó fuera. ARPods no aparece. Ver `specs/features/R11.1-hatchery/hallazgos.md`.

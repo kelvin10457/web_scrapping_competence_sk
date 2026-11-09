@@ -26,3 +26,7 @@ Buscado: registro público de alimentos para animales (MIDA / APA) y catálogos 
 | Nutrición Animal S.A. (NasaFeed) | Aquanasa Línea Premium | **Implementado (R8.10)**: `nasafeed.py`. Ficha PDF; si nasafeed.com no responde, usa la copia de Wayback (2024-08-30) | 3 filas `AQUANASA 25/30/35` (nombre del registro MIDA), 45.36 kg, Pellet, post larva a cosecha. Tamaño vacío: 1.4 y 2.4 mm sin asignar a cada proteína | El sitio da timeout (2026-11-09); Wayback responde | Alta |
 | Avícola Grecia | Excellent Camarón | Solo registro MIDA | — | Sin sitio | Baja |
 | Italcol (Colombia) | AQUACAMARON 35 | **Implementado (R8.11)**: `italcol.py`, italcol.com/producto/camaron-levante/ | 1 fila: 35 % de proteína, engorde ("hasta peso de cosecha") | 200 con UA de navegador | Media |
+
+## Hatchery / competencia de Ignis e InVita, R11.1 (2026-11-09)
+
+No apareció ningún distribuidor de alimentos de hatchery con ficha pública. Detalle en `specs/features/R11.1-hatchery/hallazgos.md`.

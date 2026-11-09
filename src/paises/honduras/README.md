@@ -25,3 +25,7 @@ Buscado: registro público de alimentos para animales (SENASA) y catálogos de c
 ## Competidores nuevos R7.4 (2026-11-09)
 
 Sin fuente técnica nueva. ALCON es marca de Cargill (cargill.com.hn), ya cubierto.
+
+## Hatchery / competencia de Ignis e InVita, R11.1 (2026-11-09)
+
+No apareció ningún distribuidor de alimentos de hatchery con ficha pública. Detalle en `specs/features/R11.1-hatchery/hallazgos.md`.
