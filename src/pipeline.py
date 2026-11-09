@@ -139,12 +139,12 @@ def revisar_registros_path() -> Path:
 
 
 def actualizar_registros(max_dias: int = registros_oficiales.MAX_DIAS_CACHE) -> str:
-    """Fase 5: baja SENASICA/eaduana (cache de `max_dias`). Es complementaria:
+    """Fase 5: baja SENASICA/eaduana/MIDA (cache de `max_dias`). Es complementaria:
     si falla se avisa y el master se arma igual con los registros anteriores.
     Devuelve el mensaje para el log (CLI o GUI)."""
     try:
         n = registros_oficiales.actualizar(registros_path(), max_dias=max_dias)
-        return f"--- registros oficiales: {n} (SENASICA + eaduana) ---"
+        return f"--- registros oficiales: {n} (SENASICA + eaduana + MIDA) ---"
     except Exception as exc:
         return f"  AVISO: no se pudieron actualizar los registros oficiales ({exc}); se usan los anteriores."
 
@@ -297,7 +297,7 @@ def parse_args(argv: list[str]):
     parser.add_argument("--pais", choices=schema.PAIS_VALUES, help="solo este pais")
     parser.add_argument("--empresa", help="solo esta empresa")
     parser.add_argument("--registros", action="store_true",
-                        help="volver a bajar SENASICA/eaduana aunque la cache tenga menos de 30 dias")
+                        help="volver a bajar SENASICA/eaduana/MIDA aunque la cache tenga menos de 30 dias")
     return parser.parse_args(argv)
 
 

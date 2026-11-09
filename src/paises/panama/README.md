@@ -17,6 +17,8 @@ Buscado: registro público de alimentos para animales (MIDA / APA) y catálogos 
 
 **Resultado:** no aparece un listado público de alimentos para camarón registrados en APA ni en MIDA. El único registro que menciona camarón es una lista de exportación de plantas extranjeras, que no sirve de catálogo. **Nada que implementar en R8.6.** Se carga a mano (R8.7).
 
+**Actualización R8.8/R8.9 (2026-11-09):** MIDA/DINASA sí publica dos PDF de alimentos registrados (nacional y PGA; bajan solo con User-Agent de navegador). Desde R8.9 entran a `data/registros_oficiales.csv` como `fuente=mida`: 5 registros de camarón vigentes (AQUANASA 25/30/35 de Nutrición Animal, EXCELLENT CAMARÓN de Avícola Grecia, MATEMAX de Farallon Aquaculture). Sin proteína ni tamaño: no crean filas en el Excel.
+
 ## Competidores nuevos R7.4 (2026-11-09)
 
 | Empresa | Marca | Fuente | Datos | Acceso | Utilidad |

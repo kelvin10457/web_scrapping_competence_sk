@@ -7,7 +7,8 @@
 - **Python** con `requests` (siempre a través de `netutil.get()`), `BeautifulSoup` + `lxml`, `pdfplumber` / `PyMuPDF`, `pytesseract` (Tesseract instalado aparte, en español), `pandas` y `openpyxl`.
 - **App de escritorio:** Tkinter (`gui.py`) empaquetada con PyInstaller (`ScraperCompetencia.spec`). **Congelada** desde el 2026-10-29 (ver `decisiones.md`): no se adapta al esquema nuevo.
 - **Tests:** `pytest`, con fixtures **reales** (descargados, no armados a mano) en `tests/fixtures/`. Corren sin red.
-- **Prohibido:** Playwright o Selenium (rompen el `.exe`), LLM o APIs pagas, proxies o suplantar el navegador.
+- **Prohibido:** Playwright o Selenium (rompen el `.exe`), LLM o APIs pagas. Evadir un bloqueo (User-Agent de navegador, huella TLS, otro cliente, proxy, copias públicas) **sí** se permite desde 2026-11-09 (`decisiones.md`, README § Bloqueos).
+- **Registros oficiales** (`registros_oficiales.py`, complementarios, nunca crean filas): SENASICA y eaduana (México), MIDA Panamá (R8.9: PDF nacional con tabla y PGA sin bordes, filtrado a camarón explícito o curado y vigente).
 
 ## Patrones
 

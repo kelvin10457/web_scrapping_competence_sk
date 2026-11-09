@@ -204,6 +204,132 @@ def parse_eaduana(html: str) -> dict | None:
     }
 
 
+# ---------------------------------------------------------------- MIDA (Panama)
+# DINASA publica dos PDF de alimentos registrados (R8.8). Sin especie, proteina
+# ni tamano: solo sirven para listar competidores registrados (sin_match). Bajan
+# solo con User-Agent de navegador (README § Bloqueos).
+
+MIDA_NACIONAL_URL = "https://mida.gob.pa/wp-content/uploads/2023/08/Alimentos-nacionales-vigentes-2026-1.pdf"
+MIDA_PGA_URL = "https://mida.gob.pa/wp-content/uploads/2026/01/Alimentos-registrados-en-PGA.pdf"
+MIDA_DIR = RAW_DIR / "mida"
+MIDA_HEADERS = {"User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                               "(KHTML, like Gecko) Chrome/130.0 Safari/537.36")}
+
+# Nombres sin "camaron" que son alimento de camaron por cruce con otra fuente.
+MIDA_CAMARON_CURADO = {
+    "AQUANASA": "Nutricion Animal S.A.: linea acuicola (R8.8; especie no confirmada por SKU)",
+    "MATEMAX": "Farallon Aquaculture: catalogo Sea Technology, maduracion de camaron (R8.8)",
+}
+
+_MESES = {m: i for i, m in enumerate(
+    ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO",
+     "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"], start=1)}
+_MESES["SETIEMBRE"] = 9
+_FECHA_ES_RE = re.compile(r"(\d{1,2})\s+DE\s+([A-Z]+)\s+(?:DEL?\s+)?(\d{4})")
+_REGISTRO_RE = re.compile(r"^RAA?-\d+-\d+$")
+
+
+def _fecha_es(texto: str | None) -> str | None:
+    """'30 DE MAYO DE 2025.' -> '2025-05-30'; None si no se puede leer."""
+    m = _FECHA_ES_RE.search(_sin_acentos(str(texto or "")).upper())
+    if not m or m.group(2) not in _MESES:
+        return None
+    try:
+        return datetime.date(int(m.group(3)), _MESES[m.group(2)], int(m.group(1))).isoformat()
+    except ValueError:
+        return None
+
+
+def _limpio(texto) -> str:
+    return " ".join(str(texto or "").split())
+
+
+def _fila_mida(registro, nombre, clasificacion, fabricante, vigencia, url) -> dict:
+    return {"registro": _limpio(registro), "nombre_producto": _limpio(nombre),
+            "clasificacion": _limpio(clasificacion),
+            "empresa_registro": _limpio(fabricante), "vigencia": _fecha_es(vigencia),
+            "fuente_url": url}
+
+
+def parse_mida_nacional(path: Path) -> list[dict]:
+    """PDF nacional: tabla con bordes de 8 columnas (Entrada, Registro, Nombre,
+    Clasificacion, Fabricante, Pais, Expedido, Vigencia)."""
+    import pdfplumber
+    filas = []
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            for tabla in page.extract_tables():
+                for c in tabla:
+                    if len(c) == 8 and _REGISTRO_RE.match(_limpio(c[1])):
+                        filas.append(_fila_mida(c[1], c[2], c[3], c[4], c[7], MIDA_NACIONAL_URL))
+    return filas
+
+
+def parse_mida_pga(path: Path) -> list[dict]:
+    """PDF de PGA: sin bordes y con celdas de varias lineas. Columnas por la x
+    del encabezado. Las celdas van alineadas abajo: su ultima linea esta en la
+    fila del registro (RA-...), asi que cada linea va al primer registro a su
+    altura o mas abajo (EMPRESAS MELO, / S.A. (029); FARALLON / AQUACULTURE,)."""
+    import pdfplumber
+    filas = []
+    with pdfplumber.open(path) as pdf:
+        cortes = None
+        for page in pdf.pages:
+            words = page.extract_words()
+            enc = {w["text"]: w["x0"] for w in words if w["top"] < words[0]["top"] + 5}
+            if {"Nombre", "Fabricante", "Vigencia"} <= set(enc):
+                cortes = [enc["Nombre"], enc["Clasificación"], enc["Fabricante"], enc["País"],
+                          enc["Expedido"], enc["Vigencia"]]
+                words = [w for w in words if w["top"] >= words[0]["top"] + 5]
+            if cortes is None:
+                continue
+            anclas = sorted((w["top"] for w in words if w["x0"] < cortes[0] and _REGISTRO_RE.match(w["text"])))
+            if not anclas:
+                continue
+            celdas = {a: [[] for _ in range(7)] for a in anclas}
+            for w in sorted(words, key=lambda w: (round(w["top"]), w["x0"])):
+                a = next((a for a in anclas if w["top"] <= a + 2), anclas[-1])
+                col = sum(w["x0"] >= c - 2 for c in cortes)
+                celdas[a][col].append(w["text"])
+            celdas = {a: [" ".join(x) for x in c] for a, c in celdas.items()}
+            for a in anclas:
+                c = celdas[a]
+                filas.append(_fila_mida(c[0], c[1], c[2], c[3], c[6], MIDA_PGA_URL))
+    return filas
+
+
+_MIDA_NO_ALIMENTO = ("PREMEZCLA", "PREMIX", "POLIQUETO", "ADITIVO", "VITAMINA", "MATERIA PRIMA")
+
+
+def _es_camaron_mida(nombre: str, clasificacion: str | None = None) -> bool:
+    """Alimento (segun la clasificacion oficial) cuyo nombre dice camaron o
+    esta en el cruce curado. Premezclas, aditivos y poliquetos quedan fuera."""
+    n = _sin_acentos(nombre).upper()
+    c = _sin_acentos(clasificacion or "").upper()
+    if "ALIMENTO" not in c or any(x in f"{n} {c}" for x in _MIDA_NO_ALIMENTO):
+        return False
+    return "CAMAR" in n or any(n.split()[:1] == [k] for k in MIDA_CAMARON_CURADO)
+
+
+def registros_mida(filas: list[dict], hoy: datetime.date | None = None) -> list[dict]:
+    """Filtra camaron (explicito o curado) y vigentes a `hoy`. Sin proteina:
+    el numero de AQUANASA 25 no se toma como proteina (vacio antes que inferir)."""
+    corte = (hoy or datetime.date.today()).isoformat()
+    out = []
+    for f in filas:
+        if not _es_camaron_mida(f["nombre_producto"], f.get("clasificacion")):
+            continue
+        if f.get("vigencia") and f["vigencia"] < corte:
+            continue
+        out.append({"fuente": "mida", "pais": "panama", "empresa": None,
+                    "empresa_registro": f["empresa_registro"],
+                    "nombre_producto": f["nombre_producto"],
+                    "proteina_pct": None, "tamano_pellet_mm": None, "empaque_kg": None,
+                    "registro": f["registro"], "vigencia": f.get("vigencia"),
+                    "fuente_url": f["fuente_url"]})
+    return out
+
+
 # ---------------------------------------------------------------- red
 
 def _vigente(path: Path, max_dias: int) -> bool:
@@ -211,9 +337,18 @@ def _vigente(path: Path, max_dias: int) -> bool:
 
 
 def actualizar(destino: Path, max_dias: int = MAX_DIAS_CACHE, session=None) -> int:
-    """Baja SENASICA y las fichas de eaduana (cache de `max_dias`) y escribe los
-    registros en `destino`. Devuelve cuantos registros hay."""
+    """Baja SENASICA, las fichas de eaduana y los PDF de MIDA (cache de
+    `max_dias`) y escribe los registros en `destino`. Devuelve cuantos hay.
+    MIDA es opcional: si falla y no hay copia, se avisa y se sigue."""
     s = session or requests.Session()
+    registros = _registros_senasica_eaduana(s, max_dias)
+    registros += _registros_mida_red(s, max_dias)
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(registros, columns=REGISTRO_COLUMNS).to_csv(destino, index=False, encoding="utf-8-sig")
+    return len(registros)
+
+
+def _registros_senasica_eaduana(s, max_dias: int) -> list[dict]:
     if not _vigente(SENASICA_XLSX, max_dias):
         r = netutil.get(s, SENASICA_URL, headers=HEADERS, timeout=120)
         r.raise_for_status()
@@ -240,10 +375,38 @@ def actualizar(destino: Path, max_dias: int = MAX_DIAS_CACHE, session=None) -> i
         registro = parse_eaduana(pagina.read_text(encoding="utf-8"))
         if registro:
             registros.append(registro)
+    return registros
 
-    destino.parent.mkdir(parents=True, exist_ok=True)
-    pd.DataFrame(registros, columns=REGISTRO_COLUMNS).to_csv(destino, index=False, encoding="utf-8-sig")
-    return len(registros)
+
+def _registros_mida_red(s, max_dias: int) -> list[dict]:
+    """Baja (o reusa) cada PDF de MIDA. Una descarga solo reemplaza la copia
+    guardada si se puede parsear; cualquier error de MIDA se avisa y se sigue
+    (es complementaria: no tumba SENASICA/eaduana)."""
+    filas = []
+    for url, parser in ((MIDA_NACIONAL_URL, parse_mida_nacional), (MIDA_PGA_URL, parse_mida_pga)):
+        pdf = MIDA_DIR / url.rsplit("/", 1)[1]
+        if not _vigente(pdf, max_dias):
+            nuevo = pdf.with_suffix(".nuevo.pdf")
+            try:
+                r = netutil.get(s, url, headers=MIDA_HEADERS, timeout=120)
+                r.raise_for_status()
+                if not r.content.startswith(b"%PDF"):
+                    raise ValueError("la respuesta no es un PDF")
+                pdf.parent.mkdir(parents=True, exist_ok=True)
+                nuevo.write_bytes(r.content)
+                if not parser(nuevo):
+                    raise ValueError("el PDF no trae registros")
+                nuevo.replace(pdf)
+            except Exception as exc:
+                nuevo.unlink(missing_ok=True)
+                print(f"  AVISO: MIDA {pdf.name} no se pudo bajar ({exc})"
+                      + ("; se usa la copia guardada." if pdf.exists() else "; se omite."))
+        if pdf.exists():
+            try:
+                filas += parser(pdf)
+            except Exception as exc:
+                print(f"  AVISO: MIDA {pdf.name} no se pudo leer ({exc}); se omite.")
+    return registros_mida(filas)
 
 
 # ---------------------------------------------------------------- cruce
