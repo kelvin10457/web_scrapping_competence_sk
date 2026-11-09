@@ -32,5 +32,5 @@ El proyecto genera **un Excel por país y empresa** (`data/powerbi/<pais>/<empre
 4. **Trazabilidad.** Internamente, cada fila guarda `fuente_url` y `fecha_extraccion`. Los conflictos entre valores se resuelven con reglas fijas y quedan registrados.
 5. **Costo cero por corrida.** Nada de LLM ni APIs pagas. OCR local sí.
 6. **Validar contra la fuente real.** Antes de cerrar una fase de scraping se comparan ≥3 productos contra la ficha o la página real.
-7. **Respetar los sitios, sin hacer esperar al usuario.** Pausas aleatorias solo donde hay captcha, caché agresiva y un presupuesto de tiempo por corrida. Los bloqueos no se evaden.
+7. **Respetar los sitios, sin hacer esperar al usuario.** Pausas aleatorias solo donde hay captcha, caché agresiva y un presupuesto de tiempo por corrida. Los bloqueos se pueden evadir (cabeceras, huella TLS, proxy, copias públicas), sin navegador headless ni servicios pagos (decisión 2026-11-09).
 8. **Que lo corra cualquiera.** Tiene que funcionar como `.exe`, sin navegador headless.

@@ -23,7 +23,7 @@ Scraping de competencia de alimento para camarón (5 países). El resultado son 
 - Vacío antes que inventar o inferir un valor. Los conflictos se resuelven con `schema.resolver_campo` y quedan en `_conflictos.csv`.
 - Normalizar en el parser, con funciones de `schema.py`. Nunca con un parche al exportar.
 - Nada de LLM ni APIs pagas. Nada de Playwright ni Selenium.
-- Si un sitio bloquea, no se evade (ver `README.md` § Bloqueos).
+- Si un sitio bloquea, se puede evadir (cabeceras, huella TLS, otro cliente, proxy, copias públicas), sin Playwright/Selenium ni servicios pagos (ver `README.md` § Bloqueos).
 - Validar ≥3 productos contra la fuente real antes de cerrar una fase de scraping.
 
 ## Uso inteligente del plan (Pro de $20, Opus 5.5 en effort medio)
