@@ -6,10 +6,44 @@
 Dos agentes en paralelo; Codex en el worktree `../wt-codex` (rama `codex/<ID>`), Claude en `expansion-regional`. Fases que tocan `schema.py`, `pipeline.py` o `powerbi.py`: solo Claude.
 - **Plan inicial:** Codex R7.6 → R7.7; Claude R8.9 → R6.1–R6.4 → R7.1 → cierre.
 - **Cambio (2026-11-09):** el entorno de Codex monta `../wt-codex` como solo lectura y no tiene DNS (no resolvió `nutrimentos.com.mx`). No implementó nada. No se tocó su configuración. **Claude implementa todas las fases**; Codex queda como revisor de solo lectura de cada diff (ahí sí funciona). La rama `codex/R7.6` quedó vacía (igual a `47988e4`).
-- **Estado:** R8.9 ✅, R7.6 ✅, R7.7 ✅ (Claude, revisadas por Codex) → R6.1–R6.4 → R7.1 → cierre.
+- **Estado:** todas cerradas (ver resumen). Worktree `../wt-codex` y rama `codex/R7.6` (vacía) eliminados.
 - Al retomar tras un corte: leer esta sección y `git log --all --oneline -10`; Codex retoma desde su rama y su último commit.
 
-## Resumen final
+## Resumen para el usuario — sesión autónoma (2026-11-09)
+**Estado:** roadmap sin fases `[ ]` ni `[~]`. Solo quedan los `[?]` que decidís vos (R7.3 y "Después"). Suite: **331/331 en verde**. Pipeline completo: 14 fuentes OK en 325 s, sin bloqueos (BioMar/Agrizon ya no dio 429). Power BI regenerado: **17 Excel, 383 filas**, mismas 16 columnas.
+
+Ecuador: Agripac 38 · BioMar 17 · Cargill 37 · HAID 17 · Nicovita 61 · **Zeigler 28 · Mackay Marine 15 · Higashimaru 5** (nuevas). Honduras: Nicovita 35. México: **AQUATEC 11** (nueva) · Api-Aba 3 · Cargill 14 · El Pedregal 36 · Nicovita 26 · Nutrimar 6 · Vimifos 21 · Zeigler 13.
+
+**Fases cerradas en esta sesión (todas implementadas por Claude y revisadas por Codex en modo solo lectura):**
+| Fase | Commit | Qué | Revisión de Codex |
+|---|---|---|---|
+| R8.9 MIDA Panamá | `59f702a` | PDF nacional y PGA → `registros_oficiales` (5 alimentos de camarón vigentes, `sin_match`) | 4 hallazgos, todos aplicados |
+| R7.6 AQUATEC | `27c27ca` | nutrimentos.com.mx, 11 SKU, variantes sin herencia | 2 hallazgos, aplicados |
+| R7.7 Prilabsa | `215b8ee` | catálogo PDF, 48 SKU de Zeigler/Mackay/Higashimaru en Ecuador | 3 hallazgos, aplicados (1 en parte) |
+| R6.1 + R6.2 | `69f66e3` | pausas más cortas (Nicovita Honduras en frío: **61 s**) y freno por dominio tras un captcha | 1 hallazgo, aplicado |
+| R6.3 + R6.4 | `8cb3f1d` | Nicovita en los 3 países, comparada con el 2026-10-29 | — (sin diff de código) |
+| R7.1 | `5ebe3a5` | México completo, presentaciones nuevas revisadas | — |
+
+**Cómo funcionó la colaboración:** Codex **no pudo implementar** ninguna fase. Su entorno monta `../wt-codex` como solo lectura y no tiene DNS (no resolvió `nutrimentos.com.mx`). No toqué su configuración. Implementé todo yo, y Codex revisó cada diff: 10 hallazgos, 9 aplicados completos y 1 en parte. La rama `codex/R7.6` quedó vacía y se borró junto con el worktree.
+
+**Fases que quedaron `[~]`:** ninguna.
+
+**Decisiones "pendiente de confirmar" (nuevas, en `decisiones.md`):**
+1. **Prilabsa:** Zeigler se incluye en Ecuador (no estaba cubierto ahí) y `empresa` = fabricante, no "Prilabsa".
+2. **Prilabsa:** proteína vacía si la ficha publica dos valores (peso seco/líquido: EZ Artemia, EZ Artemia Ultra, EZ Larva; dos dietas: ZM Feed) o un rango (Espirulina 60–70 %). Son 10 filas. Alternativa: tomar el de peso seco.
+3. **Tamaños `<50 µm`** → `tamano_pellet_mm = <0.05` con `particula_min_mm` vacío (cambio en `schema.parse_particula_range`).
+4. **AQUATEC:** `nombre_producto` lleva "(Línea X)" y la proteína de las variantes sale del "NN%" de su nombre. Etapas vacías ("juveniles hasta 5 g" no nombra etapa).
+5. **MIDA:** AQUANASA entra por el cruce curado (el ministerio no dice la especie). El número de "AQUANASA 25" no se toma como proteína.
+
+**Qué revisar primero:**
+1. **Nicovita Origin → Nursery** (decisión n.º 1 de la sesión 1, sigue abierta). R6.4 confirma que es el único cambio de `etapa_skt` en Nicovita contra el 2026-10-29, en los 3 países.
+2. **Productos dudosos:** Prilabsa "PRE-MIX PL" (¿es alimento o premezcla?) y "ESPIRULINA" (microalga; la incluí porque el catálogo la lista en "Alimentos"). Las 10 filas de Prilabsa sin proteína.
+3. **Presentación nueva:** BioMar "Exia Prime" = `Microgranulado` (`data/presentaciones_nuevas.csv`). Decidir si entra a la lista oficial o se mapea a otra.
+4. **Conflictos:** `data/conflictos.csv` tiene 1 (Api-Aba, ya existía).
+5. **Sitios que se evadieron y cómo:** `mida.gob.pa` y `prilabsa.com` con User-Agent de navegador; `nutrimentos.com.mx` aceptando su certificado SSL inválido (`verify=False` solo para ese dominio, sin seguir redirecciones a otros dominios). Ningún captcha.
+6. **Spec corregida contra la realidad:** R6.3 (Nicovita ya estaba fuera de `INACTIVAS` desde el 10-29) y R6.4 (no existen CSV del 10-20; se comparó con `data.zip`, 10-29).
+
+## Resumen de la sesión 1 (anterior)
 **Corrida:** suite 288/288 en verde. Pipeline corrido por país: Ecuador (parcial, ver bloqueo), Honduras, México, Agripac; master reconstruido. Power BI regenerado.
 
 **Excel generados** (`data/powerbi/<pais>/<empresa>.xlsx`, 12 archivos, 288 filas, mismas 16 columnas y tipos):
