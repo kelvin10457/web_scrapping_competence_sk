@@ -70,3 +70,58 @@ def test_ocr_fuera_de_rango_queda_null_y_se_registra():
     assert {c["regla"] for c in rec["_conflictos"]} == {"ocr_fuera_de_rango"}
     # El mismo texto en un PDF con texto (no OCR) no se filtra.
     assert parser.parse_product("u", _read("nutrimar_intensivo.html"), "Nutrimar", texto)[0]["proteina_pct"] == 3.5
+
+
+def test_etapas_fichas_reales_y_expansion_sku():
+    import schema
+    cases = [("nutrimar_ficha_pl_raceway_40_9.txt", {"post_larva", "precria", "post_transferencia", "engorde"}, 1),
+             ("nutrimar_ficha_semi_intensivo.txt", {"engorde"}, 2),
+             ("nutrimar_ficha_extensivo_ocr.txt", set(), 1)]
+    for fixture, expected, count in cases:
+        records = parser.parse_product("u", _read("nutrimar_intensivo.html"), ficha_texto=_read(fixture),
+                                       ficha_ocr="ocr" in fixture)
+        assert len(records) == count
+        for r in records:
+            assert r.get("_etapas_detectadas") is True
+            assert {c for c in schema.ETAPA_COLUMNS if r[c] is True} == {"etapa_" + e for e in expected}
+            assert all(r[c] is (False if expected else None) for c in schema.ETAPA_COLUMNS
+                       if c.removeprefix("etapa_") not in expected)
+
+
+def test_etapas_sin_ficha_desde_nombre_y_pagina_sin_inferir():
+    import schema
+    larva = parser.parse_product("u", _read("nutrimar_ez_larva.html"))[0]
+    assert larva.get("_etapas_detectadas") is True
+    assert {c for c in schema.ETAPA_COLUMNS if larva[c] is True} == {"etapa_larva"}
+    r = parser.parse_product("https://example.test/engorde", _read("nutrimar_intensivo.html"))[0]
+    assert r.get("_etapas_detectadas") is True
+    assert all(r[c] is None for c in schema.ETAPA_COLUMNS)
+
+
+def test_ficha_tiene_prioridad_y_retorno_ocr_conserva_marcador():
+    from bs4 import BeautifulSoup
+    import schema
+    soup = BeautifulSoup(_read("nutrimar_intensivo.html"), "html.parser")
+    soup.find("main").append(BeautifulSoup("<p>larvas reproductores</p>", "html.parser"))
+    r = parser.parse_product("u", str(soup), ficha_texto=_read("nutrimar_ficha_extensivo_ocr.txt"), ficha_ocr=True)[0]
+    assert r.get("_etapas_detectadas") is True
+    assert all(r[c] is None for c in schema.ETAPA_COLUMNS)
+    # Perturbación del OCR real para recorrer el retorno por valor dudoso.
+    texto = _read("nutrimar_ficha_extensivo_ocr.txt").replace("35,0%", "3,5%")
+    r = parser.parse_product("u", str(soup), ficha_texto=texto, ficha_ocr=True)[0]
+    assert r.get("_etapas_detectadas") is True
+    assert all(r[c] is None for c in schema.ETAPA_COLUMNS)
+    assert r["_conflictos"][0]["regla"] == "ocr_fuera_de_rango"
+
+
+def test_etapas_web_excluyen_menu_footer_y_scripts():
+    from bs4 import BeautifulSoup
+    import schema
+    soup = BeautifulSoup(_read("nutrimar_intensivo.html"), "html.parser")
+    for selector in ["header", "footer", "script"]:
+        tag = soup.find(selector)
+        assert tag is not None
+        tag.string = "larvas precría engorde reproductores"
+    r = parser.parse_product("u", str(soup))[0]
+    assert r.get("_etapas_detectadas") is True
+    assert all(r[c] is None for c in schema.ETAPA_COLUMNS)

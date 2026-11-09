@@ -65,3 +65,32 @@ def test_strong_breed_is_reproductores():
     rec = parser.parse_product("u", _read("vimifos_strong_breed.html"))[0]
     assert rec["etapa_competidor"] == "reproductores"
     assert rec["tamano_pellet_mm"] == "2.4"
+
+
+# R4.7: evidencia de etapas por columna, sin inferir por calibre o peso.
+def test_etapas_explicitas_por_sku():
+    import schema
+    x = parser.parse_product("u", _read("vimifos_xtrudix.html"))
+    b = parser.parse_product("u", _read("vimifos_strong_breed.html"))[0]
+    assert {c for c in schema.ETAPA_COLUMNS if x[0][c] is True} == {"etapa_post_larva"}
+    assert {c for c in schema.ETAPA_COLUMNS if b[c] is True} == {"etapa_reproductores"}
+    assert all(x[0][c] is False for c in schema.ETAPA_COLUMNS if c != "etapa_post_larva")
+
+
+def test_sin_etapa_explicita_no_infiere_por_peso_o_tamano():
+    import schema
+    records = parser.parse_product("u", _read("vimifos_race_way.html"))
+    records += parser.parse_product("u", _read("vimifos_xtrudix.html"))[1:]
+    records += parser.parse_product("u", _read("vimifos_bumper_crop.html"))[:2]
+    assert all(r.get("_etapas_detectadas") is True for r in records)
+    assert all(r[c] is None for r in records for c in schema.ETAPA_COLUMNS)
+
+
+def test_cosecha_marca_engorde_en_todas_las_proteinas():
+    import schema
+    records = parser.parse_product("u", _read("vimifos_bumper_crop.html"))[2:]
+    assert len(records) == 3
+    for r in records:
+        assert r.get("_etapas_detectadas") is True
+        assert {c for c in schema.ETAPA_COLUMNS if r[c] is True} == {"etapa_engorde"}
+        assert all(r[c] is False for c in schema.ETAPA_COLUMNS if c != "etapa_engorde")

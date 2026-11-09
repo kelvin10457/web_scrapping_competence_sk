@@ -1,6 +1,6 @@
 """Parser de Api-Aba (Mexico). Publica nombre (con el saco en kg), analisis
 garantizado (proteina/humedad/fibra) y, en Raceways, el tamano de micropellet.
-No publica etapa normalizable ni tecnologia: quedan en None.
+Etapas desde título y descripción del producto; tecnología no publicada.
 
 Si el % de proteina del titulo ("Dorado 35%") contradice el analisis
 garantizado de la misma pagina (ocurre hoy en Dorado 35%, que muestra 40%), se
@@ -95,6 +95,14 @@ def parse_product(url: str, html: str) -> list[dict]:
 
     record = schema.empty_record("Api-Aba")
     record["nombre_producto"] = nombre
+    # Solo contenido propio: excluir navegación y tarjetas relacionadas.
+    contenido = soup.select_one("article .entry-content")
+    parrafos = (p.get_text(" ", strip=True) for p in contenido.find_all("p")
+                if not p.find_parent("article", class_="card-product")) if contenido else []
+    etapa_text = " ".join([nombre, *parrafos])
+    etapa_text = re.sub(r"\bengorda\b", "engorde", etapa_text, flags=re.I)
+    record.update(schema.columnas_etapa(schema.detectar_etapas(etapa_text)))
+    record["_etapas_detectadas"] = True
     record["tamano_pellet_mm"] = _micropellet(" ".join(lines))
     record["empaque_kg"] = f"{float(kg.group(1)):g}" if kg else None
     record["_candidatos_proteina"] = candidatos

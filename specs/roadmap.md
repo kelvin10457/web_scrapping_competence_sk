@@ -35,9 +35,9 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R4.4** Aquaxcel
 - [x] **R4.5** Agrizon (BioMar)
 - [x] **R4.6** Agripac
-- [ ] **R4.7** Vimifos
-- [ ] **R4.8** Api-Aba
-- [ ] **R4.9** Nutrimar
+- [x] **R4.7** Vimifos (codex)
+- [x] **R4.8** Api-Aba (codex)
+- [x] **R4.9** Nutrimar (codex)
 - [ ] **R4.10** Quitar `etapa_competidor` (ya reemplazada por los booleanos). Se actualizan merge_human y el baseline.
 
 ## R5 — Excel para Power BI

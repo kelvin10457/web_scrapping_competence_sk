@@ -58,3 +58,28 @@ def test_dorado_35_solo_default_nombre_comercial():
     rec = parser.parse_product("u35", _sin_menciones(_read("apiaba_dorado35.html")))[0]
     assert rec["proteina_pct"] == 35.0
     assert rec["_conflictos"][0]["regla"] == "nombre_comercial"
+
+
+def test_etapas_de_tres_productos_reales():
+    import schema
+    for fixture, expected in [("apiaba_dorado40.html", {"post_larva"}),
+                              ("apiaba_dorado35.html", {"engorde"}),
+                              ("apiaba_raceways.html", set())]:
+        r = parser.parse_product("u", _read(fixture))[0]
+        assert r.get("_etapas_detectadas") is True
+        assert {c for c in schema.ETAPA_COLUMNS if r[c] is True} == {"etapa_" + e for e in expected}
+        assert all(r[c] is (False if expected else None) for c in schema.ETAPA_COLUMNS
+                   if c.removeprefix("etapa_") not in expected)
+
+
+def test_etapas_no_contaminadas_por_navegacion_o_relacionados():
+    from bs4 import BeautifulSoup
+    import schema
+    soup = BeautifulSoup(_read("apiaba_raceways.html"), "html.parser")
+    # Perturbación de fixture real: el texto ajeno al producto no debe contar.
+    for tag in [soup.find("nav"), soup.select_one("article.card-product")]:
+        assert tag is not None
+        tag.append(BeautifulSoup("<p>larvas precría engorde reproductores</p>", "html.parser"))
+    r = parser.parse_product("u", str(soup))[0]
+    assert r.get("_etapas_detectadas") is True
+    assert all(r[c] is None for c in schema.ETAPA_COLUMNS)

@@ -19,6 +19,8 @@ import re
 import sys
 from pathlib import Path
 
+from bs4 import BeautifulSoup
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import schema  # noqa: E402
 
@@ -78,6 +80,15 @@ def parse_product(url: str, html: str, marca: str = "Nutrimar", ficha_texto: str
     record["nombre_producto"] = nombre
     record["fuente_url"] = url
     record["fecha_extraccion"] = datetime.date.today().isoformat()
+    # La ficha tiene prioridad; sin ficha, solo texto visible del producto.
+    etapa_text = ficha_texto
+    if not etapa_text:
+        main = BeautifulSoup(html, "html.parser").find("main")
+        etapa_text = " ".join(t.get_text(" ", strip=True)
+                              for t in main.find_all(["h1", "h2", "h3", "p"])) if main else ""
+    etapa_text = re.sub(r"\bengorda\b", "engorde", f"{nombre} {etapa_text}", flags=re.I)
+    record.update(schema.columnas_etapa(schema.detectar_etapas(etapa_text)))
+    record["_etapas_detectadas"] = True
     if not ficha_texto:
         return [record]
 

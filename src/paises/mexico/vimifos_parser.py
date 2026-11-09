@@ -134,6 +134,11 @@ def parse_product(url: str, html: str) -> list[dict]:
             same_line = _fold(header).startswith(_fold(rows[0][0]))
             record["nombre_producto"] = header.title() if same_line else linea
             record["etapa_competidor"] = schema.normalize_etapa(header) or schema.normalize_etapa(cell("peso"))
+            # Etapas de esta columna, sin inferir por pesos ni calibres.
+            etapa_text = f"{header} {cell('peso')}"
+            etapa_text = re.sub(r"\ba\s+cosecha\b", "hasta cosecha", etapa_text, flags=re.I)
+            record.update(schema.columnas_etapa(schema.detectar_etapas(etapa_text)))
+            record["_etapas_detectadas"] = True
             record["tamano_pellet_mm"] = _parse_tamano(cell("tamano"))
             record["tipo_presentacion"] = schema.detect_tecnologia(cell("presentacion"))
             record["empaque_kg"] = _parse_empaque(cell("presentacion"))
