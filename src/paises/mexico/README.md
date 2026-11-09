@@ -11,3 +11,18 @@ Salida: `data/processed/mexico/`.
 | Nutrimar | `nutrimar.py` | nutrimar.mx (listado en grupoacuicolamexicano.com.mx/nutrimar) | ok (19 filas: `empresa` = Zeigler 13 / Nutrimar 6). Fichas PDF (pdfplumber) e imagen (OCR de HAID). Intensivo sin ficha → proteína `null` (R2.4) |
 
 Descartadas: **Purina** (nutrimentospurina.com solo tilapia/bagre/trucha), **Azteca** (aztecamexico.mx es avícola), **ADM** (sin catálogo público).
+
+## Competidores nuevos R7.4 (2026-11-09)
+
+Research con Codex; acceso comprobado con `requests` solo donde dice "verificado". Implementar cada uno es una fase aparte.
+
+| Empresa | Marca | Fuente | Datos | Acceso | Utilidad |
+|---|---|---|---|---|---|
+| Alimentos de Alta Calidad El Pedregal | Silver Cup | el-pedregal.com/alimento/crustaceos (`?t=ep` engorda; también larvas y larvas/postlarvas) + PDF `descargas/Alimentos-Extruidos-Crustaceos.pdf` (texto) | Tabla HTML: nombre, tamaño (2.1 x 3 mm), talla del camarón, proteína (28/30/35/40/45), grasa, fibra. 5 SKU de engorda | Verificado: 200, tabla en HTML. `Tabla-de-Alimentacion-Crustaceos.pdf` es imagen (sin texto) | **Alta** |
+| Nueva Tecnología en Alimentación (Grupo Nutec) | AQUATEC | nutrimentos.com.mx/acuicultura_1 (distribuidor) | 0.3–2.0 mm, 35/40/45 %, saco 25 kg; algunas variantes solo con texto de plantilla | **Error SSL** con `requests` (certificado). No se forzó | Alta si se resuelve el acceso |
+| BioBlue / Grupo NU3 (Multiservicios 2001 sin confirmar) | SKILLA 4008, 3505 | bioblue.com/skilla/ | Etapas; mm y proteína sin verificar | Sin verificar | Media-baja |
+| Epicore (vía ProAqua) | EPIFEED-MBF | proaqua.mx/epifeed-mbf-cu-ete-epicore/ | Maduración; sin mm ni proteína | Sin verificar | Baja |
+| Alimentos Oromar | — | Sin sitio encontrado | — | — | Baja |
+
+- **Nutrición Marina = Nutrimar** (grupoacuicolamexicano.com.mx/nutrimar). Ya cubierto.
+- **Malta Texo = Apicamarón/Api-Aba (ADM).** Ya cubierto; su sitio ADM da 403.

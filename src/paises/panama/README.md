@@ -16,3 +16,10 @@ Buscado: registro público de alimentos para animales (MIDA / APA) y catálogos 
 | Italcol (AQUAMARÓN 35, Colombia) | https://italcol.com/producto/camaron-levante/ | Ficha de levante y finalización, 1 a 13 g. Declara presencia en Panamá | Web | No | Baja (fabricante colombiano, sin catálogo de distribución en Panamá) |
 
 **Resultado:** no aparece un listado público de alimentos para camarón registrados en APA ni en MIDA. El único registro que menciona camarón es una lista de exportación de plantas extranjeras, que no sirve de catálogo. **Nada que implementar en R8.6.** Se carga a mano (R8.7).
+
+## Competidores nuevos R7.4 (2026-11-09)
+
+| Empresa | Marca | Fuente | Datos | Acceso | Utilidad |
+|---|---|---|---|---|---|
+| Nutrición Animal S.A. (NasaFeed) | Aquanasa Línea Premium | nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf | Según el índice de búsqueda: 1.4 y 2.4 mm, 25/30/35 %, postlarva a cosecha, 100 lb | **Timeout** con `requests` (2026-11-09). Reintentar otro día | Media, potencialmente alta |
+| Avícola Grecia | Excellent Camarón | Solo registro MIDA | — | Sin sitio | Baja |

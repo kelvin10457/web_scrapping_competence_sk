@@ -17,3 +17,7 @@ Buscado: registro público de alimentos para animales (IPSA) y catálogos de com
 | Cargill (Purina) en Nicaragua | https://panoramaacuicola.com/2017/11/29/cargill-invierte-en-planta-procesadora-de-alimentos-para-camarones/ | Planta de alimento para camarón (noticia de 2017) | Web | No | Baja, dato antiguo |
 
 **Resultado:** IPSA no publica un listado de piensos registrados que se pueda consultar. **Nada que implementar en R8.4.** Se carga a mano (R8.7).
+
+## Competidores nuevos R7.4 (2026-11-09)
+
+Sin fuente técnica nueva (research con Codex).

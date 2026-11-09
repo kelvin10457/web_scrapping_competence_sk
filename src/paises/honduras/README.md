@@ -21,3 +21,7 @@ Buscado: registro público de alimentos para animales (SENASA) y catálogos de c
 **Resultado:** no aparece un registro público de SENASA con productos de alimento para camarón. Se buscó en búsqueda web (estándar y extendida) con términos de SENASA, registro de piensos y listado de productos. Competidores sin fuente pública: Skretting, BioMar y Cargill (Aquaxcel). **Nada que implementar en R8.2.** Nicovita Honduras ya está cubierta.
 
 **Pendiente de verificar a mano:** un listado de piensos registrados en SENASA (portal) si existe; las fichas de Nicovita Honduras tienen unos 5–6 años (metadatos), conviene confirmarlas vigentes.
+
+## Competidores nuevos R7.4 (2026-11-09)
+
+Sin fuente técnica nueva. ALCON es marca de Cargill (cargill.com.hn), ya cubierto.
