@@ -156,8 +156,10 @@ _DETECTAR_RULES: list[tuple[re.Pattern, str]] = [
     (re.compile(r"precr[ií]a|nursery|starter|iniciador"), "precria"),
     # "transferencia" suelta es el traslado al final de la precria ("en
     # sistemas de transferencia"), no la etapa que le sigue (R4.2).
-    (re.compile(r"post[\s\-_]?transfer|transici[oó]n|alevinaje"), "post_transferencia"),
-    (re.compile(r"engorde|grow[\s\-_]?out|finalizador|finish|(?:tama[nñ]o|talla) de mercado"
+    # "Preengorda" (Mexico, El Pedregal): fase entre precria y engorda = Pre Grower
+    # (decision del usuario 2026-11-09, R7.5).
+    (re.compile(r"post[\s\-_]?transfer|transici[oó]n|alevinaje|pre[\s\-]?engorda"), "post_transferencia"),
+    (re.compile(r"(?<!pre)(?<!pre-)(?<!pre )engorda|engorde|grow[\s\-_]?out|finalizador|finish|(?:tama[nñ]o|talla) de mercado"
                 r"|talla comercial|(?<=\ba )mercado|(?<=hasta )mercado|(?<=hasta el )mercado"
                 r"|(?:tama[nñ]o|talla|peso) de cosecha|(?<=hasta )cosecha|(?<=hasta la )cosecha"), "engorde"),
 ]
