@@ -95,8 +95,8 @@ Cada país sigue dos pasos: primero **descubrir** (solo buscar y anotar en el RE
 Competidores directos de los suplementos LifeStart de Skretting: Ignis (copépodo *Calanus* pasteurizado) e InVita (líquido con microesferas de gel). Zeigler EZ (Ecuador y México) y Epicore Epifeed LHF (México) ya están. Se descubre primero y se construye solo si aparece una fuente (igual que R8).
 
 - [x] **R11.1** Descubrir: para cada competidor y cada uno de los 5 países, dónde se vende y si hay una ficha que se pueda scrapear. Los competidores son Cargill LiquaLife; copépodos congelados (Reed ARPods, Megasupply); INVE (pasta de Artemia, dietas de hatchery); Epicore en Ecuador; hatchery en Honduras, Nicaragua y Panamá. El resultado va a `specs/features/R11.1-hatchery/hallazgos.md` y a los README de cada país, sin código.
-- [ ] **R11.2** Agrizon Ecuador: además de BioMar, extraer el hatchery de Prilabsa (Biomasa de Artemia Congelada), Bernaqua (Royal Caviar, Royal Seafood, MPEX), Zeigler (Larval AP, Z-Plus, EZ Larva) y las latas de Artemia de Mackay. `empresa` = fabricante. Hay que deduplicar contra Prilabsa (Zeigler y Mackay ya están).
-- [?] **R11.3** ProAqua México: Reed Instant Algae (`/reed-mariculture/`). Reabre la decisión de R7.9 ("solo alimentos formulados"), así que espera al usuario.
+- [x] **R11.2** Agrizon Ecuador (hatchery). Zeigler, Mackay y Bernaqua ya estaban (por Prilabsa y Agripac). Entran Megasupply Megalikuid B/C (líquido, rival de InVita) como fuente nueva `megasupply`, la fila Prilabsa Biomasa de Artemia Congelada y la proteína vacía de los Bernaqua de Agripac (decisión 2026-11-09).
+- [ ] **R11.3** ProAqua México: Reed Instant Algae (`/reed-mariculture/`). Reabre R7.9 (decisión 2026-11-09).
 - [-] Cargill LiquaLife, INVE, Reed ARPods, Megasupply, Epicore Ecuador y Centroamérica: no tienen una fuente por país (ver hallazgos).
 
 ## Después (decidido 2026-11-09)

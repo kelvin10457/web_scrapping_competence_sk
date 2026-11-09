@@ -1,0 +1,10 @@
+﻿pais,empresa,nombre_producto,campo,valor_elegido,regla,candidatos,fuente_url,fecha_extraccion
+ecuador,Agripac,MeM 300 – 500,proteina_pct,55,completado:agrizon,55 (agrizon https://agrizon.com/en/products/mem-300-500-20kg),https://agripac.com.ec/productos/mem-300-500/,2026-11-09
+ecuador,Agripac,Mpex 100-200,proteina_pct,55,completado:agrizon,55 (agrizon https://agrizon.com/en/products/mpex-100-200-5kg),https://agripac.com.ec/productos/mpex-100-200/,2026-11-09
+ecuador,Agripac,Mpex 200-300,proteina_pct,55,completado:agrizon,55 (agrizon https://agrizon.com/en/products/mpex-200-300-5kg),https://agripac.com.ec/productos/mpex-200-300/,2026-11-09
+ecuador,Agripac,Royal Caviar 5-50,proteina_pct,55,completado:agrizon,55 (agrizon https://agrizon.com/en/products/royal-caviar-5-50-400-gr),https://agripac.com.ec/productos/royal-caviar-5-50/,2026-11-09
+ecuador,Agripac,Royal Caviar 50-100,proteina_pct,55,completado:agrizon,55 (agrizon https://agrizon.com/en/products/royal-caviar-50-100-400-gr),https://agripac.com.ec/productos/royal-caviar-50-100/,2026-11-09
+ecuador,Agripac,Royal Seafood 100-200,proteina_pct,54,completado:agrizon,54 (agrizon https://agrizon.com/en/products/royal-seafood-100-200-1500gr),https://agripac.com.ec/productos/royal-seafood-100-200/,2026-11-09
+ecuador,Agripac,Royal Seafood 5-50,proteina_pct,54,completado:agrizon,54 (agrizon https://agrizon.com/en/products/royal-seafood-5-50-1500-gr),https://agripac.com.ec/productos/royal-seafood-5-50/,2026-11-09
+ecuador,Agripac,Royal Seafood 50-100,proteina_pct,54,completado:agrizon,54 (agrizon https://agrizon.com/en/products/royal-seafood-50-100-1500gr),https://agripac.com.ec/productos/royal-seafood-50-100/,2026-11-09
+ecuador,Agripac,Royal Pepper Protein,proteina_pct,11,completado:agrizon,11 (agrizon https://agrizon.com/en/products/royal-pepper-protein-1lt),https://agripac.com.ec/productos/royal-pepper-protein/,2026-11-09

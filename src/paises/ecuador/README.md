@@ -30,3 +30,9 @@ Research con Codex; acceso comprobado con `requests` solo donde dice "verificado
 ## Hatchery / competencia de Ignis e InVita, R11.1 (2026-11-09)
 
 Agrizon `products.json` trae hatchery que hoy no se extrae: Prilabsa Biomasa de Artemia Congelada, Bernaqua (Royal Caviar, Royal Seafood, MPEX), Zeigler Larval AP y Z-Plus, latas de Artemia Mackay. Cargill LiquaLife, INVE y Epicore no tienen fuente por país. Ver `specs/features/R11.1-hatchery/hallazgos.md`.
+
+## R11.2 (2026-11-09): hatchery desde Agrizon
+- **Megasupply** (`megasupply.py`): Megalikuid B y C, dietas líquidas para larva/PL (rivales de InVita), desde la colección en español de Agrizon.
+- **Prilabsa**: además del PDF, la fila Biomasa de Artemia Congelada (Agrizon).
+- **Agripac**: la proteína vacía de los Bernaqua se completa con el body de Agrizon (regla `completado:agrizon` en `_conflictos.csv`).
+- Lógica en `agrizon_hatchery.py`: un solo pedido por corrida; si Agrizon falla, se sigue sin esos datos y se avisa.

@@ -21,12 +21,15 @@ import netutil
 
 BASE_URL = "https://agrizon.com"
 COLLECTION_URL = f"{BASE_URL}/en/collections/nutricion-animal"
+# R11.2: la misma coleccion en espanol (titulos y descripciones en castellano).
+COLLECTION_URL_ES = f"{BASE_URL}/collections/nutricion-animal"
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; competence-scraper/1.0)"}
 VENDOR = "BioMar"
 PAGE_LIMIT = 250  # maximo permitido por Shopify en products.json
 
 
-def fetch_collection_products(session: requests.Session | None = None) -> list[dict]:
+def fetch_collection_products(session: requests.Session | None = None,
+                              collection_url: str = COLLECTION_URL) -> list[dict]:
     """Pagina products.json (250 por pagina) hasta que una pagina vuelva
     incompleta o vacia. Con 181 productos totales en la coleccion (2026-09-03) alcanza
     con 1 pagina, pero se pagina igual por si la coleccion crece."""
@@ -34,7 +37,7 @@ def fetch_collection_products(session: requests.Session | None = None) -> list[d
     products: list[dict] = []
     page = 1
     while True:
-        url = f"{COLLECTION_URL}/products.json?limit={PAGE_LIMIT}&page={page}"
+        url = f"{collection_url}/products.json?limit={PAGE_LIMIT}&page={page}"
         # Shopify devuelve 429 si se piden paginas seguidas muy rapido
         # (verificado 2026-10-19 y 2026-10-28): netutil pausa al azar (agrizon.com
         # esta en PACED_HOSTS) y reintenta respetando Retry-After.

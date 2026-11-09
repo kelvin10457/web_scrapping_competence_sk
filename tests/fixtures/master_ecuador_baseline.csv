@@ -1,4 +1,4 @@
-pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
 ecuador,Nicovita,Nicovita Classic AD,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-11-09
 ecuador,Nicovita,Nicovita Classic AD,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-11-09
 ecuador,Nicovita,Nicovita Classic AD,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-ad-ecuador/,2026-11-09
@@ -109,23 +109,23 @@ ecuador,Cargill,AQUAXCEL RAPID 35% 2.0 AP,False,False,False,False,False,False,Tr
 ecuador,Cargill,AQUAXCEL RAPID 35% SLD 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
 ecuador,Cargill,AQUAXCEL RAPID 42% SLD 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,42,https://aquaxcel.com/productos/ecuador/,2026-11-09
 ecuador,Cargill,AQUAXCEL RAPID 45% SLD 0.6,False,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
-ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-2-0mm-25-kg-alimento-pelletizado,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-2-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-6-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-perform-35-2-0-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-prime-32-2-0-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,,10,38,https://agrizon.com/en/products/exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas,2026-10-29
-ecuador,BioMar,Exia Pro,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,Microgranulado,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-perform-32-2-0-mm-25-kg,2026-10-29
-ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-prime-28-2-0-mm-25-kg,2026-10-29
-ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-10-29
-ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-perform-28-2-0-mm-25-kg-alimento-para-camaron,2026-10-29
-ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Extruido,1,55,https://agrizon.com/en/products/larviva-55-150-250-micras-1-kg,2026-10-29
-ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,,10,38,https://agrizon.com/en/products/exia-start-38-0-6-0-9-mm-10-kg,2026-10-29
-ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.375-0.5,0.375,0.5,Extruido,1,55,https://agrizon.com/en/products/larviva-55-375-500-micras-1-kg,2026-10-29
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-2-0mm-25-kg-alimento-pelletizado,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-2-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-6-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-perform-35-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-prime-32-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,,10,38,https://agrizon.com/en/products/exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas,2026-11-09
+ecuador,BioMar,Exia Pro,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,Microgranulado,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-perform-32-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-prime-28-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-perform-28-2-0-mm-25-kg-alimento-para-camaron,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Extruido,1,55,https://agrizon.com/en/products/larviva-55-150-250-micras-1-kg,2026-11-09
+ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,,10,38,https://agrizon.com/en/products/exia-start-38-0-6-0-9-mm-10-kg,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.375-0.5,0.375,0.5,Extruido,1,55,https://agrizon.com/en/products/larviva-55-375-500-micras-1-kg,2026-11-09
 ecuador,Agripac,35% Premium Micropellet Agua Dulce 1.2mm,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Polvo,25,35,https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-2mm/,2026-11-09
 ecuador,Agripac,35% Premium Micropellet Agua Dulce 1.5mm,False,False,False,False,True,False,False,Nursery,1.5,1.5,1.5,Polvo,25,35,https://agripac.com.ec/productos/35-premium-micropellet-agua-dulce-1-5mm/,2026-11-09
 ecuador,Agripac,Feedpac 22% Premium,False,,,,,,,,,,,Pellet,25,22,https://agripac.com.ec/productos/feedpac-22-premium/,2026-11-09
@@ -147,23 +147,23 @@ ecuador,Agripac,Feedpac Growth 28%,False,False,False,False,False,False,True,Grow
 ecuador,Agripac,"Feedpac Santa Mónica 35% 1,8 mm",False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Pellet,25,35,https://agripac.com.ec/productos/feedpac-santa-monica-35-18-mm/,2026-11-09
 ecuador,Agripac,Premium Agua Dulce,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://agripac.com.ec/productos/premium-agua-dulce/,2026-11-09
 ecuador,Agripac,Larfeed,False,False,True,True,False,False,False,Hatchery,,,,,5,,https://agripac.com.ec/productos/larfeed/,2026-11-09
-ecuador,Agripac,MeM 300 – 500,False,False,False,True,False,False,False,Hatchery,,,,Microextruido,20,,https://agripac.com.ec/productos/mem-300-500/,2026-11-09
+ecuador,Agripac,MeM 300 – 500,False,False,False,True,False,False,False,Hatchery,,,,Microextruido,20,55,https://agripac.com.ec/productos/mem-300-500/,2026-11-09
 ecuador,Agripac,MeM 200 – 300,False,False,False,True,False,False,False,Hatchery,,,,Microextruido,20,,https://agripac.com.ec/productos/mem/,2026-11-09
-ecuador,Agripac,Mpex 100-200,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,5,,https://agripac.com.ec/productos/mpex-100-200/,2026-11-09
-ecuador,Agripac,Mpex 200-300,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,5,,https://agripac.com.ec/productos/mpex-200-300/,2026-11-09
+ecuador,Agripac,Mpex 100-200,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,5,55,https://agripac.com.ec/productos/mpex-100-200/,2026-11-09
+ecuador,Agripac,Mpex 200-300,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,5,55,https://agripac.com.ec/productos/mpex-200-300/,2026-11-09
 ecuador,Agripac,Mpex 300-500,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,20,,https://agripac.com.ec/productos/mpex-300-500/,2026-11-09
 ecuador,Agripac,Mpex 500-800,False,False,False,True,False,False,False,Hatchery,,,,Microparticulado,20,,https://agripac.com.ec/productos/mpex-500-800/,2026-11-09
 ecuador,Agripac,New Royal Oyster,False,True,False,False,False,False,False,Hatchery,,,,,5,,https://agripac.com.ec/productos/new-royal-oyster/,2026-11-09
-ecuador,Agripac,Royal Caviar 5-50,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/royal-caviar-5-50/,2026-11-09
-ecuador,Agripac,Royal Caviar 50-100,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/royal-caviar-50-100/,2026-11-09
-ecuador,Agripac,Royal Seafood 100-200,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,8,,https://agripac.com.ec/productos/royal-seafood-100-200/,2026-11-09
-ecuador,Agripac,Royal Seafood 5-50,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,1.5,,https://agripac.com.ec/productos/royal-seafood-5-50/,2026-11-09
-ecuador,Agripac,Royal Seafood 50-100,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,1.5,,https://agripac.com.ec/productos/royal-seafood-50-100/,2026-11-09
+ecuador,Agripac,Royal Caviar 5-50,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,55,https://agripac.com.ec/productos/royal-caviar-5-50/,2026-11-09
+ecuador,Agripac,Royal Caviar 50-100,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,55,https://agripac.com.ec/productos/royal-caviar-50-100/,2026-11-09
+ecuador,Agripac,Royal Seafood 100-200,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,8,54,https://agripac.com.ec/productos/royal-seafood-100-200/,2026-11-09
+ecuador,Agripac,Royal Seafood 5-50,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,1.5,54,https://agripac.com.ec/productos/royal-seafood-5-50/,2026-11-09
+ecuador,Agripac,Royal Seafood 50-100,False,False,True,True,False,False,False,Hatchery,,,,Microparticulado,1.5,54,https://agripac.com.ec/productos/royal-seafood-50-100/,2026-11-09
 ecuador,Agripac,Vitellus Estandar,False,False,True,True,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/vitellus-estandar/,2026-11-09
 ecuador,Agripac,Vitellus Large,False,False,True,True,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/vitellus-large/,2026-11-09
 ecuador,Agripac,Vitellus Small,False,False,True,True,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/vitellus-small/,2026-11-09
 ecuador,Agripac,Artemia Cysts,False,False,True,False,False,False,False,Hatchery,,,,Polvo,,,https://agripac.com.ec/productos/artemia-cysts/,2026-11-09
-ecuador,Agripac,Royal Pepper Protein,False,,,,,,,Hatchery,,,,Líquido,1,,https://agripac.com.ec/productos/royal-pepper-protein/,2026-11-09
+ecuador,Agripac,Royal Pepper Protein,False,,,,,,,Hatchery,,,,Líquido,1,11,https://agripac.com.ec/productos/royal-pepper-protein/,2026-11-09
 ecuador,Zeigler,LARVA Z - PLUS <50 micras,,False,True,True,False,False,False,Hatchery,<0.05,,0.05,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
 ecuador,Zeigler,LARVA Z - PLUS <100 micras,,False,True,True,False,False,False,Hatchery,<0.1,,0.1,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
 ecuador,Zeigler,LARVA Z - PLUS 100-150 micras,,False,True,True,False,False,False,Hatchery,0.1-0.15,0.1,0.15,Microparticulado,0.5,50,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
@@ -212,3 +212,6 @@ ecuador,Higashimaru,P. VANNAMEI #1 80-130 micras,,False,True,True,False,False,Fa
 ecuador,Higashimaru,P. VANNAMEI #2 200-300 micras,,False,True,True,False,False,False,Hatchery,0.2-0.3,0.2,0.3,Microparticulado,1,52,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
 ecuador,Higashimaru,ZM FEED #0 30-50 micras,,False,True,False,False,False,False,Hatchery,0.03-0.05,0.03,0.05,Microparticulado,1,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
 ecuador,Higashimaru,ZM FEED #1 80-130 micras,,False,True,False,False,False,False,Hatchery,0.08-0.13,0.08,0.13,Microparticulado,1,,https://prilabsa.com/assets/pdfs/CATALOGO%20PRODUCTOS%20JULIO%20PRILABSA.pdf,2026-11-09
+ecuador,Prilabsa,Biomasa de Artemia Congelada,False,False,False,True,False,False,False,Nursery,,,,,1,,https://agrizon.com/en/products/biomasa-de-artemia-congelada-1-kg,2026-11-09
+ecuador,Megasupply,Megalikuid B,False,False,True,True,False,False,False,Hatchery,0.05-0.12,0.05,0.12,Líquido,1,6.5,https://agrizon.com/en/products/megalikuid-b-1-lt-alimento-liquido-para-larvas-y-postlarvas,2026-11-09
+ecuador,Megasupply,Megalikuid C,False,False,True,True,False,False,False,Hatchery,0.12-0.4,0.12,0.4,Líquido,1,6.5,https://agrizon.com/en/products/megalikuid-c-1-lt-balanceado-liquido-para-camarones-y-peces,2026-11-09

@@ -1,0 +1,3 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+ecuador,Megasupply,Megalikuid B,False,False,True,True,False,False,False,Hatchery,0.05-0.12,0.05,0.12,Líquido,1,6.5,https://agrizon.com/en/products/megalikuid-b-1-lt-alimento-liquido-para-larvas-y-postlarvas,2026-11-09
+ecuador,Megasupply,Megalikuid C,False,False,True,True,False,False,False,Hatchery,0.12-0.4,0.12,0.4,Líquido,1,6.5,https://agrizon.com/en/products/megalikuid-c-1-lt-balanceado-liquido-para-camarones-y-peces,2026-11-09
