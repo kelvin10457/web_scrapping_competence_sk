@@ -256,6 +256,9 @@ _PRESENTACION_POR_CLAVE.update({
     # Grafias reales de la pestana "Tipo" de Agripac (R3.3)
     "micro particulado": "Microparticulado",
     "liquidos": "Líquido",
+    # Fila "Forma" de las tablas de Epicore en ProAqua (R7.9)
+    "liquida": "Líquido",
+    "granular": "Granulado",
 })
 
 

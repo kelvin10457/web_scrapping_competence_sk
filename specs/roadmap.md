@@ -64,7 +64,7 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R7.6** AQUATEC (México) vía nutrimentos.com.mx: scraper aceptando el certificado SSL inválido de ese dominio (decisión del usuario 2026-11-09). Sin heredar campos entre variantes. Validar 3 productos.
 - [x] **R7.7** Prilabsa (Ecuador, distribuidor): catálogo PDF (Higashimaru, Mackay Marine; Zeigler solo si no está ya cubierto). Prioridad baja: Ecuador ya está mapeado.
 - [x] **R7.8** Skilla (BioBlue/Grupo NU3, México): `bioblue.com/skilla/`. Tamaños en las imágenes de cada etapa (OCR), proteína vacía (no se publica). Validar 3 productos.
-- [ ] **R7.9** ProAqua (distribuidor, México): alimentos formulados de la categoría Camarón (Biogrow Formula 1–4, Biogrow XT Ultra, Epicore Epifeed MBF/LHF, Epibal). `empresa` = fabricante. Validar 3 productos.
+- [x] **R7.9** ProAqua (distribuidor, México): alimentos formulados de la categoría Camarón (Biogrow Formula 1–4, Biogrow XT Ultra, Epicore Epifeed MBF/LHF, Epibal). `empresa` = fabricante. Validar 3 productos.
 
 ## R8 — Centroamérica (Honduras, Nicaragua, Panamá)
 
