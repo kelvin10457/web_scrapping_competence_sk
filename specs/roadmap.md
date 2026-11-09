@@ -96,7 +96,7 @@ Competidores directos de los suplementos LifeStart de Skretting: Ignis (copépod
 
 - [x] **R11.1** Descubrir: para cada competidor y cada uno de los 5 países, dónde se vende y si hay una ficha que se pueda scrapear. Los competidores son Cargill LiquaLife; copépodos congelados (Reed ARPods, Megasupply); INVE (pasta de Artemia, dietas de hatchery); Epicore en Ecuador; hatchery en Honduras, Nicaragua y Panamá. El resultado va a `specs/features/R11.1-hatchery/hallazgos.md` y a los README de cada país, sin código.
 - [x] **R11.2** Agrizon Ecuador (hatchery). Zeigler, Mackay y Bernaqua ya estaban (por Prilabsa y Agripac). Entran Megasupply Megalikuid B/C (líquido, rival de InVita) como fuente nueva `megasupply`, la fila Prilabsa Biomasa de Artemia Congelada y la proteína vacía de los Bernaqua de Agripac (decisión 2026-11-09).
-- [ ] **R11.3** ProAqua México: Reed Instant Algae (`/reed-mariculture/`). Reabre R7.9 (decisión 2026-11-09).
+- [x] **R11.3** ProAqua México: microalgas Reed Mariculture para camarón (Instant Algae Isochrysis 1800, Tetraselmis 3600, TW 1200, TP 1800 y LPB Frozen Shellfish Diet). Reabre R7.9. N-Rich queda fuera, porque es enriquecedor de rotífero (decisión 2026-11-09).
 - [-] Cargill LiquaLife, INVE, Reed ARPods, Megasupply, Epicore Ecuador y Centroamérica: no tienen una fuente por país (ver hallazgos).
 
 ## Después (decidido 2026-11-09)

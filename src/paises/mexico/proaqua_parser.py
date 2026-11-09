@@ -177,3 +177,67 @@ def parse_producto(url: str, html: str) -> list[dict]:
         record.update(schema.columnas_etapa(etapas))
         records.append(record)
     return records
+
+
+# R11.3: selección verificada en la columna Camarón de las fichas Instant
+# Algae y en las aplicaciones de LPB. N-Rich y dietas de rotíferos no entran.
+_REED_RE = re.compile(
+    r"^Concentrado de microalga Instant Algae "
+    r"(?:Isochrysis 1800|Tetraselmis 3600|TW 1200|TP 1800)(?:\s*\([^)]*\))?$"
+    r"|^Concentrado de Microalgas LPB para Larvas, Juveniles y Reproductores de Reed Mariculture$",
+    re.I,
+)
+_CELULA_RE = re.compile(r"(\d+(?:[.,]\d+)?)\s*-\s*(\d+(?:[.,]\d+)?)\s*(?:[µμ]m|micrones)\b", re.I)
+
+
+def productos_reed_de_listado(html: str) -> list[tuple[str, str]]:
+    """Solo las cinco microalgas Reed con aplicación publicada para camarón."""
+    soup = BeautifulSoup(html, "lxml")
+    vistos = {}
+    for enlace in soup.select("a.pname[href]"):
+        nombre = " ".join(enlace.get_text(" ").split())
+        if _REED_RE.fullmatch(nombre):
+            vistos.setdefault(enlace["href"], nombre)
+    return list(vistos.items())
+
+
+def parse_reed(url: str, html: str) -> list[dict]:
+    """Una fila por microalga; etapas y tecnología solo del texto propio."""
+    soup = BeautifulSoup(html, "lxml")
+    titulo = _titulo(soup)
+    desc = soup.find(id="ProductDescription")
+    if desc is None or not _REED_RE.fullmatch(titulo):
+        return []
+    # Las tablas compartidas de especies y las dosis no describen las etapas
+    # del producto. Se excluyen antes de delimitar el texto de cada aplicación.
+    for tabla in desc.find_all("table"):
+        tabla.decompose()
+    texto = " ".join(desc.get_text(" ").split())
+    lpb = re.search(r"\bL\s+P\s+B Frozen Shellfish Diet\b", texto)
+    if lpb:
+        nombre = re.sub(r"\bL\s+P\s+B\b", "LPB", lpb.group())
+        aplicacion = re.search(r"\bAplicaciones\b(.*?)\bIngredientes\b", texto, re.I)
+        camaron = re.search(r"\bCamar[oó]n\b(.*)", aplicacion.group(1), re.I) if aplicacion else None
+        propio = camaron.group(1) if camaron else ""
+        celula = re.search(r"Tamaño de la célula:\s*(.*?)(?:Densidad|$)", texto, re.I)
+        tamano = _CELULA_RE.search(celula.group(1)) if celula else None
+        proteina = re.search(r"Prote[ií]na\s*[><=]?\s*(\d+(?:[.,]\d+)?\s*%)", texto, re.I)
+    else:
+        nombre = re.sub(r"^Concentrado de microalga\s+", "", titulo, flags=re.I)
+        nombre = re.sub(r"\s*\([^)]*\)", "", nombre).strip()
+        # Sin el cierre de la introducción no se toma texto genérico por propio.
+        partes = texto.split("sistema de cultivo de zooplancton o tanque.", 1)
+        propio = partes[1].strip() if len(partes) == 2 else ""
+        tamano = _CELULA_RE.search(propio)
+        proteina = None
+    record = schema.empty_record("Reed Mariculture")
+    record["nombre_producto"] = nombre
+    if tamano:
+        record["tamano_pellet_mm"] = "-".join(_fmt(_num(n) / 1000) for n in tamano.groups())
+    record["proteina_pct"] = schema.normalize_proteina(proteina.group(1) if proteina else None)
+    record["tipo_presentacion"] = schema.detect_tecnologia(propio)
+    record.update(schema.columnas_etapa(schema.detectar_etapas(propio)))
+    record["_etapas_detectadas"] = True
+    record["fuente_url"] = url
+    record["fecha_extraccion"] = datetime.date.today().isoformat()
+    return [record]
