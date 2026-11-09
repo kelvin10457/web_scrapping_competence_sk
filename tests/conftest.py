@@ -16,6 +16,7 @@ netutil.ENABLED = False  # tests sin pausas de cortesia
 
 
 import pytest  # noqa: E402
+import pipeline  # noqa: E402
 import powerbi  # noqa: E402
 
 
@@ -25,3 +26,6 @@ def _powerbi_fuera_del_repo(tmp_path, monkeypatch):
     y con datos de prueba borraba los Excel reales (ver revision_pendiente.md)."""
     monkeypatch.setattr(powerbi, "POWERBI_DIR", tmp_path / "_powerbi_test")
     monkeypatch.setattr(powerbi, "HUMAN_PATH", None)
+    # Idem data/presentaciones_nuevas.csv: un test de registros oficiales lo
+    # pisaba con uno vacio y se perdia el aviso real (BioMar Microgranulado).
+    monkeypatch.setattr(pipeline, "PRESENTACIONES_NUEVAS_PATH", tmp_path / "_presentaciones_nuevas.csv")
