@@ -49,8 +49,8 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 
 ## R6 — Nicovita reactivada, rápida y con cuidado
 
-- [ ] **R6.1** Presupuesto de tiempo (acordado con el usuario): medir una corrida en frío. Límite: **≤3 min por país** y segundos con caché. Pausas aleatorias más cortas, y la pausa larga solo después de varias consultas nuevas (no después de las que salen de caché).
-- [ ] **R6.2** Si una página muestra captcha, solo ese dominio pasa a un ritmo más lento y aleatorio. Se usa la página guardada si existe y se sigue con lo demás, sin esperar indefinidamente.
+- [x] **R6.1** Presupuesto de tiempo (acordado con el usuario): medir una corrida en frío. Límite: **≤3 min por país** y segundos con caché. Pausas aleatorias más cortas, y la pausa larga solo después de varias consultas nuevas (no después de las que salen de caché).
+- [x] **R6.2** Si una página muestra captcha, solo ese dominio pasa a un ritmo más lento y aleatorio. Se usa la página guardada si existe y se sigue con lo demás, sin esperar indefinidamente.
 - [ ] **R6.3** Quitar Nicovita de `fuentes.INACTIVAS`. Correr Honduras, validar 3 productos y anotar el tiempo.
 - [ ] **R6.4** Correr Ecuador y México, y comparar con los CSV guardados el 2026-10-20.
 

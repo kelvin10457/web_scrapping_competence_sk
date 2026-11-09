@@ -17,7 +17,7 @@
 - **Cada (país, empresa) corre aislado:** si falla uno, el resto sigue. Si una corrida trae 0 filas, nunca sobrescribe el archivo anterior.
 - **El vocabulario se normaliza en el parser**, con funciones de `schema.py` (`normalize_presentacion`, etapas). Lo que no está en el vocabulario se conserva y se reporta en `data/presentaciones_nuevas.csv` y en el resumen final del CLI.
 - **Conflictos:** cuando hay varios valores para un mismo campo, `schema.resolver_campo` elige uno con reglas fijas y deja el caso en `_conflictos.csv`.
-- **Ritmo:** pausas aleatorias solo para los dominios en `netutil.PACED_HOSTS`, más caché de HTML y PDF, dentro de un presupuesto de tiempo por corrida.
+- **Ritmo:** pausas aleatorias solo para los dominios en `netutil.PACED_HOSTS` (0.5–2.5 s, y 5–12 s cada 6–10 consultas nuevas; la caché no cuenta), más caché de HTML y PDF. Presupuesto: ≤3 min por país en frío (Nicovita Honduras: 61 s). Después de un captcha, solo ese dominio pasa a 6–15 s; después de 2, no se consulta más en la corrida (R6.2).
 
 ## Esquema
 
