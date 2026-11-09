@@ -57,20 +57,20 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 ## R7 — México (territorio separado)
 
 - [ ] **R7.1** Correr México completo con el esquema nuevo y revisar `presentaciones_nuevas.csv`.
-- [ ] **R7.2** Revisar las 144 pistas de SENASICA y listar los competidores nuevos con datos útiles (Aquatec, El Pedregal, Oromar, Skilla, Winfish Zeigler).
+- [x] **R7.2** Revisar las 144 pistas de SENASICA y listar los competidores nuevos con datos útiles (Aquatec, El Pedregal, Oromar, Skilla, Winfish Zeigler).
 - [?] **R7.3** El usuario decide cuáles de esos competidores se agregan (por registro oficial o por carga manual).
 
 ## R8 — Centroamérica (Honduras, Nicaragua, Panamá)
 
 Cada país sigue dos pasos: primero **descubrir** (solo buscar y anotar en el README del país, sin código), después **construir** (solo si apareció una fuente).
 
-- [ ] **R8.1** Honduras: buscar un registro público de alimentos para animales (SENASA).
-- [ ] **R8.2** Honduras: implementarlo como fuente complementaria (igual que SENASICA), si existe.
-- [ ] **R8.3** Nicaragua: buscar un registro público (IPSA).
-- [ ] **R8.4** Nicaragua: implementarlo, si existe.
-- [ ] **R8.5** Panamá: buscar un registro público (MIDA / APA).
-- [ ] **R8.6** Panamá: implementarlo, si existe.
-- [ ] **R8.7** Plantilla Excel de carga manual por país, con las mismas columnas, que `merge_human` importa. Puede hacerse en paralelo a R8.1–R8.6.
+- [x] **R8.1** Honduras: buscar un registro público de alimentos para animales (SENASA).
+- [-] **R8.2** Honduras: implementarlo como fuente complementaria (igual que SENASICA), si existe.
+- [x] **R8.3** Nicaragua: buscar un registro público (IPSA).
+- [-] **R8.4** Nicaragua: implementarlo, si existe.
+- [x] **R8.5** Panamá: buscar un registro público (MIDA / APA).
+- [-] **R8.6** Panamá: implementarlo, si existe.
+- [x] **R8.7** Plantilla Excel de carga manual por país, con las mismas columnas, que `merge_human` importa. Puede hacerse en paralelo a R8.1–R8.6.
 
 ## R9 — Corrida completa
 

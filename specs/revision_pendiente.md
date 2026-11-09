@@ -42,3 +42,12 @@ _Se completa al cerrar la corrida (ver CIERRE del pedido)._
 - **Cerradas:** R4.7–R4.9 (Codex), R4.10 y R5.1–R5.4 (Claude). Suite: 288 tests en verde.
 - **Pendientes:** R8 (research y construcción de Honduras, Nicaragua, Panamá), R7.2 (pistas de SENASICA), R8.7 (plantilla manual), R9 (pipeline completo, país por país), y el `git push`.
 - **Pendiente de correr:** el pipeline final (restaura la bandera de Larvicultura y re-scrapea con la caché).
+
+## Actualización: R7.2 y R8 (research, sin implementar fuentes nuevas)
+
+- **R8.1 Honduras, R8.3 Nicaragua, R8.5 Panamá: descubrimiento (Claude).** Se buscó con búsqueda web estándar y extendida. Ninguno de los tres países publica un listado público de alimentos registrados para camarón. Las fuentes encontradas son marcos legales o fichas de Nicovita, todas anotadas en `src/paises/<pais>/README.md`.
+  - *Decisión:* R8.2, R8.4 y R8.6 quedan descartadas (`[-]`). No hay fuente pública utilizable (no hay login ni captcha, pero tampoco hay listado). Alternativa descartada: implementar el marco legal como fuente, que daría datos de registro sin productos.
+  - *Pendiente de verificar a mano:* portales de SENASA (Honduras), IPSA (Nicaragua) y APA (Panamá) si existen listados que la búsqueda no encontró. Las fichas de Nicovita Honduras tienen 5–6 años.
+- **R8.7 plantillas de carga manual (Claude).** `data/plantillas/plantilla_carga_manual_{honduras,nicaragua,panama}.xlsx`. *Decisión:* las 19 columnas de `schema.SCHEMA_COLUMNS`, no las 16 del contrato de Power BI, porque `merge_human` rechaza cualquier encabezado distinto (verificado: sin errores). **Nota:** `merge_human` solo lee `data/competencia_human.xlsx`; estas plantillas se copian a mano allí. Revertir: borrar `data/plantillas/plantilla_carga_manual_*.xlsx`.
+- **R7.2 competidores de México en SENASICA (Claude, solo listar).** Ver `specs/features/R7.2-senasica-competidores/validation.md`. Nuevos con datos útiles: **Malta Texo (Apicamarón, 36 registros de camarón), Nueva Tecnología en Alimentación (Aquatec, 15), El Pedregal (5), Oromar (2), Multiservicios 2001 (Skilla, 2)**. Nutrición Marina (1, larval; confirmar si es Nutrimar). Winfish Zeigler, Skretting y BioMar no aparecen en el registro. Agregarlos es R7.3 (decisión tuya).
+- **Estado final de R8/R7.2:** R7.2 `[x]`; R8.1, R8.3, R8.5, R8.7 `[x]`; R8.2, R8.4, R8.6 `[-]`. R6 y R7.3 no se tocaron (necesitan decisiones tuyas).
