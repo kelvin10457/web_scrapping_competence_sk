@@ -95,7 +95,6 @@ Ecuador: Agripac 38 · BioMar 17 · Cargill 37 · HAID 17 · Nicovita 61 · Hond
 5. **Filas humanas no se deduplican contra el master.** Una fila humana repetida aparece dos veces en el Excel.
 6. **Plantillas R8.7 con 19 columnas** (las de `merge_human`), no las 16 de Power BI.
 7. **El Excel se borra si su par (pais, empresa) desaparece.** Alternativa: dejarlo.
-8. **Código M de `docs/powerbi.md` sin probar en Power BI Desktop.**
 9. **Nutrimar trae 13 productos de Zeigler** (la ficha de Nutrimar los publica). Ya estaban antes como Zeigler; sin cambio.
 
 **Cómo revertir:** cada fase es un commit. R4.10 en `8fdc0ca`; R5 en `db5a5d2`, `c688b30`; R4.7–R4.9 en `5015153`; R8/R7.2 en `3a1e538`.
@@ -130,7 +129,6 @@ Ecuador: Agripac 38 · BioMar 17 · Cargill 37 · HAID 17 · Nicovita 61 · Hond
   - *Etapas humanas sin validación* (medio): `verdaderoo` se volvía `False` en silencio. **Corregido:** `ETAPA_COLUMNS` entran en `BOOLEAN_COLUMNS`. Prueba `test_validate_rows_rechaza_etapa_con_texto_que_no_es_booleano`.
   - *Hallazgo descartado:* ninguno.
 - **Pasada final de R5.3:** el test de contrato pasa en los 12 Excel tras R4.10. Codex revisó el contrato en la misma revisión.
-- **Power BI sin probar en Power BI Desktop:** el código M de `docs/powerbi.md` no se ejecutó aquí.
 
 ## Estado de la corrida (al cierre de esta sesión)
 - **Cerradas:** R4.7–R4.9 (Codex), R4.10 y R5.1–R5.4 (Claude). Suite: 288 tests en verde.

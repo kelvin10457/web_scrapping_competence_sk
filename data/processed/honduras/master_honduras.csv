@@ -1,0 +1,36 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Nursery,0.5-1.0,0.5,1,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,28,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,25,https://nicovita.com/productos/nicovita-classic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,30,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Classic Organic Engorde,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-classic-organic-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Finalis,False,False,False,False,False,False,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-finalis-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Katal Engorde,False,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-katal-engorde-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin,False,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Organic,False,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-organic-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Organic,False,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-organic-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Organic,False,False,False,True,False,False,False,Nursery,0.8,0.8,0.8,Extruido,"10,20",45,https://nicovita.com/productos/nicovita-origin-organic-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Origin Precria,False,False,False,True,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,40,https://nicovita.com/productos/nicovita-origin-precria-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,40,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,0.8,0.8,0.8,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.0,2,2,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09
+honduras,Nicovita,Nicovita Térap,True,False,False,True,True,True,True,Grower,2.5,2.5,2.5,Pellet,25,35,https://nicovita.com/productos/nicovita-terap-honduras/,2026-11-09

@@ -1,0 +1,13 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+mexico,Biogrow,Biogrow Formula 1 (00-50 Micras Zoea),,False,True,False,False,False,False,Hatchery,0-0.05,0,0.05,Microencapsulado,0.45,60.4,https://proaqua.mx/biogrow-formula-1-00-50-micras-zoea-lata-1-lilbra/,2026-11-09
+mexico,Biogrow,Biogrow Formula 2 (040-150 Micras Mysis),,False,True,True,False,False,False,Hatchery,0.04-0.15,0.04,0.15,Microencapsulado,0.45,59,https://proaqua.mx/biogrow-formula-2-040-150-micras-mysis-lata-1-libra/,2026-11-09
+mexico,Biogrow,Biogrow Formula 3 (100-300 Micras Mysis-PL),,False,True,True,False,False,False,Hatchery,0.1-0.3,0.1,0.3,Microencapsulado,5,45,https://proaqua.mx/biogrow-formula-3-100-300-micras-mysis-pl-cubeta-5-kilos/,2026-11-09
+mexico,Biogrow,Biogrow Formula 4 (300-500 Micras PL),,False,True,True,False,False,False,Hatchery,0.3-0.5,0.3,0.5,Extruido,25,45,https://proaqua.mx/biogrow-formula-4-300-500-micras-pl-saco-25-kilos/,2026-11-09
+mexico,Biogrow,Biogrow XT ultra,,,,,,,,Nursery,0.3,0.3,0.3,,,45,https://proaqua.mx/alimento-para-camaron-biogrow-xt-ultra-adicionado-con-qrill-orego-stim-optimax-a-y-glucan-mos/,2026-11-09
+mexico,Biogrow,Biogrow XT ultra,,,,,,,,Nursery,0.6,0.6,0.6,,,45,https://proaqua.mx/alimento-para-camaron-biogrow-xt-ultra-adicionado-con-qrill-orego-stim-optimax-a-y-glucan-mos/,2026-11-09
+mexico,Biogrow,Biogrow XT ultra,,,,,,,,Nursery,0.8,0.8,0.8,,,45,https://proaqua.mx/alimento-para-camaron-biogrow-xt-ultra-adicionado-con-qrill-orego-stim-optimax-a-y-glucan-mos/,2026-11-09
+mexico,Epicore,Epifeed MBF,,True,False,False,False,False,False,,,,,,,43,https://proaqua.mx/epifeed-mbf-cu-ete-epicore/,2026-11-09
+mexico,Epicore,Epifeed LHF1,,False,True,False,False,False,False,Hatchery,0.03,0.03,0.03,Líquido,,15,https://proaqua.mx/epifeed-lhf-bote-1-litro-epicore/,2026-11-09
+mexico,Epicore,Epifeed LHF2,,False,True,False,False,False,False,Hatchery,0.085,0.085,0.085,Líquido,,15,https://proaqua.mx/epifeed-lhf-bote-1-litro-epicore/,2026-11-09
+mexico,Epicore,Epibal-500,,False,False,True,False,False,False,Nursery,0.5,0.5,0.5,Granulado,20,49,https://proaqua.mx/epibal-500-cu-ete-20-kilos-epicore/,2026-11-09
+mexico,Epicore,Epibal-300,,False,False,True,False,False,False,Nursery,0.3,0.3,0.3,Granulado,20,49,https://proaqua.mx/epibal-300-cu-ete-20-kilos-epicore/,2026-11-09

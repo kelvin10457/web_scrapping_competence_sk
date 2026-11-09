@@ -1,0 +1,5 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+panama,NasaFeed,AQUANASA 25,,False,False,True,True,True,True,Nursery,,,,Pellet,45.36,25,https://web.archive.org/web/20240830070946id_/https://nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf,2026-11-09
+panama,NasaFeed,AQUANASA 30,,False,False,True,True,True,True,Nursery,,,,Pellet,45.36,30,https://web.archive.org/web/20240830070946id_/https://nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf,2026-11-09
+panama,NasaFeed,AQUANASA 35,,False,False,True,True,True,True,Nursery,,,,Pellet,45.36,35,https://web.archive.org/web/20240830070946id_/https://nasafeed.com/files/Ficha-Tecnica-Linea-Premium-Aquanasa.pdf,2026-11-09
+panama,Italcol,AQUACAMARON 35,,False,False,False,False,False,True,Grower,,,,,,35,https://italcol.com/producto/camaron-levante/,2026-11-09

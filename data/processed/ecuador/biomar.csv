@@ -1,0 +1,18 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-2-0mm-25-kg-alimento-pelletizado,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Nursery,1.2,1.2,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-2-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,True,Pre Grower,1.6,1.6,1.6,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-1-6-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-perform-35-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-prime-32-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,,10,38,https://agrizon.com/en/products/exia-start-38-0-9-1-2-mm-10-kg-dieta-para-larvas,2026-11-09
+ecuador,BioMar,Exia Pro,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://agrizon.com/en/products/exia-pro-35-2-0-mm-25-kg-alimento-de-alto-rendimiento,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,Microgranulado,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-6-0-9-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,True,False,False,Nursery,0.9-1.2,0.9,1.2,Pellet,25,35,https://agrizon.com/en/products/exia-prime-35-precria-0-9-1-2-mm-25-kg-balanceado-pelletizado,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,1.8,1.8,1.8,Extruido,25,35,https://agrizon.com/en/products/exia-prime-35-extruido-1-8-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,32,https://agrizon.com/en/products/exia-perform-32-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Exia Prime,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-prime-28-2-0-mm-25-kg,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.25-0.375,0.25,0.375,Extruido,1,55,https://agrizon.com/en/products/larviva-55-250-375-micras-1-kg,2026-11-09
+ecuador,BioMar,Exia Perform,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,28,https://agrizon.com/en/products/exia-perform-28-2-0-mm-25-kg-alimento-para-camaron,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.15-0.25,0.15,0.25,Extruido,1,55,https://agrizon.com/en/products/larviva-55-150-250-micras-1-kg,2026-11-09
+ecuador,BioMar,Exia Start,False,False,False,False,True,False,False,Nursery,0.6-0.9,0.6,0.9,,10,38,https://agrizon.com/en/products/exia-start-38-0-6-0-9-mm-10-kg,2026-11-09
+ecuador,BioMar,Larviva,False,False,True,True,False,False,False,Hatchery,0.375-0.5,0.375,0.5,Extruido,1,55,https://agrizon.com/en/products/larviva-55-375-500-micras-1-kg,2026-11-09

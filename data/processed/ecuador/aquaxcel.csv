@@ -1,0 +1,38 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+ecuador,Cargill,AQUAXCEL ACTIVE 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ACTIVE 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ACTIVE 35%LS 2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM 35% AD AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35 AD 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35 AD EEAP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35 RD2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35% RD 1.6,False,False,False,False,True,False,False,Pre Grower,1.6,1.6,1.6,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM35% RD 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM38% RD1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,38,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM40% RD0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,40,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM42% RD 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,42,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT OSM45% RD 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH35% NTMX1.2,True,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH35% RD 1.2,True,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH35% RD 2.0,True,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH45% NTMX0.6,True,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADAPT SH45% NTMX0.8,True,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35 AE2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35 EE2.0AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 1.6,False,False,False,False,True,False,False,Pre Grower,1.6,1.6,1.6,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL ADVANCE 35% AE 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% NT 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 35% NT 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 45% NT 0.6,False,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL MAXIMA 45% NT 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 35% 2.0,False,False,False,False,False,False,True,Grower,2,2,2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 35% 2.0 AP,False,False,False,False,False,False,True,Grower,2,2,2,Pellet,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 35% SLD 1.2,False,False,False,False,True,False,False,Nursery,1.2,1.2,1.2,Extruido,25,35,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 42% SLD 0.8,False,False,False,False,True,False,False,Nursery,0.8,0.8,0.8,Extruido,25,42,https://aquaxcel.com/productos/ecuador/,2026-11-09
+ecuador,Cargill,AQUAXCEL RAPID 45% SLD 0.6,False,False,False,False,True,False,False,Nursery,0.6,0.6,0.6,Extruido,25,45,https://aquaxcel.com/productos/ecuador/,2026-11-09

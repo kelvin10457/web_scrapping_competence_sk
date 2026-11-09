@@ -1,0 +1,20 @@
+﻿pais,empresa,nombre_producto,es_producto_de_salud,etapa_reproductores,etapa_larva,etapa_post_larva,etapa_precria,etapa_post_transferencia,etapa_engorde,etapa_skt,tamano_pellet_mm,particula_min_mm,particula_max_mm,tipo_presentacion,empaque_kg,proteina_pct,fuente_url,fecha_extraccion
+mexico,Zeigler,Brine Shrimp Flake,,False,True,True,False,False,False,Hatchery,,,,,25,50,https://www.nutrimar.mx/birne-shrimp-flake,2026-11-09
+mexico,Zeigler,Broodstock,,True,False,False,False,False,False,Grower,2.4,2.4,2.4,,25,40,https://www.nutrimar.mx/broodstock,2026-11-09
+mexico,Nutrimar,Extensivo,,,,,,,,,,,,,,35,https://www.nutrimar.mx/extensivo,2026-11-09
+mexico,Zeigler,EZ Artemia,,False,True,True,False,False,False,Hatchery,0.05-0.5,0.05,0.5,,1,14,https://www.nutrimar.mx/ez-artemia,2026-11-09
+mexico,Zeigler,EZ Artemia Ultra,,False,True,True,False,False,False,Hatchery,0.05-0.5,0.05,0.5,,2,12,https://www.nutrimar.mx/ez-artemia-ultra,2026-11-09
+mexico,Zeigler,EZ Larva,,False,True,True,False,False,False,Hatchery,0.01-0.6,0.01,0.6,,1,11,https://www.nutrimar.mx/ez-larva,2026-11-09
+mexico,Zeigler,Ez-mate,,True,False,False,False,False,False,Grower,2.4-5,2.4,5,,15,40,https://www.nutrimar.mx/ez-mate,2026-11-09
+mexico,Nutrimar,Intensivo,,,,,,,,,,,,,,,https://www.nutrimar.mx/intensivo,2026-11-09
+mexico,Zeigler,Larva Shrimp Flake,,False,True,True,False,False,False,Hatchery,,,,,10,48,https://www.nutrimar.mx/larva-shrimp-flake,2026-11-09
+mexico,Zeigler,Larva Z plus,,False,True,True,False,False,False,Hatchery,,,,,,50,https://www.nutrimar.mx/larva-z-plus,2026-11-09
+mexico,Zeigler,maturation,,True,False,False,False,False,True,Grower,2.4,2.4,2.4,,9.1,40,https://www.nutrimar.mx/maturation,2026-11-09
+mexico,Zeigler,PL Raceway 40-9,,False,False,True,True,True,True,Nursery,0.4-1.2,0.4,1.2,,20,40,https://www.nutrimar.mx/pl-raceway-40-9,2026-11-09
+mexico,Zeigler,PL Raceway plus,,False,False,True,True,True,True,Nursery,0.4-1.2,0.4,1.2,,20,40,https://www.nutrimar.mx/pl-raceway-plus,2026-11-09
+mexico,Zeigler,Redi-mate,,True,False,False,False,False,False,Grower,2.4,2.4,2.4,,15,40,https://www.nutrimar.mx/redi-mate,2026-11-09
+mexico,Nutrimar,Semi-intensivo 35%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,35,https://www.nutrimar.mx/semi-intensivo,2026-11-09
+mexico,Nutrimar,Semi-intensivo 30%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,30,https://www.nutrimar.mx/semi-intensivo,2026-11-09
+mexico,Nutrimar,Super growth 35%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,35,https://www.nutrimar.mx/super-growth,2026-11-09
+mexico,Nutrimar,Super growth 30%,,False,False,False,False,False,True,Pre Grower,1.6-2.5,1.6,2.5,,25,30,https://www.nutrimar.mx/super-growth,2026-11-09
+mexico,Zeigler,Z pro,,False,True,True,False,False,False,Hatchery,,,,,4,44,https://www.nutrimar.mx/z-pro,2026-11-09

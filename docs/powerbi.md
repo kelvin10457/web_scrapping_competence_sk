@@ -4,28 +4,7 @@ Los archivos están en `data/powerbi/<pais>/<empresa>.xlsx` (uno por país y emp
 
 ## 1. Unir la carpeta completa
 
-En Power BI Desktop: **Obtener datos → Carpeta** y apuntar a `data/powerbi`. Después, en Power Query, pegar esta consulta (reemplazar la ruta). Toma solo los archivos `.xlsx` de los subfolders y une sus hojas:
-
-```m
-let
-    Origen = Folder.Files("C:\ruta\a\web_scrapping_competence_sk\data\powerbi"),
-    XLSX = Table.SelectRows(Origen, each Text.EndsWith([Name], ".xlsx")),
-    ConHoja = Table.AddColumn(XLSX, "Datos",
-        each Excel.Workbook([Content], true){[Item="datos", Kind="Sheet"]}[Data]),
-    Unido = Table.Combine(ConHoja[Datos]),
-    Tipado = Table.TransformColumnTypes(Unido, {
-        {"es_producto_de_salud", type logical},
-        {"etapa_reproductores", type logical}, {"etapa_larva", type logical},
-        {"etapa_post_larva", type logical}, {"etapa_precria", type logical},
-        {"etapa_post_transferencia", type logical}, {"etapa_engorde", type logical},
-        {"particula_min_mm", type number}, {"particula_max_mm", type number},
-        {"proteina_pct", type number}
-    })
-in
-    Tipado
-```
-
-Si Power BI no encuentra la hoja `datos`, es un Excel de otra versión del pipeline: regenerarlo.
+En Power BI Desktop: **Obtener datos → Carpeta**, apuntar a `data/powerbi` y **Combinar** usando la hoja `datos`. Si Power BI no encuentra la hoja `datos`, es un Excel de otra versión del pipeline: regenerarlo.
 
 ## 2. Graficar por etapa (despivotar las `etapa_*`)
 
