@@ -106,7 +106,7 @@ def test_etapa_falls_back_to_tamano_when_text_is_generic_for_all_products():
     record = parser.parse_product(
         "https://agripac.com.ec/productos/feedpac-35-ultra-gregarinas-18-mm/", html
     )
-    assert record["etapa_competidor"] == "engorde"
+    assert record["etapa_engorde"] is True
 
 
 def test_parse_listing_tags_all_records_as_agripac():

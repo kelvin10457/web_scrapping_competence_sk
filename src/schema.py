@@ -22,7 +22,6 @@ SCHEMA_COLUMNS = [
     "pais",
     "empresa",
     "nombre_producto",
-    "etapa_competidor",
     "es_producto_de_salud",
     "etapa_reproductores",
     "etapa_larva",
@@ -377,27 +376,34 @@ _ETAPA_SKT_RESPALDO = {
 
 
 def etapa_skt_from_row(
-    etapa_competidor: str | None,
+    etapas: set[str] | None,
     tamano_pellet_mm: str | None,
     es_larvicultura: bool = False,
 ) -> str | None:
     """Clasifica el producto en las 4 etapas de Skretting (Hatchery/Nursery/
-    Pre Grower/Grower), columna aparte de `etapa_competidor` porque no
-    comparten vocabulario. Regla en tech-stack.md (R3.6):
+    Pre Grower/Grower), columna aparte de las `etapa_*` porque no comparten
+    vocabulario. Regla en tech-stack.md (R3.6, R4.10):
 
-    - `larva`, o cualquier producto de la division Larvicultura de Agripac
-      (`es_larvicultura`), es Hatchery aunque tenga tamano: la jefa la define
-      por tipo de producto, no por banda de mm (Nicovita Origin, 0.3-0.8mm,
-      hubiera caido en Nursery).
+    - Si la etapa mas temprana del ciclo que marca el producto es `larva`,
+      o si es de la division Larvicultura de Agripac (`es_larvicultura`), es
+      Hatchery aunque tenga tamano: la jefa la define por tipo de producto,
+      no por banda de mm. Un rango que empieza en larva cuenta como larva,
+      igual que "en un rango manda el minimo" (R4.10, pendiente de confirmar).
     - Por tamano (en un rango manda el minimo): < 1.6mm Nursery, 1.6mm Pre
       Grower, > 1.6mm Grower, sin distinguir pellet de extruido.
-    - Sin tamano reconocible: la etapa del competidor como respaldo
-      (`_ETAPA_SKT_RESPALDO`); si tampoco hay, vacio."""
-    if es_larvicultura or etapa_competidor == "larva":
+    - Sin tamano reconocible: respaldo por la etapa mas temprana del ciclo
+      que marque el producto (`_ETAPA_SKT_RESPALDO`); si tampoco hay, vacio.
+      (Antes era la etapa_competidor; sin ella, R4.10.)"""
+    etapas = set(etapas or ())
+    primera = next((e for e in _CICLO if e in etapas), None)
+    if es_larvicultura or primera == "larva":
         return "Hatchery"
     pmin, pmax = parse_particula_range(tamano_pellet_mm)
     if pmin is None:
-        return _ETAPA_SKT_RESPALDO.get(etapa_competidor)
+        for etapa in _CICLO:
+            if etapa in etapas and etapa in _ETAPA_SKT_RESPALDO:
+                return _ETAPA_SKT_RESPALDO[etapa]
+        return None
     size = min(pmin, pmax)
     if size < 1.6:
         return "Nursery"

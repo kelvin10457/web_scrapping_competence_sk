@@ -129,12 +129,6 @@ def parse_product(url: str, html: str, es_larvicultura: bool = False) -> dict:
         [title, tabs.get("description", ""), tabs.get("modo-de-uso", ""), ingredientes]
     )
     record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(etapa_text)
-    etapa = schema.normalize_etapa(title)
-    if etapa is None:
-        etapa = schema.normalize_etapa(etapa_text)
-    if etapa is None:
-        etapa = schema.etapa_from_tamano(record["tamano_pellet_mm"], record["tipo_presentacion"])
-    record["etapa_competidor"] = etapa
     # R4.6: todas las etapas que nombran los textos ("larvas y post-larvas" ->
     # las dos); sin termino, la banda de tamano de pellet, como en Agrizon.
     # Los Feedpac nunca nombran etapa ("adultos y juveniles" no es termino).

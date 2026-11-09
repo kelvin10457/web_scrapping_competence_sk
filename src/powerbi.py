@@ -122,8 +122,8 @@ def filas_humanas(path: Path | None = HUMAN_PATH) -> pd.DataFrame:
     """Filas de competencia_human.xlsx en el esquema de Power BI (R5.2).
 
     Sin columna `pais` (o celda vacía) se asume ecuador, igual que
-    merge_human._with_default_pais (PLAN_REGIONAL 2.5). Las etapa_* salen de
-    etapa_competidor si el archivo la trae (puente R3.5); etapa_skt y las
+    merge_human._with_default_pais (PLAN_REGIONAL 2.5). Las etapa_* son las
+    booleanas del archivo (R4.10; etapa_competidor se ignora); etapa_skt y las
     particulas se derivan como en pipeline.write_csv."""
     if path is None or not Path(path).exists():
         return pd.DataFrame(columns=POWERBI_COLUMNS)
@@ -134,11 +134,11 @@ def filas_humanas(path: Path | None = HUMAN_PATH) -> pd.DataFrame:
     filas = []
     for _, fila in df.iterrows():
         rec = {c: fila.get(c) for c in df.columns}
-        etapa = _texto(rec.get("etapa_competidor"))
-        if etapa:
-            rec.update(schema.etapas_desde_competidor(etapa))
+        # R4.10: etapa_skt sale de las etapa_* booleanas; etapa_competidor (legado) se ignora.
+        etapas = {c.removeprefix("etapa_") for c in BOOLEAN_COLUMNS
+                  if c.startswith("etapa_") and _bool(rec.get(c)) is True}
         tamano = _texto(rec.get("tamano_pellet_mm"))
-        rec["etapa_skt"] = schema.etapa_skt_from_row(etapa, tamano, False)
+        rec["etapa_skt"] = schema.etapa_skt_from_row(etapas, tamano, False)
         rec["particula_min_mm"], rec["particula_max_mm"] = schema.parse_particula_range(tamano)
         filas.append(rec)
     return pd.DataFrame(filas)

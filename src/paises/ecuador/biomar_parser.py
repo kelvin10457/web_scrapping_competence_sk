@@ -59,13 +59,9 @@ def parse_product(url: str, html: str) -> dict:
     record["nombre_producto"] = _extract_nombre(soup)
 
     etapa_values = _extract_dl_values(soup, "Etapa")
-    if len(etapa_values) == 1:
-        # Si BioMar publica mas de un valor de Etapa (ej. EXIA Prime: "De
-        # Engorde" y "De Alevinaje" a la vez), el producto genuinamente
-        # cubre mas de una etapa -- se deja en None en vez de elegir una
-        # arbitrariamente (mismo criterio que Nicovita Classic/Katal base).
-        record["etapa_competidor"] = schema.normalize_etapa(etapa_values[0])
-    else:
-        record["etapa_competidor"] = None
+    # R4.10: todas las etapas que publica la ficha (EXIA Prime: "De Engorde" y
+    # "De Alevinaje" -> las dos), igual que Agrizon (R4.5). Modulo deshabilitado.
+    record.update(schema.columnas_etapa(schema.detectar_etapas(" ".join(etapa_values))))
+    record["_etapas_detectadas"] = True
 
     return record

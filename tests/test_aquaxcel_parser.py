@@ -26,7 +26,7 @@ def test_active_sku_has_full_identification_and_nutricional_data():
     records = parser.parse_listing(_load_html())
     active = next(r for r in records if r["nombre_producto"] == "AQUAXCEL ACTIVE 35% 2.0")
     assert active["empresa"] == "Cargill"
-    assert active["etapa_competidor"] == "engorde"
+    assert active["etapa_engorde"] is True
     assert active["tamano_pellet_mm"] == "2"
     assert active["tipo_presentacion"] == "Extruido"
     assert active["empaque_kg"] == "25"
@@ -38,8 +38,9 @@ def test_portfolio_blocks_only_use_inicio_and_engorde():
     # (que tenia un grupo "TRANSICION"), los bloques "Portafolio" solo usan
     # INICIO/ENGORDE -- normalize_etapa los mapea a precria/engorde.
     records = parser.parse_listing(_load_html())
-    etapas = {r["etapa_competidor"] for r in records}
-    assert etapas <= {"precria", "engorde", None}
+    for r in records:
+        assert not any(r[c] is True for c in
+                       ["etapa_reproductores", "etapa_larva", "etapa_post_larva", "etapa_post_transferencia"])
 
 
 def test_parse_listing_empty_html_returns_no_records():

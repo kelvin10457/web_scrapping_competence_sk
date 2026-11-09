@@ -7,9 +7,17 @@ import schema
 ROOT = merge_human.ROOT
 
 
+def _etapa_a_booleano(overrides: dict) -> dict:
+    """R4.10: etapa_competidor ya no existe; el helper la traduce a su booleano."""
+    etapa = overrides.pop("etapa_competidor", None)
+    if etapa:
+        overrides[f"etapa_{etapa}"] = True
+    return overrides
+
+
 def _human_row(**overrides) -> dict:
     row = {col: None for col in schema.SCHEMA_COLUMNS}
-    row.update(overrides)
+    row.update(_etapa_a_booleano(overrides))
     return row
 
 
@@ -19,7 +27,7 @@ def _human_df(*rows) -> pd.DataFrame:
 
 def _master_row(**overrides) -> dict:
     row = {col: None for col in schema.SCHEMA_COLUMNS}
-    row.update(overrides)
+    row.update(_etapa_a_booleano(overrides))
     return row
 
 
@@ -49,14 +57,6 @@ def test_validate_headers_ok_when_exact_match_regardless_of_order():
 # --- validate_rows -------------------------------------------------------
 
 
-def test_validate_rows_detects_invalid_categorical_value():
-    df = _human_df(
-        _human_row(empresa="Nicovita", nombre_producto="X", etapa_competidor="Engordee"),
-    )
-    errors = merge_human.validate_rows(df)
-    assert len(errors) == 1
-    assert "fila 2, columna etapa_competidor" in errors[0]
-    assert "Engordee" in errors[0]
 
 
 def test_validate_rows_detects_non_numeric_value():
@@ -79,7 +79,7 @@ def test_validate_rows_accumulates_all_errors_across_rows():
     # No debe detenerse en el primer error -- el reporte tiene que cubrir
     # el archivo completo de una sola pasada.
     df = _human_df(
-        _human_row(empresa="Nicovita", nombre_producto="X", etapa_competidor="Engordee"),
+        _human_row(empresa="Nicovita", nombre_producto="X", proteina_pct="alta"),
         _human_row(empresa="Nicovita", nombre_producto="Y", proteina_pct="alta"),
     )
     errors = merge_human.validate_rows(df)
@@ -199,7 +199,7 @@ def test_apply_merge_fills_null_field_on_single_match():
     assert n_updated == 1
     assert review == []
     row = updated.iloc[0]
-    assert row["etapa_competidor"] == "precria"
+    assert row["etapa_precria"] is True
     # etapa_skt se recalcula a partir del tamano ya corregido.
     assert row["etapa_skt"] == "Pre Grower"
 
@@ -431,7 +431,7 @@ def test_main_blocks_everything_when_any_row_is_invalid(tmp_path, monkeypatch):
             empaque_kg=25,
             proteina_pct=32,
         ),
-        _human_row(empresa="Nicovita", nombre_producto="X", etapa_competidor="Engordee"),
+        _human_row(empresa="Nicovita", nombre_producto="X", proteina_pct="alta"),
     ).to_excel(human_path, index=False)
 
     monkeypatch.setattr(merge_human, "MASTER_PATH", master_path)
@@ -513,17 +513,53 @@ def test_validate_headers_acepta_excel_sin_columnas_etapa():
     assert merge_human.validate_headers(pd.DataFrame(columns=sin_etapas)) == []
 
 
-def test_apply_merge_recalcula_etapas_desde_etapa_competidor():
+def test_apply_merge_recalcula_etapa_skt_desde_las_etapas_humanas():
+    # R4.10: las etapa_* las carga el humano como booleanos; etapa_skt sale de ellas.
     master = _master_df(_master_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Classic AD",
-                                    etapa_competidor="engorde", tamano_pellet_mm="2.5", proteina_pct=28.0))
-    sin_etapas = [c for c in schema.SCHEMA_COLUMNS if c not in schema.ETAPA_COLUMNS]
-    human = pd.DataFrame([
-        {**_human_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Classic AD",
-                      tamano_pellet_mm="2.5", proteina_pct=28.0, etapa_competidor="precria")},
-        {**_human_row(pais="ecuador", empresa="Acme", nombre_producto="Acme Larva", etapa_competidor="larva")},
-    ])[sin_etapas]
+                                    etapa_engorde=True, tamano_pellet_mm="2.5", proteina_pct=28.0))
+    human = _human_df(
+        _human_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Classic AD",
+                   tamano_pellet_mm="2.5", proteina_pct=28.0, etapa_precria=True, etapa_engorde=False),
+        _human_row(pais="ecuador", empresa="Acme", nombre_producto="Acme Larva", etapa_larva=True),
+    )
     out, _, n_new, n_upd = merge_human.apply_merge(master, human)
     assert (n_new, n_upd) == (1, 1)
     assert out.loc[0, "etapa_precria"] is True and out.loc[0, "etapa_engorde"] is False
     nuevo = out[out["empresa"] == "Acme"].iloc[0]
-    assert nuevo["etapa_larva"] is True and nuevo["etapa_engorde"] is False
+    assert nuevo["etapa_larva"] is True and nuevo["etapa_engorde"] is None
+    assert nuevo["etapa_skt"] == "Hatchery"
+
+
+def test_actualizacion_sin_etapas_conserva_hatchery_con_bool_sin_nulos():
+    # Revision Codex 2026-11-09: pandas da numpy.bool_ cuando la columna no tiene
+    # nulos; `is True` no lo reconoce y reclasificaba Hatchery a Nursery.
+    etapas = {c: False for c in schema.ETAPA_COLUMNS}
+    etapas["etapa_larva"] = True
+    master = _master_df(_master_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Origin",
+                                    tamano_pellet_mm="0.3", tipo_presentacion="Extruido", **etapas))
+    human = _human_df(_human_row(empresa="Nicovita", nombre_producto="Nicovita Origin", empaque_kg=10))
+    out, _, _, n_upd = merge_human.apply_merge(master, human)
+    assert n_upd == 1
+    assert out.loc[0, "etapa_skt"] == "Hatchery"
+
+
+def test_actualizacion_sin_etapas_y_sin_tamano_usa_respaldo_con_bool_sin_nulos():
+    etapas = {c: False for c in schema.ETAPA_COLUMNS}
+    etapas["etapa_precria"] = True
+    master = _master_df(_master_row(pais="ecuador", empresa="Nicovita", nombre_producto="Nicovita Base", **etapas))
+    human = _human_df(_human_row(empresa="Nicovita", nombre_producto="Nicovita Base", empaque_kg=10))
+    out, _, _, _ = merge_human.apply_merge(master, human)
+    assert out.loc[0, "etapa_skt"] == "Nursery"
+
+
+def test_validate_rows_rechaza_etapa_con_texto_que_no_es_booleano():
+    # Revision Codex 2026-11-09: 'verdaderoo' se volvia False en silencio.
+    df = _human_df(_human_row(empresa="Nicovita", nombre_producto="X", etapa_larva="verdaderoo"))
+    errors = merge_human.validate_rows(df)
+    assert any("etapa_larva" in e for e in errors)
+
+
+def test_validate_headers_acepta_etapa_competidor_heredada():
+    # R4.10: un archivo humano viejo que todavia trae etapa_competidor no bloquea la fusion.
+    df = pd.DataFrame(columns=list(schema.SCHEMA_COLUMNS) + ["etapa_competidor"])
+    assert merge_human.validate_headers(df) == []

@@ -30,7 +30,7 @@ Una fila por **SKU** (un tamaño de pellet concreto) cuando la fuente lo publica
 | `empresa` | texto | Marca del fabricante (p. ej. `Cargill` para Aquaxcel) |
 | `nombre_producto` | texto | Incluye marca y submarca |
 | `es_producto_de_salud` | booleano | Función terapéutica (p. ej. anti-Vibrio), independiente de la etapa |
-| `etapa_reproductores` | booleano | Un producto puede tener varias etapas en `true`. Vacío si la fuente no dice nada. **Hoy (puente R3.5)** se derivan de `etapa_competidor`: esa etapa en `true` y las otras en `false`; sin etapa, todas vacías. Son derivadas: el Excel manual puede no traerlas. Desde R4, cada parser las marca con `schema.detectar_etapas` (ver regla abajo) |
+| `etapa_reproductores` | booleano | Un producto puede tener varias etapas en `true`. Vacío si la fuente no dice nada. Cada parser las marca con `schema.detectar_etapas` (ver regla abajo). Desde R4.10 no hay columna `etapa_competidor`: el Excel manual las puede traer como booleanos o dejarlas vacías |
 | `etapa_larva` | booleano | Hatchery, mysis, zoea, nauplio |
 | `etapa_post_larva` | booleano | Post larva / PL: fase intermedia entre larva y precría |
 | `etapa_precria` | booleano | |
@@ -56,13 +56,14 @@ Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y em
 - "post transferencia", "transición" y "alevinaje" → `post_transferencia`. "transferencia" suelta ("en sistemas de transferencia") no cuenta: es el traslado al final de la precría.
 - Un rango entre dos etapas ("X hasta Y", "X hacia Y", "X a Y") marca los extremos y las intermedias del ciclo larva → post_larva → precria → post_transferencia → engorde. "tamaño de mercado", "a mercado", "tamaño/peso de cosecha" y "hasta (la) cosecha" cuentan como engorde. `reproductores` nunca se rellena.
 - `schema.columnas_etapa(set)`: las detectadas en `true` y las demás en `false`; con un set vacío, todas quedan vacías.
-- Un parser migrado (R4.2 en adelante: Nicovita, HAID, Aquaxcel, Agrizon, Agripac) marca `_etapas_detectadas` y `pipeline.write_csv` respeta sus `etapa_*` aunque queden vacías; el puente R3.5 sigue solo para los demás. Nicovita usa el slug más la descripción del PDF (la web solo si no hay PDF, sin la etiqueta de categoría). HAID usa el slug más la descripción y las recomendaciones de uso del PDF. Aquaxcel Ecuador usa la columna "ETAPA DE USO" de cada SKU (ahí `INICIO` = `precria`); Aquaxcel México, la línea de la tarjeta más su descripción. Agrizon (BioMar) usa el título más los tags, sin el slug; si no nombran etapa, la banda de tamaño de pellet (`etapa_from_tamano`). Agripac usa el título, la descripción, el modo de uso y los ingredientes; si no nombran etapa (todos los Feedpac), la banda de tamaño de pellet.
+- `etapa_skt` (R4.10) sale de las `etapa_*`: Hatchery si la etapa más temprana del ciclo es `larva` (o es Larvicultura de Agripac); con tamaño, la banda; sin tamaño, la etapa más temprana con respaldo (`_ETAPA_SKT_RESPALDO`).
+- Todos los parsers marcan `_etapas_detectadas` y `pipeline.write_csv` respeta sus `etapa_*` aunque queden vacías. El puente R3.5 (derivar desde `etapa_competidor`) se quitó en R4.10; BioMar (módulo deshabilitado) también marca sus etapas con `detectar_etapas`. Nicovita usa el slug más la descripción del PDF (la web solo si no hay PDF, sin la etiqueta de categoría). HAID usa el slug más la descripción y las recomendaciones de uso del PDF. Aquaxcel Ecuador usa la columna "ETAPA DE USO" de cada SKU (ahí `INICIO` = `precria`); Aquaxcel México, la línea de la tarjeta más su descripción. Agrizon (BioMar) usa el título más los tags, sin el slug; si no nombran etapa, la banda de tamaño de pellet (`etapa_from_tamano`). Agripac usa el título, la descripción, el modo de uso y los ingredientes; si no nombran etapa (todos los Feedpac), la banda de tamaño de pellet.
 
 ### Regla de `etapa_skt`: una columna, criterio propio de Skretting
 
 Se calcula a partir del **tamaño del pellet** y no de cómo llama a la etapa el competidor:
 
-- Etapa del competidor `larva`, o división Larvicultura de Agripac → `Hatchery`, **aunque tenga tamaño** (Nicovita Origin, 0.3-0.8 mm)
+- Etapa más temprana del ciclo `larva` (R4.10: antes, la etapa del competidor), o división Larvicultura de Agripac → `Hatchery`, **aunque tenga tamaño**. Nicovita Origin (0.3-0.8 mm) hoy marca `post_larva` y sale `Nursery`: pendiente de confirmar
 - menos de 1.6 mm → `Nursery`
 - 1.6 mm → `Pre Grower`
 - más de 1.6 mm → `Grower` (sin distinguir entre pellet y extruido; p. ej. 1.7 mm → `Grower`)

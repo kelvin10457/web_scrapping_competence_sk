@@ -6,14 +6,14 @@ def _load(name: str) -> str:
     return (FIXTURES / name).read_text(encoding="utf-8")
 
 
-def test_exia_prime_multi_etapa_leaves_etapa_none():
+def test_exia_prime_multi_etapa_marca_todas():
     # Caso real (docs/historico/MEMORY.md): EXIA Prime publica DOS valores de Etapa en el
     # mismo <dd> ("De Engorde" y "De Alevinaje") -- el producto cubre mas
     # de una etapa, no se fuerza una sola.
     record = parser.parse_product(
         "https://www.biomar.com/.../exia-prime-shrimp", _load("biomar_exia_prime.html")
     )
-    assert record["etapa_competidor"] is None
+    assert record["etapa_engorde"] is True and record["etapa_post_transferencia"] is True
     assert record["nombre_producto"] == "EXIA Prime"
 
 
@@ -24,7 +24,7 @@ def test_inicio_focus_single_etapa_normalizes_to_post_transferencia():
     record = parser.parse_product(
         "https://www.biomar.com/.../inicio-focus-shrimp", _load("biomar_inicio_focus.html")
     )
-    assert record["etapa_competidor"] == "post_transferencia"
+    assert record["etapa_post_transferencia"] is True
     assert record["nombre_producto"] == "INICIO Focus"
 
 
@@ -34,7 +34,8 @@ def test_smartcare_has_no_etapa_field_at_all():
     record = parser.parse_product(
         "https://www.biomar.com/.../smartcare-balance-h-shrimp", _load("biomar_smartcare_h.html")
     )
-    assert record["etapa_competidor"] is None
+    assert all(record[c] is None for c in ["etapa_reproductores", "etapa_larva", "etapa_post_larva",
+                                           "etapa_precria", "etapa_post_transferencia", "etapa_engorde"])
     assert record["nombre_producto"] == "SmartCare Balance H"
 
 

@@ -246,14 +246,7 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
     record.update(schema.columnas_etapa(schema.detectar_etapas(f"{slug.replace('-', ' ')} {descripcion_etapas}")))
     record["_etapas_detectadas"] = True
 
-    etapa = schema.normalize_etapa(slug.replace("-", " "))
-    if etapa is None:
-        etapa = _infer_etapa_from_description(etapa_text)
-    record["etapa_competidor"] = etapa
-
     if not pairs:
-        if record["etapa_competidor"] is None:
-            record["etapa_competidor"] = schema.etapa_from_tamano(record["tamano_pellet_mm"], record["tipo_presentacion"])
         return [record]
 
     records = []
@@ -261,12 +254,5 @@ def parse_product(url: str, html: str, pdf_bytes: bytes | None) -> list[dict]:
         row = dict(record)
         row["proteina_pct"] = schema.normalize_proteina(proteina)
         row["tamano_pellet_mm"] = tamano
-        # Fallback de ultimo recurso, por fila: si ni el slug ni la
-        # descripcion del producto completo resolvieron etapa (ej. Classic/
-        # Katal base, que cubren post-larva a mercado), se intenta con el
-        # tamano puntual de ESTA fila -- solo es posible desde la
-        # explosion a grano SKU (antes no habia un tamano puntual que usar).
-        if row["etapa_competidor"] is None:
-            row["etapa_competidor"] = schema.etapa_from_tamano(tamano, row["tipo_presentacion"])
         records.append(row)
     return records

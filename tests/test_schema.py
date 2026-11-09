@@ -132,49 +132,49 @@ def test_etapa_from_tamano_empty_input_stays_none():
 def test_etapa_skt_larva_overrides_to_hatchery_regardless_of_tamano():
     # REQ-4. Caso real: Nicovita Origin es "larva" con tamanos 0.3-0.8mm, que
     # por tamano hubieran caido en Nursery (decision del usuario 2026-10-29).
-    assert schema.etapa_skt_from_row("larva", "0.3-0.8") == "Hatchery"
-    assert schema.etapa_skt_from_row("larva", None) == "Hatchery"
+    assert schema.etapa_skt_from_row({"larva"}, "0.3-0.8") == "Hatchery"
+    assert schema.etapa_skt_from_row({"larva"}, None) == "Hatchery"
 
 
 def test_etapa_skt_es_larvicultura_overrides_to_hatchery_regardless_of_tamano():
     # REQ-4. Toda la division Larvicultura de Agripac es Hatchery, aunque su
     # etapa no sea "larva" (ej. Mpex, "PL1 a PL6") y su tamano sea Nursery.
-    assert schema.etapa_skt_from_row("precria", "0.3", es_larvicultura=True) == "Hatchery"
-    assert schema.etapa_skt_from_row(None, None, es_larvicultura=True) == "Hatchery"
-    assert schema.etapa_skt_from_row("engorde", "2.5", es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row({"precria"}, "0.3", es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row(set(), None, es_larvicultura=True) == "Hatchery"
+    assert schema.etapa_skt_from_row({"engorde"}, "2.5", es_larvicultura=True) == "Hatchery"
 
 
 def test_etapa_skt_cortes_por_tamano_sin_importar_presentacion():
     # REQ-1. El tamano manda sobre la etapa del competidor.
-    assert schema.etapa_skt_from_row("engorde", "0.8") == "Nursery"
-    assert schema.etapa_skt_from_row(None, "1.2") == "Nursery"
-    assert schema.etapa_skt_from_row("engorde", "1.6") == "Pre Grower"
-    assert schema.etapa_skt_from_row("precria", "1.7") == "Grower"
-    assert schema.etapa_skt_from_row(None, "1.8") == "Grower"
-    assert schema.etapa_skt_from_row(None, "2.5") == "Grower"
+    assert schema.etapa_skt_from_row({"engorde"}, "0.8") == "Nursery"
+    assert schema.etapa_skt_from_row(set(), "1.2") == "Nursery"
+    assert schema.etapa_skt_from_row({"engorde"}, "1.6") == "Pre Grower"
+    assert schema.etapa_skt_from_row({"precria"}, "1.7") == "Grower"
+    assert schema.etapa_skt_from_row(set(), "1.8") == "Grower"
+    assert schema.etapa_skt_from_row(set(), "2.5") == "Grower"
 
 
 def test_etapa_skt_rango_usa_el_minimo():
     # REQ-2
-    assert schema.etapa_skt_from_row("engorde", "1.4-2.0") == "Nursery"
-    assert schema.etapa_skt_from_row("engorde", "2.0-1.4") == "Nursery"
-    assert schema.etapa_skt_from_row(None, "1.6 - 2.4") == "Pre Grower"
-    assert schema.etapa_skt_from_row(None, "1.8-2.2") == "Grower"
+    assert schema.etapa_skt_from_row({"engorde"}, "1.4-2.0") == "Nursery"
+    assert schema.etapa_skt_from_row({"engorde"}, "2.0-1.4") == "Nursery"
+    assert schema.etapa_skt_from_row(set(), "1.6 - 2.4") == "Pre Grower"
+    assert schema.etapa_skt_from_row(set(), "1.8-2.2") == "Grower"
 
 
 def test_etapa_skt_sin_tamano_usa_etapa_del_competidor():
     # REQ-3 (decision del usuario 2026-10-29)
-    assert schema.etapa_skt_from_row("precria", None) == "Nursery"
-    assert schema.etapa_skt_from_row("post_transferencia", "") == "Pre Grower"
-    assert schema.etapa_skt_from_row("engorde", None) == "Grower"
-    assert schema.etapa_skt_from_row("engorde", "s/d") == "Grower"
+    assert schema.etapa_skt_from_row({"precria"}, None) == "Nursery"
+    assert schema.etapa_skt_from_row({"post_transferencia"}, "") == "Pre Grower"
+    assert schema.etapa_skt_from_row({"engorde"}, None) == "Grower"
+    assert schema.etapa_skt_from_row({"engorde"}, "s/d") == "Grower"
 
 
 def test_etapa_skt_sin_tamano_ni_etapa_conocida_queda_vacio():
     # REQ-3
-    assert schema.etapa_skt_from_row("reproductores", None) is None
-    assert schema.etapa_skt_from_row("salud", "") is None
-    assert schema.etapa_skt_from_row(None, None) is None
+    assert schema.etapa_skt_from_row({"reproductores"}, None) is None
+    assert schema.etapa_skt_from_row({"salud"}, "") is None
+    assert schema.etapa_skt_from_row(set(), None) is None
 
 
 def test_detect_es_producto_de_salud_true_for_disease_marker():
@@ -260,7 +260,7 @@ def test_schema_renames_etapa_and_clasificacion_camaron():
     # _skt) en vez de dos nombres sin relacion aparente entre si.
     assert "etapa" not in schema.SCHEMA_COLUMNS
     assert "clasificacion_camaron" not in schema.SCHEMA_COLUMNS
-    assert "etapa_competidor" in schema.SCHEMA_COLUMNS
+    assert "etapa_competidor" not in schema.SCHEMA_COLUMNS  # R4.10: quitada
     assert "etapa_skt" in schema.SCHEMA_COLUMNS
 
 
@@ -411,7 +411,7 @@ def test_etapas_desde_competidor_vacio_deja_las_cinco_vacias():
 def test_schema_columns_incluye_etapas_despues_de_salud():
     i = schema.SCHEMA_COLUMNS.index("es_producto_de_salud")
     assert schema.SCHEMA_COLUMNS[i + 1:i + 1 + len(schema.ETAPA_COLUMNS)] == schema.ETAPA_COLUMNS
-    assert "etapa_competidor" in schema.SCHEMA_COLUMNS
+    assert "etapa_competidor" not in schema.SCHEMA_COLUMNS  # R4.10
 
 
 # --- R4.1: detectar_etapas y etapa_post_larva -------------------------------
@@ -485,7 +485,7 @@ def test_req6_columnas_etapa():
 
 
 def test_req7_respaldo_skt_post_larva_es_nursery():
-    assert schema.etapa_skt_from_row("post_larva", None) == "Nursery"
+    assert schema.etapa_skt_from_row({"post_larva"}, None) == "Nursery"
 
 
 # --- R4.2: reglas nuevas de detectar_etapas (fichas de Nicovita) -----------

@@ -63,7 +63,7 @@ def test_asociacion_explicita_manda_sobre_el_orden():
 
 def test_strong_breed_is_reproductores():
     rec = parser.parse_product("u", _read("vimifos_strong_breed.html"))[0]
-    assert rec["etapa_competidor"] == "reproductores"
+    assert rec["etapa_reproductores"] is True
     assert rec["tamano_pellet_mm"] == "2.4"
 
 

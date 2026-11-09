@@ -5,6 +5,12 @@ import schema
 from paises._compartido import nicovita_parser as parser
 
 
+def _skt(record):
+    """etapa_skt la calcula pipeline.write_csv; el test aplica la misma regla."""
+    etapas = {c.removeprefix("etapa_") for c in schema.ETAPA_COLUMNS if record[c] is True}
+    return schema.etapa_skt_from_row(etapas, record["tamano_pellet_mm"])
+
+
 def test_slug_from_url_and_name_mapping():
     url = "https://nicovita.com/productos/nicovita-katal-ad-ecuador/"
     slug = parser.slug_from_url(url)
@@ -193,7 +199,7 @@ def test_parse_product_explodes_one_row_per_real_sku():
     assert {r["empresa"] for r in records} == {"Nicovita"}
 
 
-def test_parse_product_classic_fills_etapa_per_sku_leaving_1_6mm_ambiguous():
+def test_parse_product_classic_etapa_skt_por_sku_con_1_6mm_pre_grower():
     # Caso real que motivo el fallback: la ficha de Classic dice "desde
     # post larva hasta tamano de mercado" (cubre el ciclo completo), asi
     # que ni el slug ni la descripcion resuelven etapa -- pero ahora que
@@ -208,12 +214,12 @@ def test_parse_product_classic_fills_etapa_per_sku_leaving_1_6mm_ambiguous():
         html="",
         pdf_bytes=pdf_path.read_bytes(),
     )
-    by_tamano = {r["tamano_pellet_mm"]: r["etapa_competidor"] for r in records}
-    assert by_tamano["0.5-1.0"] == "precria"
-    assert by_tamano["1.2"] == "precria"
-    assert by_tamano["1.6"] is None
-    assert by_tamano["2.0"] == "engorde"
-    assert by_tamano["2.5"] == "engorde"
+    by_tamano = {r["tamano_pellet_mm"]: _skt(r) for r in records}
+    assert by_tamano["0.5-1.0"] == "Nursery"
+    assert by_tamano["1.2"] == "Nursery"
+    assert by_tamano["1.6"] == "Pre Grower"
+    assert by_tamano["2.0"] == "Grower"
+    assert by_tamano["2.5"] == "Grower"
 
 
 def test_parse_product_terap_keeps_stage_info_and_flags_salud():
@@ -233,11 +239,11 @@ def test_parse_product_terap_keeps_stage_info_and_flags_salud():
         pdf_bytes=pdf_path.read_bytes(),
     )
     assert all(r["es_producto_de_salud"] is True for r in records)
-    by_tamano = {r["tamano_pellet_mm"]: r["etapa_competidor"] for r in records}
-    assert by_tamano["0.8"] == "precria"
-    assert by_tamano["1.2"] == "precria"
-    assert by_tamano["2.0"] == "engorde"
-    assert by_tamano["2.5"] == "engorde"
+    by_tamano = {r["tamano_pellet_mm"]: _skt(r) for r in records}
+    assert by_tamano["0.8"] == "Nursery"
+    assert by_tamano["1.2"] == "Nursery"
+    assert by_tamano["2.0"] == "Grower"
+    assert by_tamano["2.5"] == "Grower"
 
 
 def test_slug_from_url_handles_other_countries():

@@ -25,7 +25,7 @@ def test_write_csv_output_has_no_trailing_zero_floats(tmp_path):
         {
             "empresa": "HAID",
             "nombre_producto": "HAID Speed",
-            "etapa_competidor": "engorde",
+            "etapa_engorde": True,
             "tamano_pellet_mm": "1.2",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
@@ -46,7 +46,7 @@ def test_write_csv_computes_etapa_skt_per_record(tmp_path):
         {
             "empresa": "Nicovita",
             "nombre_producto": "Nicovita Origin",
-            "etapa_competidor": "larva",
+            "etapa_larva": True,
             "tamano_pellet_mm": "0.3",
             "tipo_presentacion": "Extruido",
             "empaque_kg": "10,20",
@@ -57,7 +57,7 @@ def test_write_csv_computes_etapa_skt_per_record(tmp_path):
         {
             "empresa": "Nicovita",
             "nombre_producto": "Nicovita Classic AD",
-            "etapa_competidor": "engorde",
+            "etapa_engorde": True,
             "tamano_pellet_mm": "2.0",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
@@ -80,7 +80,7 @@ def test_write_csv_computes_particula_min_max_per_record(tmp_path):
         {
             "empresa": "Nicovita",
             "nombre_producto": "Nicovita Classic",
-            "etapa_competidor": "precria",
+            "etapa_precria": True,
             "tamano_pellet_mm": "0.5-1.0",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
@@ -91,7 +91,7 @@ def test_write_csv_computes_particula_min_max_per_record(tmp_path):
         {
             "empresa": "HAID",
             "nombre_producto": "HAID Speed",
-            "etapa_competidor": "engorde",
+            "etapa_engorde": True,
             "tamano_pellet_mm": "2.0",
             "tipo_presentacion": "Pelletizado",
             "empaque_kg": "25",
@@ -122,7 +122,7 @@ def test_write_csv_also_writes_xlsx_with_real_numeric_dtype(tmp_path):
         {
             "empresa": "BioMar",
             "nombre_producto": "Exia Start",
-            "etapa_competidor": "precria",
+            "etapa_precria": True,
             "tamano_pellet_mm": "0.9-1.2",
             "tipo_presentacion": None,
             "empaque_kg": "10",
@@ -290,10 +290,10 @@ def test_write_csv_completa_etapas_booleanas(tmp_path):
     import pandas as pd
 
     records = [
-        {"empresa": "Nicovita", "nombre_producto": "Nicovita Classic AD", "etapa_competidor": "engorde",
-         "tamano_pellet_mm": "2.5", "tipo_presentacion": "Pellet",
+        {"empresa": "Nicovita", "nombre_producto": "Nicovita Classic AD", "etapa_engorde": True,
+         "etapa_precria": False, "tamano_pellet_mm": "2.5", "tipo_presentacion": "Pellet",
          "fuente_url": "https://nicovita.com/productos/nicovita-classic-ad-ecuador/"},
-        {"empresa": "Cargill", "nombre_producto": "Sin etapa", "etapa_competidor": None},
+        {"empresa": "Cargill", "nombre_producto": "Sin etapa"},
     ]
     path = tmp_path / "nicovita.csv"
     pipeline.write_csv(records, path)
@@ -329,9 +329,9 @@ def test_write_csv_respeta_etapas_del_parser(tmp_path):
     import pandas as pd
     import schema
 
-    marcadas = {"empresa": "Nicovita", "nombre_producto": "Nicovita Classic", "etapa_competidor": "engorde",
+    marcadas = {"empresa": "Nicovita", "nombre_producto": "Nicovita Classic", "etapa_engorde": True,
                 "_etapas_detectadas": True, **schema.columnas_etapa({"post_larva", "engorde"})}
-    vacias = {"empresa": "Nicovita", "nombre_producto": "Sin texto", "etapa_competidor": "engorde",
+    vacias = {"empresa": "Nicovita", "nombre_producto": "Sin texto", "etapa_engorde": True,
               "_etapas_detectadas": True, **schema.columnas_etapa(set())}
     path = tmp_path / "nicovita.csv"
     pipeline.write_csv([marcadas, vacias], path)

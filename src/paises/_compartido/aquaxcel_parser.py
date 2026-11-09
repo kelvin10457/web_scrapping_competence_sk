@@ -107,7 +107,6 @@ def _parse_cards(soup: BeautifulSoup, fecha: str) -> list[dict]:
         linea = headings[0].get_text(strip=True)
         record = schema.empty_record("Cargill")
         record["nombre_producto"] = headings[1].get_text(strip=True)
-        record["etapa_competidor"] = schema.normalize_etapa(linea)
         record["es_producto_de_salud"] = schema.detect_es_producto_de_salud(linea_descriptions.get(linea.upper()))
         # R4.4: todas las etapas de la linea y su descripcion ("transicion hacia la fase de engorde")
         etapas = schema.detectar_etapas(f"{linea} {linea_descriptions.get(linea.upper(), '')}")
@@ -155,7 +154,6 @@ def parse_listing(html: str) -> list[dict]:
 
             record = schema.empty_record("Cargill")
             record["nombre_producto"] = producto
-            record["etapa_competidor"] = schema.normalize_etapa(etapa_txt)
             record["es_producto_de_salud"] = es_producto_de_salud
             # R4.4: solo la columna "ETAPA DE USO"; las descripciones de linea no nombran etapas
             etapas = _ETAPA_DE_USO.get(etapa_txt.upper()) or schema.detectar_etapas(etapa_txt)

@@ -105,13 +105,25 @@ def test_filas_humanas_sin_pais_se_asumen_ecuador(tmp_path):
     # R5.2 + regla existente de merge_human (PLAN_REGIONAL 2.5)
     humano = tmp_path / "humano.xlsx"
     pd.DataFrame([{
-        "empresa": "HAID", "nombre_producto": "HAID Ultra", "etapa_competidor": "precria",
+        "empresa": "HAID", "nombre_producto": "HAID Ultra", "etapa_precria": True,
         "tamano_pellet_mm": 1.0, "tipo_presentacion": "Extruido", "proteina_pct": 40,
     }]).to_excel(humano, index=False)
     df = powerbi.filas_humanas(humano)
     assert df.loc[0, "pais"] == "ecuador"
-    assert df.loc[0, "etapa_precria"] is True or df.loc[0, "etapa_precria"] == True  # noqa: E712
+    assert bool(df.loc[0, "etapa_precria"]) is True
     assert df.loc[0, "etapa_skt"] is not None
+
+
+def test_filas_humanas_usan_booleanos_no_etapa_competidor(tmp_path):
+    # Revision Codex 2026-11-09: etapa_competidor (legado) no se usa; etapa_skt sale de etapa_*.
+    humano = tmp_path / "humano.xlsx"
+    pd.DataFrame([
+        {"empresa": "Nicovita", "nombre_producto": "A", "etapa_competidor": "larva", "tamano_pellet_mm": 0.3},
+        {"empresa": "Nicovita", "nombre_producto": "B", "etapa_larva": True, "tamano_pellet_mm": 0.3},
+    ]).to_excel(humano, index=False)
+    df = powerbi.filas_humanas(humano).set_index("nombre_producto")
+    assert df.loc["A", "etapa_skt"] == "Nursery"
+    assert df.loc["B", "etapa_skt"] == "Hatchery"
 
 
 def test_filas_humanas_van_a_su_pais_y_empresa(tmp_path):

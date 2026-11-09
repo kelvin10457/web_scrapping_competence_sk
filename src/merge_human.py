@@ -19,6 +19,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -41,11 +42,10 @@ OUTPUT_PATH = ROOT / "data" / "master_prototipo.xlsx"
 # Columnas categoricas: solo valores ya definidos en schema.py, o vacio.
 CATEGORICAL_COLUMNS = {
     "pais": set(schema.PAIS_VALUES),
-    "etapa_competidor": schema.ETAPA_VALUES,
     "tipo_presentacion": schema.TIPO_PRESENTACION_VALUES,
     "etapa_skt": schema.ETAPA_SKT_VALUES,
 }
-BOOLEAN_COLUMNS = ["es_producto_de_salud"]
+BOOLEAN_COLUMNS = ["es_producto_de_salud", *schema.ETAPA_COLUMNS]
 # Columnas numericas (deben ser numero o vacio en el archivo humano) -- a
 # diferencia de schema.NUMERIC_COLUMNS, que es sobre los CSV/XLSX ya
 # escritos por el pipeline (incluye particula_min_mm/max, no tamano_pellet_mm
@@ -56,12 +56,23 @@ NUMERIC_VALIDATE_COLUMNS = ["tamano_pellet_mm", "proteina_pct", "empaque_kg"]
 REQUIRED_COLUMNS = ["empresa", "nombre_producto"]
 # etapa_skt/particula_min_mm/particula_max_mm son siempre derivadas (igual
 # que en pipeline.write_csv()) -- nunca se toma el valor que haya escrito el
-# humano ahi, se recalculan desde tamano_pellet_mm/
-# etapa_competidor despues de aplicar la fusion. Se siguen exigiendo como
-# encabezado (mismas columnas exactas que schema.SCHEMA_COLUMNS) pero su
-# contenido no se valida ni se usa. Las etapa_* (R3.5) tambien son derivadas
-# (de etapa_competidor) pero el Excel puede no traerlas: son opcionales.
-DERIVED_COLUMNS = ["etapa_skt", "particula_min_mm", "particula_max_mm", *schema.ETAPA_COLUMNS]
+# humano ahi, se recalculan desde tamano_pellet_mm y las etapa_* despues de
+# aplicar la fusion. Las etapa_* las carga el humano como booleanos (vacio =
+# la fuente no dice nada); si no las trae, quedan vacias.
+# R4.10: etapa_competidor ya no existe. Un archivo humano que todavia la trae
+# se acepta y esa columna se ignora (LEGACY_COLUMNS), sin error.
+LEGACY_COLUMNS = ["etapa_competidor"]
+DERIVED_COLUMNS = ["etapa_skt", "particula_min_mm", "particula_max_mm"]
+
+
+def _verdadero(valor) -> bool:
+    """Etapa afirmada en una celda: bool de Python o de NumPy (pandas los da
+    como numpy.bool_, que no cumple `is True`), o texto 'true'. Vacio = no."""
+    if _is_empty(valor):
+        return False
+    if isinstance(valor, str):
+        return valor.strip().lower() == "true"
+    return bool(valor)
 
 
 def _is_empty(value) -> bool:
@@ -109,6 +120,7 @@ def validate_headers(df: pd.DataFrame) -> list[str]:
     if "pais" not in actual:
         actual.append("pais")
     actual += [c for c in schema.ETAPA_COLUMNS if c not in actual]
+    actual = [c for c in actual if c not in LEGACY_COLUMNS]
     expected = set(schema.SCHEMA_COLUMNS)
     actual_set = set(actual)
     missing = [c for c in schema.SCHEMA_COLUMNS if c not in actual_set]
@@ -156,7 +168,7 @@ def validate_rows(df: pd.DataFrame) -> list[str]:
             value = row[col]
             if _is_empty(value):
                 continue
-            if isinstance(value, bool):
+            if isinstance(value, (bool, np.bool_)):
                 continue
             if isinstance(value, (int, float)) and value in (0, 1):
                 # Excel/pandas coercionan una columna booleana a 0.0/1.0
@@ -197,7 +209,7 @@ def _typed_value(col: str, raw_value):
         return pipeline._format_value(float(str(raw_value).strip()))
     if col in ("proteina_pct", "empaque_kg"):
         return float(str(raw_value).strip())
-    if col == "es_producto_de_salud":
+    if col == "es_producto_de_salud" or col in schema.ETAPA_COLUMNS:
         if isinstance(raw_value, bool):
             return raw_value
         if isinstance(raw_value, (int, float)) and raw_value in (0, 1):
@@ -270,11 +282,9 @@ def _recompute_derived(df: pd.DataFrame, idx) -> None:
     mismo mecanismo que pipeline.write_csv() usa para los 4 CSV scrapeados
     -- se ignora a proposito cualquier valor que el humano haya escrito en
     esas 3 columnas (son derivadas, nunca dato primario)."""
-    etapa_competidor = df.at[idx, "etapa_competidor"]
     tamano = df.at[idx, "tamano_pellet_mm"]
-    df.at[idx, "etapa_skt"] = schema.etapa_skt_from_row(etapa_competidor, tamano)
-    for col, valor in schema.etapas_desde_competidor(etapa_competidor).items():
-        df.at[idx, col] = valor
+    etapas = {c.removeprefix("etapa_") for c in schema.ETAPA_COLUMNS if _verdadero(df.at[idx, c])}
+    df.at[idx, "etapa_skt"] = schema.etapa_skt_from_row(etapas, tamano)
     pmin, pmax = schema.parse_particula_range(tamano)
     df.at[idx, "particula_min_mm"] = pmin
     df.at[idx, "particula_max_mm"] = pmax
@@ -293,12 +303,17 @@ def _normalize_master_dtypes(df: pd.DataFrame) -> pd.DataFrame:
     depender de que dtype le toque adivinar a pandas en cada corrida."""
     df = _with_default_pais(df)
     # Un master anterior a una columna etapa_* (p. ej. etapa_post_larva, R4.1)
-    # no la trae: se deriva de etapa_competidor como en pipeline._con_etapas.
+    # no la trae: se deriva de etapa_competidor como en pipeline._con_etapas
+    # (solo si el master viejo todavia la tiene; si no, quedan vacias).
     faltan = [c for c in schema.ETAPA_COLUMNS if c not in df.columns]
     if faltan:
-        etapas = [schema.etapas_desde_competidor(e) for e in df["etapa_competidor"]]
-        for col in faltan:
-            df[col] = [e[col] for e in etapas]
+        if "etapa_competidor" in df.columns:
+            etapas = [schema.etapas_desde_competidor(e) for e in df["etapa_competidor"]]
+            for col in faltan:
+                df[col] = [e[col] for e in etapas]
+        else:
+            for col in faltan:
+                df[col] = None
     for col in schema.SCHEMA_COLUMNS:
         if col in schema.NUMERIC_COLUMNS:
             continue
@@ -330,13 +345,11 @@ def apply_merge(master_df: pd.DataFrame, human_df: pd.DataFrame) -> tuple[pd.Dat
             record = {}
             for col in schema.SCHEMA_COLUMNS:
                 record[col] = None if col in DERIVED_COLUMNS else _typed_value(col, human_row[col])
-            record["etapa_skt"] = schema.etapa_skt_from_row(
-                record["etapa_competidor"], record["tamano_pellet_mm"]
-            )
+            etapas = {c.removeprefix("etapa_") for c in schema.ETAPA_COLUMNS if _verdadero(record.get(c))}
+            record["etapa_skt"] = schema.etapa_skt_from_row(etapas, record["tamano_pellet_mm"])
             record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
                 record["tamano_pellet_mm"]
             )
-            record.update(schema.etapas_desde_competidor(record["etapa_competidor"]))
             new_records.append(record)
             continue
 

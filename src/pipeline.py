@@ -75,14 +75,13 @@ def write_xlsx(df: pd.DataFrame, path: Path) -> None:
 
 def write_csv(records: list[dict], path: Path) -> None:
     for record in records:
+        # R4.10: etapa_skt sale de las etapa_* booleanas (ya no de etapa_competidor).
+        etapas = {c.removeprefix("etapa_") for c in schema.ETAPA_COLUMNS if record.get(c) is True}
         record["etapa_skt"] = schema.etapa_skt_from_row(
-            record.get("etapa_competidor"),
+            etapas,
             record.get("tamano_pellet_mm"),
             record.get("_es_larvicultura", False),
         )
-        # Puente R3.5 solo para los parsers que todavia no marcan sus etapas (R4).
-        if not record.get("_etapas_detectadas"):
-            record.update(schema.etapas_desde_competidor(record.get("etapa_competidor")))
         record["particula_min_mm"], record["particula_max_mm"] = schema.parse_particula_range(
             record.get("tamano_pellet_mm")
         )
@@ -154,6 +153,10 @@ def _con_etapas(df: pd.DataFrame) -> pd.DataFrame:
     """Un CSV escrito antes de R3.5 no trae las etapa_*: se derivan de su
     etapa_competidor igual que en write_csv (texto, como el resto del CSV)."""
     if set(schema.ETAPA_COLUMNS) <= set(df.columns):
+        return df
+    if "etapa_competidor" not in df.columns:  # CSV muy viejo: sin etapa ninguna
+        for col in schema.ETAPA_COLUMNS:
+            df[col] = None
         return df
     etapas = [schema.etapas_desde_competidor(e) for e in df["etapa_competidor"]]
     for col in schema.ETAPA_COLUMNS:

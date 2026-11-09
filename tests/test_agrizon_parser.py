@@ -96,7 +96,7 @@ def test_etapa_falls_back_to_tamano_when_tags_are_ambiguous():
     # set de tags -- ambiguo, se resuelve por tamano de pellet (< 1.6 -> precria).
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-1-2-mm-25-kg"))
-    assert record["etapa_competidor"] == "precria"
+    assert record["etapa_precria"] is True
 
 
 def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
@@ -104,16 +104,18 @@ def test_etapa_larva_from_unambiguous_tags_not_derivable_from_tamano():
     # Larviva SOLO se puede resolver via tags ("larvas"/"Post-larva").
     products = _load_products()
     record = parser.parse_product(_find(products, "larviva-55-250-375-micras-1-kg"))
-    assert record["etapa_competidor"] == "larva"
+    assert record["etapa_larva"] is True
     assert record["etapa_skt"] is None  # se calcula despues, en pipeline.write_csv
 
 
-def test_etapa_1_6mm_boundary_stays_none():
-    # Limite documentado en schema.etapa_from_tamano: 1.6mm es ambiguo por
-    # diseno (techo de Nursery y tamano tipico de Pre Grower a la vez).
+def test_etapa_1_6mm_con_tags_que_nombran_dos_etapas_marca_ambas():
+    # R4.5/R4.10: los tags nombran "engorde" e "Iniciadores" (precria); se marcan
+    # las dos, sin desempatar por tamano. La banda de 1.6 mm solo entra si no
+    # hay termino de etapa, y aca lo hay.
     products = _load_products()
     record = parser.parse_product(_find(products, "exia-prime-35-1-6-mm-25-kg"))
-    assert record["etapa_competidor"] is None
+    assert record["etapa_precria"] is True
+    assert record["etapa_engorde"] is True
 
 
 def test_parse_listing_tags_all_records_as_biomar():
