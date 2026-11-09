@@ -9,6 +9,19 @@ Dos agentes en paralelo; Codex en el worktree `../wt-codex` (rama `codex/<ID>`),
 - **Estado:** todas cerradas (ver resumen). Worktree `../wt-codex` y rama `codex/R7.6` (vacía) eliminados.
 - Al retomar tras un corte: leer esta sección y `git log --all --oneline -10`; Codex retoma desde su rama y su último commit.
 
+## Competidores nuevos de México y Panamá (2026-11-09, R7.8–R8.11)
+Pedido del usuario: scrapers para los candidatos de México y Panamá (Ecuador no), con Codex como revisor (solo lectura, effort medium). Pipeline completo: 18 fuentes OK, **22 Excel, 403 filas** (+20). Suite: 359/359 en verde.
+
+| Fase | Commit | Filas | Codex |
+|---|---|---|---|
+| R7.8 Skilla (MX) | `b94909c` | 4 (tamaño por OCR del pie de foto; sin proteína publicada) | 3 hallazgos, aplicados |
+| R7.9 ProAqua (MX) → `Biogrow` 7 + `Epicore` 5 | `e6421ca` | 12 | 1, aplicado |
+| R8.10 NasaFeed (PA) | `ab82b0b` | 3 (copia de Wayback; tamaño vacío) | 2, aplicados |
+| R8.11 Italcol (PA) | `170a852` | 1 | 2, aplicados |
+
+Sin implementar, porque no tienen sitio: Oromar (MX) y Avícola Grecia (PA), que siguen solo por registro oficial.
+**Para decidir (opcional):** los registros MIDA "AQUANASA 25/30/35" siguen `sin_match`, porque las filas se llaman "Aquanasa Línea Premium 25%" (la ficha no dice "AQUANASA 25"). Si se usa el nombre del registro, el cruce queda hecho.
+
 ## Resumen para el usuario — sesión autónoma (2026-11-09)
 **Estado:** roadmap sin fases `[ ]` ni `[~]`. Solo quedan los `[?]` que decidís vos (R7.3 y "Después"). Suite: **331/331 en verde**. Pipeline completo: 14 fuentes OK en 325 s, sin bloqueos (BioMar/Agrizon ya no dio 429). Power BI regenerado: **17 Excel, 383 filas**, mismas 16 columnas.
 
