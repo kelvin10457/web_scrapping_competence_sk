@@ -60,6 +60,9 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R7.2** Revisar las 144 pistas de SENASICA y listar los competidores nuevos con datos útiles (Aquatec, El Pedregal, Oromar, Skilla, Winfish Zeigler).
 - [?] **R7.3** El usuario decide cuáles de esos competidores se agregan (por registro oficial o por carga manual).
 - [x] **R7.4** Buscar más competidores con catálogo web público (fichas con tamaño, proteína o etapa) en los 5 países, además de los de SENASICA. Solo listar con evidencia en el README del país; implementar cada uno es una fase aparte (pedido del usuario 2026-11-09; research delegado a Codex).
+- [ ] **R7.5** El Pedregal (México): scraper de la tabla HTML de crustáceos (`el-pedregal.com/alimento/crustaceos`, todas las categorías) + PDF de extruidos si aporta. Validar 3 productos.
+- [ ] **R7.6** AQUATEC (México) vía nutrimentos.com.mx: scraper aceptando el certificado SSL inválido de ese dominio (decisión del usuario 2026-11-09). Sin heredar campos entre variantes. Validar 3 productos.
+- [ ] **R7.7** Prilabsa (Ecuador, distribuidor): catálogo PDF (Higashimaru, Mackay Marine; Zeigler solo si no está ya cubierto). Prioridad baja: Ecuador ya está mapeado.
 
 ## R8 — Centroamérica (Honduras, Nicaragua, Panamá)
 
@@ -72,6 +75,7 @@ Cada país sigue dos pasos: primero **descubrir** (solo buscar y anotar en el RE
 - [x] **R8.5** Panamá: buscar un registro público (MIDA / APA).
 - [-] **R8.6** Panamá: implementarlo, si existe.
 - [x] **R8.7** Plantilla Excel de carga manual por país, con las mismas columnas, que `merge_human` importa. Puede hacerse en paralelo a R8.1–R8.6.
+- [~] **R8.8** Buscar en los ministerios de agricultura (MIDA Panamá, SAG/SENASA Honduras, MAG/IPSA Nicaragua, SADER México) listados públicos de alimentos para camarón registrados. Pista: MIDA publica `Alimentos-nacionales-vigentes-2026-1.pdf`. Research delegado a Codex; resultado en `specs/features/R8.8-ministerios/hallazgos.md`.
 
 ## R9 — Corrida completa
 
