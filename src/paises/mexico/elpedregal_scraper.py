@@ -8,13 +8,13 @@ from __future__ import annotations
 
 import io
 import re
-from pathlib import Path
 
 import pytesseract
 import requests
 from PIL import Image
 
 import netutil
+import ocr
 
 BASE_URL = "https://el-pedregal.com"
 PAGE_URL = f"{BASE_URL}/alimento/crustaceos"
@@ -23,11 +23,7 @@ HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
                          "(KHTML, like Gecko) Chrome/130.0 Safari/537.36"}
 _IMG_RE = re.compile(r'src="(https://el-pedregal\.com/img/crustaceos-info-\d+\.png)"')
 
-for _candidate in (r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-                   str(Path.home() / "AppData/Local/Programs/Tesseract-OCR/tesseract.exe")):
-    if Path(_candidate).exists():
-        pytesseract.pytesseract.tesseract_cmd = _candidate
-        break
+ocr.configurar()  # Tesseract del .exe, de Windows o del PATH (R10.1)
 
 
 def _get(url: str, session) -> requests.Response:

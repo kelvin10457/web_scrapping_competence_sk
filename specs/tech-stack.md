@@ -4,7 +4,7 @@
 
 ## Stack
 
-- **Python** con `requests` (siempre a través de `netutil.get()`), `BeautifulSoup` + `lxml`, `pdfplumber` / `PyMuPDF`, `pytesseract` (Tesseract instalado aparte, en español), `pandas` y `openpyxl`.
+- **Python** con `requests` (siempre a través de `netutil.get()`), `BeautifulSoup` + `lxml`, `pdfplumber` / `PyMuPDF`, `pytesseract` (Tesseract con español; en el `.exe` va empaquetado, ver `src/ocr.py`), `pandas` y `openpyxl`.
 - **App de escritorio:** Tkinter (`gui.py`) empaquetada con PyInstaller (`ScraperCompetencia.spec`). **Congelada** desde el 2026-10-29 (ver `decisiones.md`): no se adapta al esquema nuevo.
 - **Tests:** `pytest`, con fixtures **reales** (descargados, no armados a mano) en `tests/fixtures/`. Corren sin red.
 - **Prohibido:** Playwright o Selenium (rompen el `.exe`), LLM o APIs pagas. Evadir un bloqueo (User-Agent de navegador, huella TLS, otro cliente, proxy, copias públicas) **sí** se permite desde 2026-11-09 (`decisiones.md`, README § Bloqueos).
@@ -41,7 +41,7 @@ Una fila por **SKU** (un tamaño de pellet concreto) cuando la fuente lo publica
 | `tamano_pellet_mm` | texto | Tal cual lo publica la fuente; puede ser un rango (`1.2-1.5`) |
 | `particula_min_mm` | número decimal | Extremo inferior del rango; si es un solo valor, ese mismo. Si el tamaño es `<X` (solo máximo publicado, Prilabsa), vacío |
 | `particula_max_mm` | número decimal | Extremo superior |
-| `tipo_presentacion` | texto | `Extruido`, `Granulado`, `Líquido`, `Microencapsulado`, `Microextruido`, `Microparticulado`, `Nauplios de artemia`, `Otro`, `Pellet`, `Polvo`, `Quistes de artemia`, `Suspensión`. Un valor fuera de esta lista **no es un error**: se conserva y se avisa |
+| `tipo_presentacion` | texto | `Extruido`, `Granulado`, `Líquido`, `Microencapsulado`, `Microextruido`, `Microgranulado`, `Microparticulado`, `Nauplios de artemia`, `Otro`, `Pellet`, `Polvo`, `Quistes de artemia`, `Suspensión`. Un valor fuera de esta lista **no es un error**: se conserva y se avisa |
 | `proteina_pct` | número decimal | Porcentaje tal cual: `35`, `37.5` (no `0.375`). Los parsers lo asignan con `schema.normalize_proteina` (acepta coma decimal; ambiguo o fuera de (1, 100] → vacío) |
 
 Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y empresa.

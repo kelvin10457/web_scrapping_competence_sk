@@ -16,6 +16,7 @@ import pytesseract
 import requests
 
 import netutil
+import ocr
 from PIL import Image
 
 BASE_URL = "https://www.haid.com.ec"
@@ -38,14 +39,7 @@ PRODUCT_SLUGS = ["starter-pro", "starter", "speed", "happiness", "happiness-plus
 # el slug de la URL el duplicado no molesta (set() lo colapsa solo).
 _PRODUCT_LINK_RE = re.compile(r'href="(?:https://www\.haid\.com\.ec)?/([a-z0-9\-]+)/?"')
 
-_TESSERACT_CANDIDATES = [
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-    str(Path.home() / "AppData/Local/Programs/Tesseract-OCR/tesseract.exe"),
-]
-for _candidate in _TESSERACT_CANDIDATES:
-    if Path(_candidate).exists():
-        pytesseract.pytesseract.tesseract_cmd = _candidate
-        break
+ocr.configurar()  # Tesseract del .exe, de Windows o del PATH (R10.1)
 
 
 def fetch(url: str, session: requests.Session | None = None) -> str:
