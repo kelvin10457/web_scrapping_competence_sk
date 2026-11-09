@@ -42,8 +42,8 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 
 ## R5 — Excel para Power BI
 
-- [ ] **R5.1** `pipeline` escribe `data/powerbi/<pais>/<empresa>.xlsx`: selección de columnas con tipos fijos (booleano, decimal, texto). Sin transformaciones.
-- [ ] **R5.2** Incluir las filas cargadas a mano (`competencia_human.xlsx`) en el Excel de su país y empresa.
+- [x] **R5.1** `pipeline` escribe `data/powerbi/<pais>/<empresa>.xlsx`: selección de columnas con tipos fijos (booleano, decimal, texto). Sin transformaciones.
+- [x] **R5.2** Incluir las filas cargadas a mano (`competencia_human.xlsx`) en el Excel de su país y empresa.
 - [ ] **R5.3** Test de contrato: todos los Excel tienen exactamente las mismas columnas, en el mismo orden y con los mismos tipos. Así Power BI los puede unir sin errores.
 - [ ] **R5.4** Guía `docs/powerbi.md` (1 página): cómo unir los Excel de `data/powerbi/` desde una carpeta y cómo despivotar las 5 columnas `etapa_*` para graficar por etapa. Incluye el código M listo para pegar en Power Query y la advertencia de que un producto con varias etapas se cuenta una vez en cada una.
 

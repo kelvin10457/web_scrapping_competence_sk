@@ -17,6 +17,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import schema  # noqa: E402
+import powerbi  # noqa: E402
 
 if getattr(sys, "frozen", False):
     # Empaquetado con PyInstaller: __file__ apunta a la carpeta temporal
@@ -189,6 +190,8 @@ def build_master() -> None:
         df_pais.to_csv(pais_path, index=False, encoding="utf-8-sig")
         write_xlsx(df_pais, pais_path.with_suffix(".xlsx"))
     write_presentaciones_nuevas(master, PRESENTACIONES_NUEVAS_PATH)
+    # R5.1/R5.2: Excel por pais y empresa para Power BI (incluye filas humanas).
+    powerbi.escribir_todo(master, powerbi.POWERBI_DIR, powerbi.HUMAN_PATH)
 
 
 def write_presentaciones_nuevas(master: pd.DataFrame, path: Path) -> None:
