@@ -3,7 +3,40 @@
 > Lista para revisar juntos. Se actualiza después de cada commit. Arriba va el resumen final; abajo, el registro cronológico de decisiones.
 
 ## Resumen final
-_Se completa al cerrar la corrida (ver CIERRE del pedido)._
+**Corrida:** suite 288/288 en verde. Pipeline corrido por país: Ecuador (parcial, ver bloqueo), Honduras, México, Agripac; master reconstruido. Power BI regenerado.
+
+**Excel generados** (`data/powerbi/<pais>/<empresa>.xlsx`, 12 archivos, 288 filas, mismas 16 columnas y tipos):
+Ecuador: Agripac 38 · BioMar 17 · Cargill 37 · HAID 17 · Nicovita 61 · Honduras: Nicovita 35 · México: Api-Aba 3 · Cargill 14 · Nicovita 26 · Nutrimar 6 · Vimifos 21 · Zeigler 13.
+
+**Fases cerradas:**
+- Claude: R5.1, R5.2, R5.3, R5.4, R4.10, R7.2, R8.1, R8.3, R8.5, R8.7, R9.1. Y `CLAUDE.md` (ruta Linux).
+- Codex: R4.7 Vimifos, R4.8 Api-Aba, R4.9 Nutrimar (revisadas por mí; sin objeciones).
+- **Pendientes:** R6 (no tocada) y R7.3 (decide el usuario). R8.2, R8.4, R8.6 descartadas (sin fuente implementable).
+
+**Países investigados:**
+- *Honduras:* marco legal SENASA y fichas Nicovita (ya en el pipeline). Sin listado público de piensos. Sin fuente nueva.
+- *Nicaragua:* marco IPSA, procedimiento de registro y noticia de Cargill (2017). Sin listado público. Sin fuente nueva.
+- *Panamá:* resolución APA 2021 (trámite por plataforma), catálogo Nicovita y Italcol. Sin listado público. Sin fuente nueva.
+- Detalle en `src/paises/<pais>/README.md`.
+
+**Competidores nuevos de México para decidir en R7.3:** Malta Texo (Apicamarón, 36 registros), Nueva Tecnología en Alimentación (Aquatec, 15), El Pedregal (5), Oromar (2), Multiservicios 2001 (Skilla, 2). Nutrición Marina (1, confirmar si es Nutrimar). Winfish Zeigler, Skretting y BioMar no aparecen en el registro.
+
+**Bloqueos y páginas a guardar a mano:**
+- **Agrizon (BioMar) respondió 429** en la corrida de Ecuador. No reintenté en bucle. Se conservó su CSV anterior, así que BioMar puede estar desactualizado. Para reintentar después: esperar y volver a correr `--pais ecuador --empresa biomar`. Si sigue bloqueando, guardar a mano la colección `https://agrizon.com/en/collections/nutricion-animal` (HTML) en `data/manual/` (ignorado por git, es tuyo).
+- Ningún otro bloqueo (sin captcha ni 403) en Honduras, México y Agripac.
+
+**Decisiones para revisar juntos (de la más importante a la menos):**
+1. **Nicovita Origin (3 filas, 0.3–0.8 mm):** booleanos = `post_larva`, sale `Nursery`. Antes `Hatchery`. Tu ejemplo de 2026-10-29 decía Hatchery. Decidir si Origin es larva (corregir el parser) o post larva (aceptar Nursery).
+2. **Regla de Hatchery (R4.10):** Hatchery si la etapa más temprana es `larva` (o Larvicultura de Agripac). Se descartó "solo larva exacto". Confirmar.
+3. **Quitar `etapa_competidor` (R4.10):** las filas humanas ya no tienen etapa salvo que se pasen a booleanos (hoy ninguna lo tiene). Confirmar que es aceptable.
+4. **Filas humanas sin `pais` → ecuador** (regla existente, PLAN_REGIONAL 2.5).
+5. **Filas humanas no se deduplican contra el master.** Una fila humana repetida aparece dos veces en el Excel.
+6. **Plantillas R8.7 con 19 columnas** (las de `merge_human`), no las 16 de Power BI.
+7. **El Excel se borra si su par (pais, empresa) desaparece.** Alternativa: dejarlo.
+8. **Código M de `docs/powerbi.md` sin probar en Power BI Desktop.**
+9. **Nutrimar trae 13 productos de Zeigler** (la ficha de Nutrimar los publica). Ya estaban antes como Zeigler; sin cambio.
+
+**Cómo revertir:** cada fase es un commit. R4.10 en `8fdc0ca`; R5 en `db5a5d2`, `c688b30`; R4.7–R4.9 en `5015153`; R8/R7.2 en `3a1e538`.
 
 ## Registro de decisiones y cambios
 
@@ -23,10 +56,9 @@ _Se completa al cerrar la corrida (ver CIERRE del pedido)._
 - **Commit R4.10 (Claude).** `etapa_competidor` sale del esquema, de los parsers, de `merge_human` y de los tests. `etapa_skt` sale de las `etapa_*`:
   - *Decisión (pendiente de confirmar):* Hatchery si la etapa **más temprana** del ciclo es `larva` (o Larvicultura de Agripac); "en un rango manda el mínimo". Alternativa descartada: solo `larva` exacto (dejaba Larviva fuera de Hatchery). Revertir: `schema.etapa_skt_from_row`.
   - *Decisión (pendiente de confirmar):* sin tamaño, el respaldo es la etapa más temprana con mapa en `_ETAPA_SKT_RESPALDO`. Alternativa descartada: conservar `etapa_competidor` como respaldo.
-  - *Efecto en Ecuador (verificado: solo cambia `etapa_skt`, 11 filas):*
+  - *Efecto en Ecuador (verificado: solo cambia `etapa_skt`, 11 filas tras la corrida real):*
     - **Nicovita Origin (3 filas, 0.3–0.8 mm):** booleanos = `post_larva`, así que pasa de Hatchery a **Nursery**. Contradice el ejemplo de la decisión de 2026-10-29 (Origin es Hatchery por tipo de producto). **Decidir:** ¿Origin es larva o post larva? Si es larva, hay que corregir su detección en el parser de Nicovita.
-    - **Agripac MeM/Mpex (6 filas):** `post_larva` desde R4.6, pasan a **Nursery** (regla de post larva sin tamaño). Antes salían Hatchery por la etapa vieja; R4.6 ya los había movido a post larva y el skt no se había recalculado.
-    - **Agripac New Royal Oyster y Royal Pepper Protein (2 filas):** pierden Hatchery porque la bandera `_es_larvicultura` del parser no está en el CSV. **Se restaura con el pipeline final**, que vuelve a correr el parser de Agripac. Si el pipeline final no corre, quedan vacías.
+    - **Agripac MeM/Mpex (6 filas) y New Royal Oyster, Royal Pepper Protein:** el re-derivado offline (sin red) las dejó en Nursery o vacío, porque la bandera `_es_larvicultura` del parser no está en el CSV. **Corrida real de Agripac (2026-11-09): vuelven a Hatchery.** Son la división Larvicultura, así que Hatchery viene de la bandera y no de las etapas booleanas. No hay regresión.
   - *Cómo se regeneró sin red:* `data/processed/*.csv` se re-derivó con `pipeline.write_csv` (sin scrapear) y se reconstruyó `data/master.csv`. El baseline de Ecuador (`tests/fixtures/master_ecuador_baseline.csv`) se reescribió con ese master.
   - *`merge_human`:* `etapa_competidor` se acepta en el archivo humano y se ignora (`LEGACY_COLUMNS`). Las `etapa_*` las carga el humano como booleanos (vacío = no dice nada). **Decidir:** las filas humanas cargadas con `etapa_competidor` pierden su etapa hasta que se pasen a booleanos. Hoy el archivo humano trae esa columna y ninguna fila tiene booleanos.
   - *`gui.py`:* sigue referenciando `etapa_competidor` (congelada según decisiones.md). No se adaptó.

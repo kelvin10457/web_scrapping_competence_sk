@@ -74,7 +74,7 @@ Cada país sigue dos pasos: primero **descubrir** (solo buscar y anotar en el RE
 
 ## R9 — Corrida completa
 
-- [ ] **R9.1** `pipeline.py` completo: los 5 países, tiempo total, nulos por columna y presentaciones nuevas. Se entregan los Excel de `data/powerbi/`.
+- [x] **R9.1** `pipeline.py` completo: los 5 países, tiempo total, nulos por columna y presentaciones nuevas. Se entregan los Excel de `data/powerbi/`.
 
 ## Después (a conversar)
 
