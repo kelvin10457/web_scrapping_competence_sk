@@ -434,6 +434,13 @@ def test_req2_detectar_etapas_devuelve_todas_las_explicitas():
     assert schema.detectar_etapas(texto) == {"post_larva", "precria"}
     assert schema.detectar_etapas("Reproductores / maduración") == {"reproductores"}
     assert schema.detectar_etapas(None) == set()
+
+
+def test_nauplios_de_reproductores_no_marcan_larva():
+    # Revisión Opus: los nauplios son lo que produce una dieta de maduración.
+    assert schema.detectar_etapas("dieta de maduración: más producción de nauplios") == {"reproductores"}
+    assert schema.detectar_etapas("maduración y larvicultura, nauplios") == {"reproductores", "larva"}
+    assert schema.detectar_etapas("alimento para nauplios y zoea") == {"larva"}
     assert schema.detectar_etapas("") == set()
     assert set().union(*(schema.detectar_etapas(e) for e in ("larva", "engorde"))) <= set(schema.ETAPAS)
 

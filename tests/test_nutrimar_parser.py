@@ -98,6 +98,16 @@ def test_etapas_sin_ficha_desde_nombre_y_pagina_sin_inferir():
     assert all(r[c] is None for c in schema.ETAPA_COLUMNS)
 
 
+def test_dietas_de_maduracion_no_marcan_larva_por_nauplios():
+    # Revisión Opus: "producción de nauplios" en Ez-mate/Redi-mate (Zeigler vía
+    # Nutrimar) es lo que producen los reproductores, no la etapa alimentada.
+    import schema
+    for fixture in ("nutrimar_ez_mate.html", "nutrimar_redi_mate.html"):
+        r = parser.parse_product("u", _read(fixture), marca="Zeigler")[0]
+        assert {c for c in schema.ETAPA_COLUMNS if r[c] is True} == {"etapa_reproductores"}, fixture
+        assert schema.etapa_skt_from_row({"reproductores"}, None) is None
+
+
 def test_ficha_tiene_prioridad_y_retorno_ocr_conserva_marcador():
     from bs4 import BeautifulSoup
     import schema

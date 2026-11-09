@@ -1,6 +1,6 @@
 # R7.2 — Competidores nuevos en el registro SENASICA (solo listar)
 
-Fuente: `data/raw/senasica/productos_regulados_registrados.xlsx` (copia local del registro; no se consultó el sitio). Filas con clasificación `ALIMENTO` y `camarón` en la columna Uso. Conteos de filas del registro, no de productos únicos.
+Fuente: `data/raw/senasica/productos_regulados_registrados.xlsx` (copia local del registro; no se consultó el sitio). Filas con clasificación `ALIMENTO` o `ALIMENTO MEDICADO` y `camarón` en la columna Uso (Revisión Opus: con solo `ALIMENTO`, Vimifos da 55; los 3 restantes son medicados con OXI; el resto de los conteos no cambia). Conteos de filas del registro, no de productos únicos.
 
 | Empresa en el registro | Alimentos para camarón | Ya en el master | Utilidad | Nota |
 |---|---|---|---|---|

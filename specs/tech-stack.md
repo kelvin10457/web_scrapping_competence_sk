@@ -53,6 +53,7 @@ Incluye las filas cargadas a mano (`competencia_human.xlsx`) para ese país y em
 
 - Solo cuentan los términos de etapa explícitos. Las palabras genéricas ("crecimiento", "inicio") no marcan nada.
 - "post larva", "postlarval", "PL" y "PL" + número ("PL10", "PL 4") → `post_larva`, no `larva`.
+- "nauplio" no marca `larva` si el mismo texto marca `reproductores`: en una dieta de maduración los nauplios son lo que producen los reproductores, no a quién se alimenta (Revisión Opus: Zeigler Ez-mate y Redi-mate, "producción de nauplios"). Otro término de larva ("larvicultura", "zoea") sí sigue contando.
 - "post transferencia", "transición" y "alevinaje" → `post_transferencia`. "transferencia" suelta ("en sistemas de transferencia") no cuenta: es el traslado al final de la precría.
 - Un rango entre dos etapas ("X hasta Y", "X hacia Y", "X a Y") marca los extremos y las intermedias del ciclo larva → post_larva → precria → post_transferencia → engorde. "tamaño de mercado", "a mercado", "tamaño/peso de cosecha" y "hasta (la) cosecha" cuentan como engorde. `reproductores` nunca se rellena.
 - `schema.columnas_etapa(set)`: las detectadas en `true` y las demás en `false`; con un set vacío, todas quedan vacías.

@@ -178,6 +178,10 @@ def detectar_etapas(texto: str | None) -> set[str]:
         for pattern, etapa in _DETECTAR_RULES
         for m in pattern.finditer(text)
     )
+    # En una dieta de maduracion, "nauplios" es lo que producen los
+    # reproductores, no la etapa alimentada (Revision Opus, Ez-mate/Redi-mate).
+    if any(etapa == "reproductores" for _, _, etapa in hallazgos):
+        hallazgos = [h for h in hallazgos if not text.startswith("nauplio", h[0])]
     etapas = {etapa for _, _, etapa in hallazgos}
     for (_, fin, a), (inicio, _, b) in zip(hallazgos, hallazgos[1:]):
         if a in _CICLO and b in _CICLO and _RANGO.search(text[fin:inicio]):
