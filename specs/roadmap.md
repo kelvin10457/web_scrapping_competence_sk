@@ -63,6 +63,8 @@ Objetivo: que cada parser marque **todas** las etapas que declara la fuente (por
 - [x] **R7.5** El Pedregal (México): scraper de la tabla HTML de crustáceos (`el-pedregal.com/alimento/crustaceos`, todas las categorías) + PDF de extruidos si aporta. Validar 3 productos.
 - [x] **R7.6** AQUATEC (México) vía nutrimentos.com.mx: scraper aceptando el certificado SSL inválido de ese dominio (decisión del usuario 2026-11-09). Sin heredar campos entre variantes. Validar 3 productos.
 - [x] **R7.7** Prilabsa (Ecuador, distribuidor): catálogo PDF (Higashimaru, Mackay Marine; Zeigler solo si no está ya cubierto). Prioridad baja: Ecuador ya está mapeado.
+- [x] **R7.8** Skilla (BioBlue/Grupo NU3, México): `bioblue.com/skilla/`. Tamaños en las imágenes de cada etapa (OCR), proteína vacía (no se publica). Validar 3 productos.
+- [ ] **R7.9** ProAqua (distribuidor, México): alimentos formulados de la categoría Camarón (Biogrow Formula 1–4, Biogrow XT Ultra, Epicore Epifeed MBF/LHF, Epibal). `empresa` = fabricante. Validar 3 productos.
 
 ## R8 — Centroamérica (Honduras, Nicaragua, Panamá)
 
@@ -77,6 +79,8 @@ Cada país sigue dos pasos: primero **descubrir** (solo buscar y anotar en el RE
 - [x] **R8.7** Plantilla Excel de carga manual por país, con las mismas columnas, que `merge_human` importa. Puede hacerse en paralelo a R8.1–R8.6.
 - [x] **R8.8** Buscar en los ministerios de agricultura (MIDA Panamá, SAG/SENASA Honduras, MAG/IPSA Nicaragua, SADER México) listados públicos de alimentos para camarón registrados. Pista: MIDA publica `Alimentos-nacionales-vigentes-2026-1.pdf`. Research delegado a Codex; resultado en `specs/features/R8.8-ministerios/hallazgos.md`. PDF de MIDA verificados (bajan con User-Agent de navegador).
 - [x] **R8.9** MIDA Panamá: parser de los PDF nacional y PGA (`requests` con UA de navegador + `pdfplumber`) hacia `registros_oficiales`; filtrar camarón (explícitos + MATEMAX/AQUANASA por cruce curado) y vigencia por fecha. Validar 3 registros.
+- [ ] **R8.10** NasaFeed Aquanasa (Panamá): ficha PDF Línea Premium; el sitio no responde y se usa la copia de Wayback (decisión 2026-11-09). 3 filas por proteína, tamaño vacío.
+- [ ] **R8.11** Italcol AQUAMARÓN 35 como fuente de Panamá (decisión 2026-11-09): 1 fila.
 
 ## R9 — Corrida completa
 

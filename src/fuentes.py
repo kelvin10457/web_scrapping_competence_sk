@@ -12,7 +12,7 @@ import importlib
 import schema
 
 # Orden estable de empresas dentro de cada pais en la GUI/CLI.
-EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac", "vimifos", "apiaba", "nutrimar", "elpedregal", "aquatec", "prilabsa"]
+EMPRESA_ORDER = ["nicovita", "haid", "aquaxcel", "biomar", "agripac", "vimifos", "apiaba", "nutrimar", "elpedregal", "aquatec", "prilabsa", "skilla", "proaqua", "nasafeed", "italcol"]
 
 
 # Pares (pais, empresa) pausados: siguen en el registro (master.csv incluye su CSV
