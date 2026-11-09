@@ -36,4 +36,6 @@ El límite real es el uso por ventana de tiempo, y cada mensaje vuelve a enviar 
 - **Elegir el modelo según la tarea:** las fases mecánicas (renombres, mover columnas) pueden ir con Sonnet (`/model`). Opus se reserva para specs, parsers difíciles y bugs.
 - Respuestas cortas: lo que cambió, el resultado de los tests y qué sigue.
 
-Python del proyecto: `.venv/Scripts/python`.
+Python del proyecto:
+- Windows: `.venv/Scripts/python`
+- Linux/macOS: `.venv/bin/python`
